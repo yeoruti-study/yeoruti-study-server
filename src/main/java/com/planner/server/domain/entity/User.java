@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -16,7 +17,10 @@ public class User {
     @Id @GeneratedValue
     @Column(name = "user_id")
     @NotNull
-    private Long id;
+    private Long cid;
+    
+    private UUID id;
+
     private String userName;
     private String passWord;
     private String nickName;
