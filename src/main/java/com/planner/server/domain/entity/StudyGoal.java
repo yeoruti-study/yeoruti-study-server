@@ -30,4 +30,8 @@ public class StudyGoal {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

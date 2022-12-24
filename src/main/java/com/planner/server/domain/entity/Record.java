@@ -23,4 +23,8 @@ public class Record {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
