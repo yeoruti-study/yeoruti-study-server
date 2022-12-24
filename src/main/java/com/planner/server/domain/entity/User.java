@@ -35,6 +35,22 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Record> recordList = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Record> records = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Friend> friends = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<StudyGoal> studyGoals = new ArrayList<>();
+
+    public void addRecord(Record record) {
+        this.records.add(record);
+        record.setUser(this);
+    }
+
+    public void addStudyGoal(StudyGoal studyGoal) {
+        this.studyGoals.add(studyGoal);
+        studyGoal.setUser(this);
+    }
 }
