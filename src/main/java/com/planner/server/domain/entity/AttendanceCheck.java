@@ -1,6 +1,9 @@
 package com.planner.server.domain.entity;
 
+import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,12 +11,13 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AttendanceCheck {
 
-    @Id @GeneratedValue
-    @Column(name = "attendence_check_id")
-    private Long cid;
-
+    @Id
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @OneToOne
@@ -22,11 +26,4 @@ public class AttendanceCheck {
 
     private LocalDateTime createdAt;
 
-    public AttendanceCheck() {
-    }
-
-    public AttendanceCheck(UUID id, LocalDateTime createdAt) {
-        this.id = id;
-        this.createdAt = createdAt;
-    }
 }

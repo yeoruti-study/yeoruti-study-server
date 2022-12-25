@@ -2,7 +2,9 @@ package com.planner.server.domain.entity;
 
 import com.planner.server.Role;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,34 +14,44 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
-    @Id @GeneratedValue
-    @Column(name = "user_id")
+    @Id
     @NotNull
-    private Long cid;
-    
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @Column(name = "username")
     private String userName;
-    private String passWord;
+
+    private String password;
+
+    @Column(name = "nickname")
     private String nickName;
 
-    private String profileName;
-    private short profileAge;
+    private UUID salt;
 
     private Role roles;
-    private Boolean friendRecommendPermission;
+
+    private String profileName;
+
+    private short profileAge;
+
     private Boolean alarmPermission;
 
+    private Boolean friendAcceptance;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Record> records = new ArrayList<>();
+    private List<Friend> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Friend> friends = new ArrayList<>();
+    private List<Record> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<StudyGoal> studyGoals = new ArrayList<>();
@@ -62,18 +74,8 @@ public class User {
         roomChat.setUser(this);
     }
 
-    public User() {
+    public void addFriend(User friend) {
+
     }
 
-    public User(UUID id, String userName, String passWord, String nickName, String profileName, short profileAge, Role roles, boolean friendRecommendPermission, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.userName = userName;
-        this.passWord = passWord;
-        this.nickName = nickName;
-        this.profileName = profileName;
-        this.profileAge = profileAge;
-        this.roles = roles;
-        this.friendRecommendPermission = friendRecommendPermission;
-        this.alarmPermission = alarmPermission;
-    }
 }

@@ -1,6 +1,9 @@
 package com.planner.server.domain.entity;
 
+import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,12 +11,13 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoomChat {
 
-    @Id @GeneratedValue
-    @Column(name = "room_chat_id")
-    private Long cid;
-
+    @Id
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     private String content;
@@ -26,17 +30,6 @@ public class RoomChat {
     @ManyToOne
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
-
-    public RoomChat() {
-    }
-
-    public RoomChat(UUID id, String content, LocalDateTime createdAt, User user, StudyRoom studyRoom) {
-        this.id = id;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.user = user;
-        this.studyRoom = studyRoom;
-    }
 
     public void setUser(User user) {
         this.user = user;

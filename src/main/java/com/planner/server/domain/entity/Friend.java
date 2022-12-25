@@ -1,6 +1,9 @@
 package com.planner.server.domain.entity;
 
+import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,32 +12,23 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Friend {
 
-    @Id @GeneratedValue
-    @Column(name = "friend_list_id")
-    private Long cid;
-
+    @Id
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    private boolean allowYn;
-    private LocalDateTime createdAt;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    private Long friend_id;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "friend_id")
+    private User friend;
 
-    public Friend() {
-    }
+    private LocalDateTime createdAt;
 
-    public Friend(UUID id, boolean allowYn, LocalDateTime createdAt) {
-        this.id = id;
-        this.allowYn = allowYn;
-        this.createdAt = createdAt;
-    }
 }

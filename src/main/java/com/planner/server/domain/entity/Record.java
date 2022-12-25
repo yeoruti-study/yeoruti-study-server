@@ -1,6 +1,9 @@
 package com.planner.server.domain.entity;
 
+import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -9,11 +12,13 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Record {
-    @Id @GeneratedValue
-    @Column(name = "record_id")
-    private Long cid;
 
+    @Id
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     private LocalDateTime recordStartTime;
@@ -26,15 +31,5 @@ public class Record {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Record() {
-    }
-
-    public Record(UUID id, LocalDateTime recordStartTime, LocalDateTime recordEndTime, Duration totalStudyTime) {
-        this.id = id;
-        this.recordStartTime = recordStartTime;
-        this.recordEndTime = recordEndTime;
-        this.totalStudyTime = totalStudyTime;
     }
 }

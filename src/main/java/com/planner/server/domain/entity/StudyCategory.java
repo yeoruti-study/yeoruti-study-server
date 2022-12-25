@@ -1,5 +1,6 @@
 package com.planner.server.domain.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudyCategory {
-    @Id @GeneratedValue
-    @Column(name = "study_room_category_id")
-    private Long cid;
 
+    @Id
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     private String name;

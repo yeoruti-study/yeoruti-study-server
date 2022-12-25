@@ -1,17 +1,22 @@
 package com.planner.server.domain.entity;
 
+import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoomUser {
-    @Id @GeneratedValue
-    @Column(name = "room_user_id")
-    private Long cid;
 
+    @Id
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @ManyToOne
@@ -22,12 +27,4 @@ public class RoomUser {
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    public RoomUser() {
-    }
-
-    public RoomUser(UUID id, User user, StudyRoom studyRoom) {
-        this.id = id;
-        this.user = user;
-        this.studyRoom = studyRoom;
-    }
 }
