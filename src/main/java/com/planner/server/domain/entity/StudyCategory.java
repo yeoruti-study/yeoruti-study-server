@@ -1,6 +1,8 @@
 package com.planner.server.domain.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +11,9 @@ import java.util.UUID;
 
 @Entity
 @Getter
-public class StudyRoomCategory {
+@NoArgsConstructor
+@AllArgsConstructor
+public class StudyCategory {
     @Id @GeneratedValue
     @Column(name = "study_room_category_id")
     private Long cid;
@@ -19,20 +23,18 @@ public class StudyRoomCategory {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "studyRoomCategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "studyCategory", cascade = CascadeType.ALL)
     private List<StudyRoom> studyRooms = new ArrayList<>();
 
     public void addStudyRoom(StudyRoom studyRoom){
         this.studyRooms.add(studyRoom);
-        studyRoom.setStudyRoomCategory(this);
+        studyRoom.setStudyCategory(this);
     }
 
-    public StudyRoomCategory(UUID id, String name, String description) {
+    public StudyCategory(UUID id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public StudyRoomCategory() {
-    }
 }
