@@ -26,4 +26,13 @@ public class StudyRoomCategory {
         this.studyRooms.add(studyRoom);
         studyRoom.setStudyRoomCategory(this);
     }
+
+    public StudyRoomCategory(UUID id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public StudyRoomCategory() {
+    }
 }

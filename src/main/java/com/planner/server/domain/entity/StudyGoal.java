@@ -34,4 +34,19 @@ public class StudyGoal {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public StudyGoal() {
+    }
+
+    public StudyGoal(UUID id, String goalTitle, String goalDetail, String goalTime, LocalDate startDate, LocalDate endDate, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.goalTitle = goalTitle;
+        this.goalDetail = goalDetail;
+        this.goalTime = goalTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.user = user;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

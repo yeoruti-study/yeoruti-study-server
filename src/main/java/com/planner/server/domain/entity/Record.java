@@ -27,4 +27,14 @@ public class Record {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Record() {
+    }
+
+    public Record(UUID id, LocalDateTime recordStartTime, LocalDateTime recordEndTime, Duration totalStudyTime) {
+        this.id = id;
+        this.recordStartTime = recordStartTime;
+        this.recordEndTime = recordEndTime;
+        this.totalStudyTime = totalStudyTime;
+    }
 }

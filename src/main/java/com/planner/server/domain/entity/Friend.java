@@ -28,4 +28,13 @@ public class Friend {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Friend() {
+    }
+
+    public Friend(UUID id, boolean allowYn, LocalDateTime createdAt) {
+        this.id = id;
+        this.allowYn = allowYn;
+        this.createdAt = createdAt;
+    }
 }

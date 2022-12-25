@@ -22,10 +22,12 @@ public class RoomUser {
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    public void setUser(User user){
-        this.user = user;
+    public RoomUser() {
     }
-    public void setStudyRoom(StudyRoom studyRoom){
+
+    public RoomUser(UUID id, User user, StudyRoom studyRoom) {
+        this.id = id;
+        this.user = user;
         this.studyRoom = studyRoom;
     }
 }

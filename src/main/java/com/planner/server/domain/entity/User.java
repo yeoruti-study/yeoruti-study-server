@@ -29,8 +29,8 @@ public class User {
     private short profileAge;
 
     private Role roles;
-    private boolean friendRecommendPermission;
-    private boolean alarmPermission;
+    private Boolean friendRecommendPermission;
+    private Boolean alarmPermission;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -44,6 +44,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<StudyGoal> studyGoals = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<RoomChat> roomChats = new ArrayList<>();
+
     public void addRecord(Record record) {
         this.records.add(record);
         record.setUser(this);
@@ -52,5 +55,25 @@ public class User {
     public void addStudyGoal(StudyGoal studyGoal) {
         this.studyGoals.add(studyGoal);
         studyGoal.setUser(this);
+    }
+
+    public void addRoomChats(RoomChat roomChat){
+        this.roomChats.add(roomChat);
+        roomChat.setUser(this);
+    }
+
+    public User() {
+    }
+
+    public User(UUID id, String userName, String passWord, String nickName, String profileName, short profileAge, Role roles, boolean friendRecommendPermission, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.userName = userName;
+        this.passWord = passWord;
+        this.nickName = nickName;
+        this.profileName = profileName;
+        this.profileAge = profileAge;
+        this.roles = roles;
+        this.friendRecommendPermission = friendRecommendPermission;
+        this.alarmPermission = alarmPermission;
     }
 }

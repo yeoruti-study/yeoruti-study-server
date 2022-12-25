@@ -21,4 +21,12 @@ public class AttendanceCheck {
     private User user;
 
     private LocalDateTime createdAt;
+
+    public AttendanceCheck() {
+    }
+
+    public AttendanceCheck(UUID id, LocalDateTime createdAt) {
+        this.id = id;
+        this.createdAt = createdAt;
+    }
 }
