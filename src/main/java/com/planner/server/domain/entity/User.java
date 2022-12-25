@@ -51,6 +51,9 @@ public class User {
     private List<Friend> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    private List<Attendance> attendances = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -64,6 +67,10 @@ public class User {
         record.setUser(this);
     }
 
+    public void addAttendance(Attendance attendance){
+        this.attendances.add(attendance);
+        attendance.setUser(this);
+    }
     public void addStudyGoal(StudyGoal studyGoal) {
         this.studyGoals.add(studyGoal);
         studyGoal.setUser(this);

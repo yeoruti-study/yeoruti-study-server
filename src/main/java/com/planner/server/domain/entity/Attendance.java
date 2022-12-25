@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,14 +14,15 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttendanceCheck {
+public class Attendance {
 
     @Id
     @NotNull
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @OneToOne
+    @Setter
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
