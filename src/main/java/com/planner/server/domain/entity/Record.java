@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -22,14 +23,13 @@ public class Record {
     private UUID id;
 
     private LocalDateTime recordStartTime;
+
     private LocalDateTime recordEndTime;
+
     private Duration totalStudyTime;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
