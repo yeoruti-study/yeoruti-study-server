@@ -7,23 +7,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomUser {
+public class ChatRoom {
 
     @Id
     @NotNull
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String content;
+
+    private LocalDateTime createdAt;
 
     @Setter
     @ManyToOne

@@ -4,16 +4,17 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.JoinColumnOrFormula;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class RoomChat {
+@NoArgsConstructor
+public class ChatMessage {
 
     @Id
     @NotNull
@@ -21,17 +22,15 @@ public class RoomChat {
     private UUID id;
 
     private String content;
-    private LocalDateTime createdAt;
 
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "chat_message_id")
+    private ChatRoom chatRoom;
+
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "study_room_id")
-    private StudyRoom studyRoom;
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
