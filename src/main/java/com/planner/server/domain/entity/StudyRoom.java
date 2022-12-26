@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -35,15 +36,25 @@ public class StudyRoom {
 
     private LocalDateTime updatedAt;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_category_id")
     private StudyCategory studyCategory;
 
     @OneToMany(mappedBy = "studyRoom")
-    private List<RoomChat> roomChats = new ArrayList<>();
+    private List<RoomUser> roomUsers = new ArrayList<>();
 
-    public void setStudyCategory(StudyCategory studyCategory) {
-        this.studyCategory = studyCategory;
+    @OneToMany(mappedBy = "studyRoom")
+    private List<ChatRoom> roomChats = new ArrayList<>();
+
+    public void addRoomUser(RoomUser roomUser){
+        this.roomUsers.add(roomUser);
+        roomUser.setStudyRoom(this);
+    }
+
+    public void addRoomChat(ChatRoom chatRoom){
+        this.roomChats.add(chatRoom);
+        chatRoom.setStudyRoom(this);
     }
 
 }

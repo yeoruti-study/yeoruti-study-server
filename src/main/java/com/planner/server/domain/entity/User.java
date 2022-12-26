@@ -60,29 +60,29 @@ public class User {
     private List<StudyGoal> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<RoomChat> roomChats = new ArrayList<>();
+    private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public void addFriend(Friend friend){
+        this.friends.add(friend);
+        friend.setUser(this);
+    }
+    public void addAttendance(Attendance attendance){
+        this.attendances.add(attendance);
+        attendance.setUser(this);
+    }
 
     public void addRecord(Record record) {
         this.records.add(record);
         record.setUser(this);
-    }
-
-    public void addAttendance(Attendance attendance){
-        this.attendances.add(attendance);
-        attendance.setUser(this);
     }
     public void addStudyGoal(StudyGoal studyGoal) {
         this.studyGoals.add(studyGoal);
         studyGoal.setUser(this);
     }
 
-    public void addRoomChats(RoomChat roomChat){
-        this.roomChats.add(roomChat);
-        roomChat.setUser(this);
-    }
-
-    public void addFriend(User friend) {
-
+    public void addChatMessages(ChatMessage chatMessage){
+        this.chatMessages.add(chatMessage);
+        chatMessage.setUser(this);
     }
 
 }
