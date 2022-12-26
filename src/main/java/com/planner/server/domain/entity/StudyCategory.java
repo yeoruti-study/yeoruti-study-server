@@ -22,20 +22,15 @@ public class StudyCategory {
     private UUID id;
 
     private String name;
+
     private String description;
 
-    @OneToMany(mappedBy = "studyCategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "studyCategory")
     private List<StudyRoom> studyRooms = new ArrayList<>();
 
     public void addStudyRoom(StudyRoom studyRoom){
         this.studyRooms.add(studyRoom);
         studyRoom.setStudyCategory(this);
-    }
-
-    public StudyCategory(UUID id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
     }
 
 }
