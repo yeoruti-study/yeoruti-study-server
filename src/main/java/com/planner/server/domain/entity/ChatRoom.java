@@ -23,13 +23,15 @@ public class ChatRoom {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    private String content;
-
     private LocalDateTime createdAt;
 
+    private String title;
+
     @Setter
-    @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @OneToOne(mappedBy = "chatRoom")
     private StudyRoom studyRoom;
+
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 
 }
