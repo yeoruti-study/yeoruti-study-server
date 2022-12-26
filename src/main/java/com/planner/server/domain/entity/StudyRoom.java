@@ -44,18 +44,17 @@ public class StudyRoom {
     @OneToMany(mappedBy = "studyRoom")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    @OneToMany(mappedBy = "studyRoom")
+    private List<RoomChat> roomChats = new ArrayList<>();
 
     public void addRoomUser(RoomUser roomUser){
         this.roomUsers.add(roomUser);
         roomUser.setStudyRoom(this);
     }
 
-    public void addChatRoom(ChatRoom chatRoom){
-        this.chatRoom = chatRoom;
-        chatRoom.setStudyRoom(this);
+    public void addRoomChat(RoomChat roomChat){
+        this.roomChats.add(roomChat);
+        roomChat.setStudyRoom(this);
     }
 
 }

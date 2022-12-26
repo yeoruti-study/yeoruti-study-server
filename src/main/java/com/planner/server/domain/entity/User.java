@@ -28,9 +28,6 @@ public class User {
 
     private String password;
 
-    @Column(name = "nickname")
-    private String nickName;
-
     private UUID salt;
 
     private Role roles;
@@ -39,9 +36,9 @@ public class User {
 
     private short profileAge;
 
-    private Boolean alarmPermission;
+    private boolean alarmPermission;
 
-    private Boolean friendAcceptance;
+    private boolean friendAcceptance;
 
     private LocalDateTime createdAt;
 
@@ -60,8 +57,7 @@ public class User {
     private List<StudyGoal> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
-
+    private List<RoomChat> roomChats = new ArrayList<>();
     public void addFriend(Friend friend){
         this.friends.add(friend);
         friend.setUser(this);
@@ -80,9 +76,9 @@ public class User {
         studyGoal.setUser(this);
     }
 
-    public void addChatMessages(ChatMessage chatMessage){
-        this.chatMessages.add(chatMessage);
-        chatMessage.setUser(this);
+    public void addRoomChats(RoomChat roomChat){
+        this.roomChats.add(roomChat);
+        roomChat.setUser(this);
     }
 
 }

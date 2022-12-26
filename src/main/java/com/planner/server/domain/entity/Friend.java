@@ -34,4 +34,6 @@ public class Friend {
 
     private LocalDateTime createdAt;
 
+    private boolean allow;
+
 }
