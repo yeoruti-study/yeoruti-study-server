@@ -1,5 +1,8 @@
-package com.planner.server.domain.entity;
+package com.planner.server.domain.study_room;
 
+import com.planner.server.domain.study_category.StudyCategory;
+import com.planner.server.domain.room_chat.RoomChat;
+import com.planner.server.domain.room_user.RoomUser;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,7 @@
-package com.planner.server.domain.entity;
+package com.planner.server.domain.room_chat;
 
+import com.planner.server.domain.study_room.StudyRoom;
+import com.planner.server.domain.user.User;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,21 +16,25 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Record {
+public class RoomChat {
 
     @Id
     @NotNull
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    private LocalDateTime recordStartTime;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime recordEndTime;
+    private String content;
 
-    private Duration totalStudyTime;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "study_room_id")
+    private StudyRoom studyRoom;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
+
 }

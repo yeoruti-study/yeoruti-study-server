@@ -1,5 +1,6 @@
-package com.planner.server.domain.entity;
+package com.planner.server.domain.study_category;
 
+import com.planner.server.domain.study_room.StudyRoom;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

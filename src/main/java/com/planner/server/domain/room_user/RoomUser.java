@@ -1,5 +1,7 @@
-package com.planner.server.domain.entity;
+package com.planner.server.domain.room_user;
 
+import com.planner.server.domain.study_room.StudyRoom;
+import com.planner.server.domain.user.User;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,15 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Friend {
+public class RoomUser {
 
     @Id
     @NotNull
@@ -23,17 +23,13 @@ public class Friend {
     private UUID id;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_id")
-    private User friend;
-
-    private LocalDateTime createdAt;
-
-    private boolean allow;
+    @ManyToOne
+    @JoinColumn(name = "study_room_id")
+    private StudyRoom studyRoom;
 
 }

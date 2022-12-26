@@ -1,6 +1,11 @@
-package com.planner.server.domain.entity;
+package com.planner.server.domain.user;
 
 import com.planner.server.Role;
+import com.planner.server.domain.attendance_check.AttendanceCheck;
+import com.planner.server.domain.friend.Friend;
+import com.planner.server.domain.record.Record;
+import com.planner.server.domain.room_chat.RoomChat;
+import com.planner.server.domain.study_goal.StudyGoal;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,7 +53,7 @@ public class User {
     private List<Friend> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Attendance> attendances = new ArrayList<>();
+    private List<AttendanceCheck> attendances = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
@@ -62,7 +67,7 @@ public class User {
         this.friends.add(friend);
         friend.setUser(this);
     }
-    public void addAttendance(Attendance attendance){
+    public void addAttendance(AttendanceCheck attendance){
         this.attendances.add(attendance);
         attendance.setUser(this);
     }

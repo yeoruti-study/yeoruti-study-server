@@ -1,5 +1,6 @@
-package com.planner.server.domain.entity;
+package com.planner.server.domain.attendance_check;
 
+import com.planner.server.domain.user.User;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,26 +15,18 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyGoal {
+public class AttendanceCheck {
 
     @Id
     @NotNull
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    private String goalTitle;
-
-    private String goalDetail;
-
-    private Duration goalTime;
-
-    private LocalDate startDate;
-
-    private LocalDate endDate;
-
     @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private LocalDateTime createdAt;
 
 }
