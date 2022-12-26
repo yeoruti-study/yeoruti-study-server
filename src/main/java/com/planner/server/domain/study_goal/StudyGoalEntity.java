@@ -26,10 +26,7 @@ public class StudyGoalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-
-    @Column(name = "study_goal_id")
-    private UUID id;
+    private Long id;
 
     private String goalTitle;
 

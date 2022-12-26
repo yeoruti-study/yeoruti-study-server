@@ -25,21 +25,19 @@ public class FriendEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
+    private Long id;
 
-    @Column(name = "friend_id")
-    private UUID id;
-
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "friend_id")
     private UserEntity friend;
 
-    private Boolean friendAcceptance;
+    private boolean allow;
     
     private LocalDateTime createdAt;
 }

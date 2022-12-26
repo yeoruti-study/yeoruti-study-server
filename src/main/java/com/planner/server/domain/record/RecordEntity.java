@@ -26,10 +26,7 @@ public class RecordEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-    
-    @Column(name = "record_id")
-    private UUID id;
+    private Long id;
     
     private LocalDateTime startTime;
     

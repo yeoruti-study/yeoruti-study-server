@@ -32,10 +32,7 @@ public class StudyRoomEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-
-    @Column(name = "study_room_id")
-    private UUID id;
+    private Long id;
 
     private String name;
 
@@ -60,10 +57,10 @@ public class StudyRoomEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "studyRoom")
-    List<RoomUserEntity> roomUsers = new ArrayList<RoomUserEntity>();
+    List<RoomUserEntity> roomUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "studyRoom")
-    List<RoomChatEntity> roomChats = new ArrayList<RoomChatEntity>();
+    List<RoomChatEntity> roomChats = new ArrayList<>();
 
     public void addRoomUser(RoomUserEntity roomUser) {
         this.roomUsers.add(roomUser);

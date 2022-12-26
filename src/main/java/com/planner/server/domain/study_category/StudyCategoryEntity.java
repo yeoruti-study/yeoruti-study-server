@@ -2,9 +2,7 @@ package com.planner.server.domain.study_category;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,17 +21,14 @@ public class StudyCategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-
-    @Column(name = "study_category_id")
-    private UUID id;
+    private Long id;
 
     private String name;
 
     private String description;
 
     @OneToMany(mappedBy = "studyCategory")
-    List<StudyRoomEntity> studyRooms = new ArrayList<StudyRoomEntity>();
+    List<StudyRoomEntity> studyRooms = new ArrayList<>();
 
     public void addStudyRoom(StudyRoomEntity studyRoom) {
         this.studyRooms.add(studyRoom);

@@ -1,7 +1,6 @@
 package com.planner.server.domain.attendance_check;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +24,7 @@ public class AttendanceCheckEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-
-    @Column(name = "attendance_check_id")
-    private UUID id;
+    private Long id;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)

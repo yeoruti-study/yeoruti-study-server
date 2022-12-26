@@ -30,10 +30,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-
-    @Column(name = "uesr_id")
-    private UUID id;
+    private Long id;
 
     private String username;
 
@@ -49,42 +46,33 @@ public class UserEntity {
 
     private Integer profileAge;
 
-    private Boolean alarmPermission;
+    private boolean friendAcceptance;
+
+    private boolean alarmPermission;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    List<StudyRoomEntity> studyRooms = new ArrayList<StudyRoomEntity>();
+    List<StudyRoomEntity> studyRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<RoomChatEntity> roomChats = new ArrayList<RoomChatEntity>();
+    List<RecordEntity> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<RecordEntity> records = new ArrayList<RecordEntity>();
+    List<StudyGoalEntity> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<StudyGoalEntity> studyGoals = new ArrayList<StudyGoalEntity>();
-
-    @OneToMany(mappedBy = "user")
-    List<AttendanceCheckEntity> attendanceChecks = new ArrayList<AttendanceCheckEntity>();
-
-    @OneToMany(mappedBy = "user")
-    List<RoomUserEntity> roomUsers = new ArrayList<RoomUserEntity>();
+    List<AttendanceCheckEntity> attendanceChecks = new ArrayList<>();
 
     // friend의 friend
     @OneToMany(mappedBy = "user")
-    List<FriendEntity> friends = new ArrayList<FriendEntity>();
+    List<FriendEntity> friends = new ArrayList<>();
 
     public void addStudyRoom(StudyRoomEntity studyRoom) {
         this.studyRooms.add(studyRoom);
         studyRoom.setUser(this);
-    }
-
-    public void addRoomChat(RoomChatEntity roomChat) {
-        this.roomChats.add(roomChat);
-        roomChat.setUser(this);
     }
 
     public void addRecord(RecordEntity record) {
@@ -102,13 +90,8 @@ public class UserEntity {
         attendanceCheck.setUser(this);
     }
 
-    public void addRoomUser(RoomUserEntity roomUser) {
-        this.roomUsers.add(roomUser);
-        roomUser.setUser(this);
-    }
-
     public void addFriend(FriendEntity friend) {
         this.friends.add(friend);
-        friend.setFriend(this);
+        friend.setUser(this);
     }
 }

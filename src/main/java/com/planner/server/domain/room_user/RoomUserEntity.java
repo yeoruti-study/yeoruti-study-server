@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.planner.server.domain.study_room.StudyRoomEntity;
-import com.planner.server.domain.user.entity.UserEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,18 +24,10 @@ public class RoomUserEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long cid;
-
-    @Column(name = "room_user_id")
-    private UUID id;
+    private Long id;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_room_id")
     private StudyRoomEntity studyRoom;
-
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
 }
