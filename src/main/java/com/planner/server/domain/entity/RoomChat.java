@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.util.Lazy;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom {
+public class RoomChat {
 
     @Id
     @NotNull
@@ -25,13 +26,16 @@ public class ChatRoom {
 
     private LocalDateTime createdAt;
 
-    private String title;
+    private String content;
 
     @Setter
-    @OneToOne(mappedBy = "chatRoom")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    @OneToMany(mappedBy = "chatRoom")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
