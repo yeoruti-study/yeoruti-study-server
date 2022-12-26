@@ -38,6 +38,4 @@ public class StudyGoal {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDateTime createdAt;
-
 }
