@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,30 +12,26 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.planner.server.domain.attendance_check.AttendanceCheckEntity;
-import com.planner.server.domain.friend.FriendEntity;
-import com.planner.server.domain.record.RecordEntity;
-import com.planner.server.domain.room_chat.RoomChatEntity;
-import com.planner.server.domain.room_user.RoomUserEntity;
-import com.planner.server.domain.study_goal.StudyGoalEntity;
-import com.planner.server.domain.study_room.StudyRoomEntity;
+import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
+import com.planner.server.domain.friend.entity.Friend;
+import com.planner.server.domain.record.entity.Record;
+import com.planner.server.domain.room_user.entity.RoomUser;
+import com.planner.server.domain.study_goal.entity.StudyGoal;
+import com.planner.server.domain.study_room.entity.StudyRoom;
 
 import lombok.Getter;
 
 @Entity
 @Table(name = "user")
 @Getter
-public class UserEntity {
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
     private String username;
 
     private String password;
-
-    private String nickname;
 
     private UUID salt;
 
@@ -44,7 +39,7 @@ public class UserEntity {
 
     private String profileName;
 
-    private Integer profileAge;
+    private int profileAge;
 
     private boolean friendAcceptance;
 
@@ -55,42 +50,50 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    List<StudyRoomEntity> studyRooms = new ArrayList<>();
+    List<Record> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<RecordEntity> records = new ArrayList<>();
+    List<StudyGoal> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<StudyGoalEntity> studyGoals = new ArrayList<>();
+    List<AttendanceCheck> attendanceChecks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<AttendanceCheckEntity> attendanceChecks = new ArrayList<>();
+    List<RoomUser> roomUsers = new ArrayList<>();
 
     // friend의 friend
     @OneToMany(mappedBy = "user")
-    List<FriendEntity> friends = new ArrayList<>();
+    List<Friend> friends = new ArrayList<>();
 
-    public void addStudyRoom(StudyRoomEntity studyRoom) {
+    @OneToMany(mappedBy = "user")
+    List<StudyRoom> studyRooms = new ArrayList<>();
+
+    public void addStudyRoom(StudyRoom studyRoom) {
         this.studyRooms.add(studyRoom);
         studyRoom.setUser(this);
     }
 
-    public void addRecord(RecordEntity record) {
+    public void addRoomUser(RoomUser roomUser) {
+        this.roomUsers.add(roomUser);
+        roomUser.setUser(this);
+    }
+
+    public void addRecord(Record record) {
         this.records.add(record);
         record.setUser(this);
     }
 
-    public void addStudyGoal(StudyGoalEntity studyGoal) {
+    public void addStudyGoal(StudyGoal studyGoal) {
         this.studyGoals.add(studyGoal);
         studyGoal.setUser(this);
     }
 
-    public void addAttendanceCheck(AttendanceCheckEntity attendanceCheck) {
+    public void addAttendanceCheck(AttendanceCheck attendanceCheck) {
         this.attendanceChecks.add(attendanceCheck);
         attendanceCheck.setUser(this);
     }
 
-    public void addFriend(FriendEntity friend) {
+    public void addFriend(Friend friend) {
         this.friends.add(friend);
         friend.setUser(this);
     }

@@ -1,6 +1,8 @@
-package com.planner.server.domain.attendance_check;
+package com.planner.server.domain.record.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,24 +14,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.planner.server.domain.user.entity.UserEntity;
+import com.planner.server.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "attendance_check")
+@Table(name = "record")
 @Getter
-public class AttendanceCheckEntity {
-
+public class Record {
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
+    
+    private LocalDateTime startTime;
+    
+    private LocalDateTime endTime;
+
+    private Duration totalStudyTime;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
-
-    private LocalDateTime createdAt;
+    private User user;
 }

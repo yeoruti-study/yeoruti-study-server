@@ -1,7 +1,8 @@
-package com.planner.server.domain.study_category;
+package com.planner.server.domain.study_category.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,27 +11,26 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.planner.server.domain.study_room.StudyRoomEntity;
+import com.planner.server.domain.study_room.entity.StudyRoom;
 
 import lombok.Getter;
 
 @Entity
 @Table(name = "study_category")
 @Getter
-public class StudyCategoryEntity {
+public class StudyCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
     private String name;
 
     private String description;
 
     @OneToMany(mappedBy = "studyCategory")
-    List<StudyRoomEntity> studyRooms = new ArrayList<>();
+    List<StudyRoom> studyRooms = new ArrayList<>();
 
-    public void addStudyRoom(StudyRoomEntity studyRoom) {
+    public void addStudyRoom(StudyRoom studyRoom) {
         this.studyRooms.add(studyRoom);
         studyRoom.setStudyCategory(this);
     }

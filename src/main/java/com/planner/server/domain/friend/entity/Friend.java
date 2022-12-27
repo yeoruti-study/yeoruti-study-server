@@ -1,5 +1,6 @@
-package com.planner.server.domain.room_user;
+package com.planner.server.domain.friend.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -12,22 +13,30 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.planner.server.domain.study_room.StudyRoomEntity;
+import com.planner.server.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Table(name = "room_user")
+@Table
+@Entity(name = "friend")
 @Getter
-public class RoomUserEntity {
+public class Friend {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_room_id")
-    private StudyRoomEntity studyRoom;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "friend_id")
+    private User friend;
+
+    private boolean allow;
+    
+    private LocalDateTime createdAt;
 }

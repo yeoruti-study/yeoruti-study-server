@@ -1,4 +1,4 @@
-package com.planner.server.domain.study_room;
+package com.planner.server.domain.study_room.entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -6,21 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.planner.server.domain.room_chat.RoomChatEntity;
-import com.planner.server.domain.room_user.RoomUserEntity;
-import com.planner.server.domain.study_category.StudyCategoryEntity;
-import com.planner.server.domain.user.entity.UserEntity;
+import com.planner.server.domain.room_chat.entity.RoomChat;
+import com.planner.server.domain.room_user.entity.RoomUser;
+import com.planner.server.domain.study_category.entity.StudyCategory;
+import com.planner.server.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,46 +25,45 @@ import lombok.Setter;
 @Entity
 @Table(name = "study_room")
 @Getter
-public class StudyRoomEntity {
+public class StudyRoom {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
     private String name;
 
-    private Integer maximumNumberOfPeople;
+    private int maximumNumberOfPeople;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_category_id")
-    private StudyCategoryEntity studyCategory;
+    private StudyCategory studyCategory;
 
     private Duration studyGoalTime;
 
     private String roomPassword;
 
-    private LocalDateTime createdAt;
-
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private User user;
+    
+    private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "studyRoom")
-    List<RoomUserEntity> roomUsers = new ArrayList<>();
+    List<RoomUser> roomUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "studyRoom")
-    List<RoomChatEntity> roomChats = new ArrayList<>();
+    List<RoomChat> roomChats = new ArrayList<>();
 
-    public void addRoomUser(RoomUserEntity roomUser) {
+    public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);
         roomUser.setStudyRoom(this);
     }
 
-    public void addRoomChat(RoomChatEntity roomChat) {
+    public void addRoomChat(RoomChat roomChat) {
         this.roomChats.add(roomChat);
         roomChat.setStudyRoom(this);
     }
