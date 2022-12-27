@@ -35,7 +35,7 @@ public class User {
 
     private UUID salt;
 
-    private Role roles;
+    private String roles;
 
     private String profileName;
 
@@ -53,7 +53,7 @@ public class User {
     private List<Friend> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<AttendanceCheck> attendances = new ArrayList<>();
+    private List<AttendanceCheck> attendanceChecks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
@@ -63,12 +63,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<RoomChat> roomChats = new ArrayList<>();
+
     public void addFriend(Friend friend){
         this.friends.add(friend);
         friend.setUser(this);
     }
-    public void addAttendance(AttendanceCheck attendance){
-        this.attendances.add(attendance);
+    public void addAttendanceCheck(AttendanceCheck attendance){
+        this.attendanceChecks.add(attendance);
         attendance.setUser(this);
     }
 

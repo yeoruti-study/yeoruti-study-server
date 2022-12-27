@@ -34,7 +34,7 @@ public class StudyGoal {
     private LocalDate endDate;
 
     @Setter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
