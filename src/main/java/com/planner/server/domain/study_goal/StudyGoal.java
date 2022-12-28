@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -20,7 +21,7 @@ public class StudyGoal {
 
     @Id
     @NotNull
-    @Column(columnDefinition = "BINARY(16)")
+    @Type(type = "uuid-char")
     private UUID id;
 
     private String goalTitle;
