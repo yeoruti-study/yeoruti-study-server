@@ -46,7 +46,7 @@ public class User {
 
     private short profileAge;
 
-    private String profileImageUrlPath;
+    private String profileImagePath;
 
     private boolean friendAcceptance;
 
