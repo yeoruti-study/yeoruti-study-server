@@ -21,14 +21,19 @@ public class Record {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+
     @Type(type = "uuid-char")
     private UUID id;
 
-    private LocalDateTime recordStartTime;
+    private LocalDateTime startTime;
 
-    private LocalDateTime recordEndTime;
+    private LocalDateTime endTime;
 
     private Duration totalStudyTime;
+
+    private boolean studying;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)

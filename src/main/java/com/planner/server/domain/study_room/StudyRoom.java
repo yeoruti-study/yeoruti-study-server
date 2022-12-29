@@ -25,12 +25,20 @@ public class StudyRoom {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+
     @Type(type = "uuid-char")
     private UUID id;
 
     private String name;
 
     private int maximumNumberOfPeople;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "study_category_id")
+    private StudyCategory studyCategory;
 
     private LocalTime studyGoalTime;
 
@@ -40,10 +48,7 @@ public class StudyRoom {
 
     private LocalDateTime updatedAt;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_category_id")
-    private StudyCategory studyCategory;
+    private UUID masterUserId;
 
     @OneToMany(mappedBy = "studyRoom")
     private List<RoomUser> roomUsers = new ArrayList<>();

@@ -21,10 +21,11 @@ public class RoomChat {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+
     @Type(type = "uuid-char")
     private UUID id;
-
-    private LocalDateTime createdAt;
 
     private String content;
 
@@ -33,9 +34,5 @@ public class RoomChat {
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private LocalDateTime createdAt;
 }

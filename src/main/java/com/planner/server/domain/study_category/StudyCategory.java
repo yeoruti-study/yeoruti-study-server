@@ -20,6 +20,9 @@ public class StudyCategory {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+
     @Type(type = "uuid-char")
     private UUID id;
 

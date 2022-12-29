@@ -5,6 +5,7 @@ import com.planner.server.domain.attendance_check.AttendanceCheck;
 import com.planner.server.domain.friend.Friend;
 import com.planner.server.domain.record.Record;
 import com.planner.server.domain.room_chat.RoomChat;
+import com.planner.server.domain.room_user.RoomUser;
 import com.planner.server.domain.study_goal.StudyGoal;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,9 @@ public class User {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+
     @Type(type = "uuid-char")
     private UUID id;
 
@@ -42,19 +46,15 @@ public class User {
 
     private short profileAge;
 
-    private boolean alarmPermission;
+    private String profileImageUrlPath;
 
     private boolean friendAcceptance;
+
+    private boolean alarmPermission;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "user")
-    private List<Friend> friends = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<AttendanceCheck> attendanceChecks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
@@ -63,15 +63,17 @@ public class User {
     private List<StudyGoal> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<RoomChat> roomChats = new ArrayList<>();
+    private List<AttendanceCheck> attendanceChecks = new ArrayList<>();
 
-    public void addFriend(Friend friend){
-        this.friends.add(friend);
-        friend.setUser(this);
-    }
-    public void addAttendanceCheck(AttendanceCheck attendance){
-        this.attendanceChecks.add(attendance);
-        attendance.setUser(this);
+    @OneToMany(mappedBy = "user")
+    private List<RoomUser> roomUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Friend> friends = new ArrayList<>();
+
+    public void addRoomUser(RoomUser roomUser){
+        this.roomUsers.add(roomUser);
+        roomUser.setUser(this);
     }
 
     public void addRecord(Record record) {
@@ -83,9 +85,13 @@ public class User {
         studyGoal.setUser(this);
     }
 
-    public void addRoomChats(RoomChat roomChat){
-        this.roomChats.add(roomChat);
-        roomChat.setUser(this);
+    public void addAttendanceCheck(AttendanceCheck attendance){
+        this.attendanceChecks.add(attendance);
+        attendance.setUser(this);
     }
 
+    public void addFriend(Friend friend){
+        this.friends.add(friend);
+        friend.setUser(this);
+    }
 }

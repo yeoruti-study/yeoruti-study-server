@@ -20,6 +20,9 @@ public class Friend {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+
     @Type(type = "uuid-char")
     private UUID id;
 
@@ -33,8 +36,8 @@ public class Friend {
     @JoinColumn(name = "friend_id")
     private User friend;
 
-    private LocalDateTime createdAt;
-
     private boolean allow;
+
+    private LocalDateTime createdAt;
 
 }
