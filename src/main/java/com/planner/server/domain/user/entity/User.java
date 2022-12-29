@@ -12,12 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
 import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
-import com.planner.server.domain.study_room.entity.StudyRoom;
 
 import lombok.Getter;
 
@@ -27,6 +28,10 @@ import lombok.Getter;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+    
+    @Type(type = "uuid-char")
     private UUID id;
 
     private String username;
@@ -40,6 +45,8 @@ public class User {
     private String profileName;
 
     private int profileAge;
+
+    private String profileImageUrl;
 
     private boolean friendAcceptance;
 
@@ -61,17 +68,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<RoomUser> roomUsers = new ArrayList<>();
 
-    // friend의 friend
     @OneToMany(mappedBy = "user")
     List<Friend> friends = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    List<StudyRoom> studyRooms = new ArrayList<>();
-
-    public void addStudyRoom(StudyRoom studyRoom) {
-        this.studyRooms.add(studyRoom);
-        studyRoom.setUser(this);
-    }
 
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);

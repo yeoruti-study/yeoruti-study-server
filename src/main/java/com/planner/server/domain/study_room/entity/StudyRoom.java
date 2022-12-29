@@ -8,16 +8,19 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.planner.server.domain.room_chat.entity.RoomChat;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_category.entity.StudyCategory;
-import com.planner.server.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +31,10 @@ import lombok.Setter;
 public class StudyRoom {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+    
+    @Type(type = "uuid-char")
     private UUID id;
 
     private String name;
@@ -42,15 +49,12 @@ public class StudyRoom {
     private Duration studyGoalTime;
 
     private String roomPassword;
-
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
     
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private UUID masterUserId;
 
     @OneToMany(mappedBy = "studyRoom")
     List<RoomUser> roomUsers = new ArrayList<>();
