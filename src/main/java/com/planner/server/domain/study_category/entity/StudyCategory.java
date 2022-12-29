@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.planner.server.domain.study_room.entity.StudyRoom;
 
 import lombok.Getter;
@@ -21,6 +23,10 @@ import lombok.Getter;
 public class StudyCategory {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cid;
+    
+    @Type(type = "uuid-char")
     private UUID id;
 
     private String name;
