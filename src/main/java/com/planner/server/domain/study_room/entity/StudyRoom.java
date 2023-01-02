@@ -57,10 +57,10 @@ public class StudyRoom {
     private UUID masterUserId;
 
     @OneToMany(mappedBy = "studyRoom")
-    List<RoomUser> roomUsers = new ArrayList<>();
+    private List<RoomUser> roomUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "studyRoom")
-    List<RoomChat> roomChats = new ArrayList<>();
+    private List<RoomChat> roomChats = new ArrayList<>();
 
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);

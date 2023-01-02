@@ -46,7 +46,7 @@ public class User {
 
     private int profileAge;
 
-    private String profileImageUrl;
+    private String profileImagePath;
 
     private boolean friendAcceptance;
 
@@ -57,19 +57,19 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    List<Record> records = new ArrayList<>();
+    private List<Record> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<StudyGoal> studyGoals = new ArrayList<>();
+    private List<StudyGoal> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<AttendanceCheck> attendanceChecks = new ArrayList<>();
+    private List<AttendanceCheck> attendanceChecks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<RoomUser> roomUsers = new ArrayList<>();
+    private List<RoomUser> roomUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<Friend> friends = new ArrayList<>();
+    private List<Friend> friends = new ArrayList<>();
 
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);
