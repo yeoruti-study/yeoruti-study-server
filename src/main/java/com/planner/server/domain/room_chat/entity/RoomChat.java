@@ -3,7 +3,6 @@ package com.planner.server.domain.room_chat.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import javax.annotation.processing.Generated;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,7 +15,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.study_room.entity.StudyRoom;
-import com.planner.server.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
