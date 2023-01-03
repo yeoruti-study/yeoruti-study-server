@@ -54,6 +54,7 @@ public class StudyRoom {
 
     private LocalDateTime updatedAt;
 
+    @Type(type = "uuid-char")
     private UUID masterUserId;
 
     @OneToMany(mappedBy = "studyRoom")
