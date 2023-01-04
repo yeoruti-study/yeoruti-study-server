@@ -38,6 +38,7 @@ public class User {
 
     private String password;
 
+    @Type(type = "uuid-char")
     private UUID salt;
 
     private String roles;
