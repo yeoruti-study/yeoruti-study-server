@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
@@ -44,4 +45,9 @@ public class Record {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_study_subject_id")
+    private UserStudySubject userStudySubject;
+
 }

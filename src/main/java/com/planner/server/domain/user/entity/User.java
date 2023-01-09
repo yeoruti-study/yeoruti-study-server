@@ -6,6 +6,7 @@ import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
 import com.planner.server.domain.user.dto.UpdateProfileReqDto;
+import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -83,6 +84,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Friend> friends = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user")
+    private UserStudySubject userStudySubject;
 
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);
