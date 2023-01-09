@@ -1,7 +1,7 @@
-package com.planner.server.domain.record.entity;
+package com.planner.server.domain.user_study_subject.entity;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -16,16 +16,22 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.user.entity.User;
-import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Entity
-@Table(name = "record")
 @Getter
-public class Record {
+@ToString
+@Entity
+@Table(name = "user_study_subject")
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserStudySubject {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,22 +39,19 @@ public class Record {
     
     @Type(type = "uuid-char")
     private UUID id;
-    
-    private LocalDateTime startTime;
-    
-    private LocalDateTime endTime;
 
-    private Duration totalStudyTime;
+    private String title;
 
-    private boolean studying;
-
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_category_subject_id")
-    private UserStudySubject userStudySubject;
-
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "")
+    private List<Record> records = new ArrayList<>();
+
+    public void addRecord(Record record) {
+        this.addRecord(record);
+        record.setUserStudySubject(this);
+    }
 }

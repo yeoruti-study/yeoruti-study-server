@@ -19,6 +19,7 @@ import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
+import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 
 import lombok.Getter;
 
@@ -72,6 +73,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Friend> friends = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<UserStudySubject> userStudySubjects = new ArrayList<>();
+
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);
         roomUser.setUser(this);
@@ -95,5 +99,10 @@ public class User {
     public void addFriend(Friend friend) {
         this.friends.add(friend);
         friend.setUser(this);
+    }
+
+    public void addUserStudySubject(UserStudySubject userStudySubject) {
+        this.userStudySubjects.add(userStudySubject);
+        userStudySubject.setUser(this);
     }
 }
