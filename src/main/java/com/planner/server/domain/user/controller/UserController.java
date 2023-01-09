@@ -1,9 +1,6 @@
 package com.planner.server.domain.user.controller;
 
-import com.planner.server.domain.user.dto.SaveUserReqDto;
-import com.planner.server.domain.user.dto.SaveUserResDto;
-import com.planner.server.domain.user.dto.UserDto;
-import com.planner.server.domain.user.dto.UserListDto;
+import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +16,7 @@ public class UserController {
 
     /**
      * 회원가입 - 유저생성 */
-    @PostMapping ("/save")
+    @PostMapping ("")
     public SaveUserResDto signIn(@RequestBody SaveUserReqDto req){
         return userService.save(req);
     }
@@ -41,8 +38,25 @@ public class UserController {
 
     /**
      * 프로필 이름으로 조회 */
-    @GetMapping("/profilename")
+    @GetMapping("/profile")
     public UserDto findByProfileName(@RequestParam String name) {
         return userService.findByProfileName(name);
+    }
+
+    /**
+     * 유저 프로필 수정 (수정 예정)*/
+    @PatchMapping("/profile")
+    public String updateUserProfile(@RequestBody UpdateProfileReqDto req){
+        if(userService.changeProfile(req) == true)
+            return "SUCCESS";
+        else return "FAIL";
+    }
+
+    /**
+     * 유저 삭제*/
+    @DeleteMapping("")
+    public String deleteMapping(@RequestBody DeleteUserReqDto req){
+        userService.deleteUser(req);
+        return "SUCCESS";
     }
 }

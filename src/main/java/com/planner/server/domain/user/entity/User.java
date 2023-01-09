@@ -5,7 +5,7 @@ import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
-import com.planner.server.domain.user.dto.ChangeProfileReqDto;
+import com.planner.server.domain.user.dto.UpdateProfileReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -109,10 +109,12 @@ public class User {
         friend.setUser(this);
     }
 
-    public void fixProfile(ChangeProfileReqDto profileDto) {
+    public void fixProfile(UpdateProfileReqDto profileDto) {
         this.profileName = profileDto.getProfileName();
-        this.profileAge = profileDto.getProfileAge();;
+        this.profileAge = profileDto.getProfileAge();
         this.profileImagePath = profileDto.getProfileImagePath();
+        this.friendAcceptance = profileDto.isFriendAcceptance();
+        this.alarmPermission = profileDto.isAlarmPermission();
     }
 
     public void fixPassword(String password){

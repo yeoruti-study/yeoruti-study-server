@@ -5,6 +5,7 @@ import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,28 +64,31 @@ public class UserService {
         return UserDto.toDto(userRepository.findByProfileName(profileName));
     }
 
-    public void changeProfile(ChangeProfileReqDto reqDto){
-        Long cid = reqDto.getCid();
-        userRepository.findById(cid);
+    @Transactional
+    public boolean changeProfile(UpdateProfileReqDto req){
+        Optional<User> user = userRepository.findById(req.getId());
+
+        if(!user.isPresent()){
+            throw new IllegalArgumentException();
+        }
+        User findUser = user.get();
+        findUser.fixProfile(req);
+        return true;
     }
 
-    public void changePassword(User user, String password){
-        // String userPassword = encodePassword(password);
-
-        user.fixPassword(password);
-        user.update();
+    public String deleteUser(DeleteUserReqDto req){
+        Optional<User> findUser = userRepository.findById(req.getId());
+        if(!findUser.isPresent()){
+            throw new NullPointerException();
+        }
+        try{
+            userRepository.delete(findUser.get());
+        }
+        catch (NullPointerException e){
+            throw new NullPointerException(e.getMessage());
+        }
+        return "SUCCESS";
     }
 
-    public void changeAlarmPermission(User user){
-        user.fixAlarmPermission();
-    }
-
-    public void changeFriendAcceptance(User user){
-        user.fixFriendAcceptance();
-    }
-
-    public void delete(User user){
-        userRepository.delete(user);
-    }
 
 }
