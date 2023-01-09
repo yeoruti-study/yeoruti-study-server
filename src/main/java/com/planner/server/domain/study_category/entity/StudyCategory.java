@@ -15,22 +15,35 @@ import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.study_room.entity.StudyRoom;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "study_category")
 @Getter
+@ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class StudyCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
     
     @Type(type = "uuid-char")
     private UUID id;
 
+    @Setter
     private String name;
 
+    @Setter
     private String description;
 
     @OneToMany(mappedBy = "studyCategory")
