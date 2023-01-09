@@ -31,7 +31,7 @@ import lombok.Setter;
 public class StudyRoom {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
     
     @Type(type = "uuid-char")

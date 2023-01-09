@@ -25,7 +25,7 @@ import lombok.Setter;
 public class Friend {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
     
     @Type(type = "uuid-char")

@@ -26,7 +26,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
 
     @Type(type = "uuid-char")
@@ -85,8 +85,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Friend> friends = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user")
-    private UserStudySubject userStudySubject;
+    @OneToMany(mappedBy = "user")
+    private List<UserStudySubject> userStudySubjects = new ArrayList<>();
 
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);
