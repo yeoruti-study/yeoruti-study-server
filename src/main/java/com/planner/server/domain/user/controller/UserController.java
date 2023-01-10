@@ -23,15 +23,15 @@ public class UserController {
 
     /**
      * 전체 유저 조회 */
-    @GetMapping("/allusers")
+    @GetMapping("")
     public UserListDto findAll(){
         UserListDto result = userService.findAll();
         return result;
     }
 
     /**
-     * id 로 조회 (수정예정) */
-    @GetMapping("/userid")
+     * 유저 id(UUID)로 조회 */
+    @GetMapping("/id")
     public UserDto findOne(@RequestParam UUID id){
         return UserDto.toDto(userService.findById(id));
     }
@@ -39,13 +39,13 @@ public class UserController {
     /**
      * 프로필 이름으로 조회 */
     @GetMapping("/profile")
-    public UserDto findByProfileName(@RequestParam String name) {
-        return userService.findByProfileName(name);
+    public UserDto findByProfileName(@RequestParam String profileName) {
+        return userService.findByProfileName(profileName);
     }
 
     /**
      * 유저 프로필 수정 (수정 예정)*/
-    @PatchMapping("/profile")
+    @PutMapping ("/profile")
     public String updateUserProfile(@RequestBody UpdateProfileReqDto req){
         if(userService.changeProfile(req) == true)
             return "SUCCESS";
