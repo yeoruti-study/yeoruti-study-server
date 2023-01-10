@@ -24,7 +24,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
-    public FriendDto save(SaveFriendReqDto req){
+    public FriendDto save(SaveFriendReqDto req, int flag){
 
         User user = userRepository.findByProfileName(req.getUserProfileName());
         User friend = userRepository.findByProfileName(req.getFriendProfileName());
@@ -44,8 +44,10 @@ public class FriendService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Friend savedFriend = friendRepository.save(friendEntity);
+        if(flag == 1)
+            friendEntity.fixAllowance();
 
+        Friend savedFriend = friendRepository.save(friendEntity);
 
         return FriendDto.builder()
                 .user(UserDto.toDto(user))

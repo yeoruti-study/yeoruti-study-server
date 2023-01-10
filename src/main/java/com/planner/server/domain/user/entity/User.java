@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -84,6 +85,7 @@ public class User implements Serializable {
     private List<RoomUser> roomUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<Friend> friends = new ArrayList<>();
 
 
