@@ -1,9 +1,7 @@
 package com.planner.server.domain.friend.dto;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +11,10 @@ import java.util.List;
 public class FriendListDto {
 
     private int count;
-    private List<FriendDto> friendDtoList = new ArrayList<>();
+    private List<FriendDto> friendList = new ArrayList<>();
 
     public void addFriendDto(FriendDto friendDto){
-        this.friendDtoList.add(friendDto);
+        this.friendList.add(friendDto);
     }
 
     public static FriendListDto toDto(List<FriendDto> friendDtos){
@@ -25,7 +23,7 @@ public class FriendListDto {
 
         return FriendListDto.builder()
                 .count(temp.size())
-                .friendDtoList(temp)
+                .friendList(temp)
                 .build();
     }
 }

@@ -8,20 +8,16 @@ import lombok.Data;
 @Builder
 public class UserDto {
 
-    private Long cid;
     private String username;
-    private String profile_name;
-    private int profile_age;
-    private String roles;
+    private String profileName;
+    private int profileAge;
 
     public static UserDto toDto(User user) {
 
         return UserDto.builder()
-                .cid(user.getCid())
                 .username(user.getUsername())
-                .profile_name(user.getProfileName())
-                .profile_age(user.getProfileAge())
-                .roles(user.getRoles())
+                .profileName(user.getProfileName())
+                .profileAge(user.getProfileAge())
                 .build();
     }
 }
