@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.planner.server.domain.study_category.dto.StudyCategoryDto;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
 import com.planner.server.domain.study_room.dto.StudyRoomDto;
@@ -26,7 +27,7 @@ public class StudyRoomService {
 
     // TODO :: masterUserId
     public void createOne(StudyRoomDto studyRoomDto) {
-        UUID studyCategoryId = studyRoomDto.getStudyCategory().getId();
+        UUID studyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
 
         // 1. study category 조회
         Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
@@ -54,11 +55,17 @@ public class StudyRoomService {
     public List<StudyRoomDto> searchAll() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAll();
         List<StudyRoomDto> studyRoomDtos = studyRooms.stream().map(entity -> {
+            StudyCategoryDto studyCategoryDto = StudyCategoryDto.builder()
+                .id(entity.getStudyCategory().getId())
+                .name(entity.getStudyCategory().getName())
+                .description(entity.getStudyCategory().getDescription())
+                .build();
+
             StudyRoomDto dto = StudyRoomDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .maximumNumberOfPeople(entity.getMaximumNumberOfPeople())
-                .studyCategory(entity.getStudyCategory())
+                .studyCategoryDto(studyCategoryDto)
                 .studyGoalTime(entity.getStudyGoalTime())
                 .roomPassword(entity.getRoomPassword())
                 .createdAt(entity.getCreatedAt())
