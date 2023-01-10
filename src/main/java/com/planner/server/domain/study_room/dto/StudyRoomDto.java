@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.planner.server.domain.study_category.entity.StudyCategory;
+import com.planner.server.domain.study_category.dto.StudyCategoryDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import lombok.ToString;
 public class StudyRoomDto {
     private UUID id;
     private String name;
-    private StudyCategory studyCategory;
+    private StudyCategoryDto studyCategoryDto;
     private int maximumNumberOfPeople;
     private Duration studyGoalTime;
     private String roomPassword;
