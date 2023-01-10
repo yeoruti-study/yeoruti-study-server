@@ -1,5 +1,6 @@
 package com.planner.server.domain.study_category.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,13 +26,13 @@ import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "study_category")
+@ToString(exclude = "studyRooms")
 @Getter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class StudyCategory {
+public class StudyCategory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
