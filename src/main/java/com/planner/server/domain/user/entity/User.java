@@ -84,8 +84,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> friends = new ArrayList<>();
 
 

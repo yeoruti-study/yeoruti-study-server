@@ -29,8 +29,8 @@ public class FriendController {
     }
 
     @GetMapping("/user")
-    public FindFriendByUserResDto getFriendsByUser(@RequestParam String id){
-        return friendService.findFriend(id);
+    public FriendResDto getFriendsByUserId(@RequestParam String id){
+        return friendService.findByUserId(id);
     }
 
     @PatchMapping("")
@@ -56,7 +56,7 @@ public class FriendController {
 
     @DeleteMapping("")
     public String deleteFriend(@RequestBody DeleteFriendByUserReqDto req){
-        return friendService.deleteFriend(req);
+        return friendService.deleteById(req);
     }
 
 }

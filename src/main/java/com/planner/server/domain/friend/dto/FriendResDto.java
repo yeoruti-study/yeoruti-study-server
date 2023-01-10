@@ -9,18 +9,18 @@ import java.util.List;
 
 @Data
 @Builder
-public class FindFriendByUserResDto {
+public class FriendResDto {
     private String userProfileName;
     private int count;
     private List<UserDto> friend = new ArrayList<>();
 
 
-    public static FindFriendByUserResDto toDto(String profileName, List<FriendDto> friendDtos){
+    public static FriendResDto toDto(String profileName, List<FriendDto> friendDtos){
 
         List<UserDto> temp = new ArrayList<>();
         friendDtos.stream().forEach(friendDto -> temp.add(friendDto.getFriend()));
 
-        return FindFriendByUserResDto.builder()
+        return FriendResDto.builder()
                 .userProfileName(profileName)
                 .count(temp.size())
                 .friend(temp)

@@ -63,7 +63,7 @@ public class FriendService {
         return friend;
     }
 
-    public FindFriendByUserResDto findFriend(String userId){
+    public FriendResDto findByUserId(String userId){
         UUID id = UUID.fromString(userId);
         String profileName = userRepository.findById(id).get().getProfileName();
 
@@ -71,7 +71,12 @@ public class FriendService {
 
         List<FriendDto> friendDtoList = new ArrayList<>();
         friendList.stream().forEach(friend -> friendDtoList.add(FriendDto.toDto(friend)));
-        return FindFriendByUserResDto.toDto(profileName, friendDtoList);
+        return FriendResDto.toDto(profileName, friendDtoList);
+    }
+
+    public List<Friend> findByFriendId(String friendId) {
+        UUID id = UUID.fromString(friendId);
+        return friendRepository.findByFriendId(id);
     }
 
     public FriendListDto findAll(){
@@ -83,7 +88,7 @@ public class FriendService {
         return FriendListDto.toDto(friendDtoList);
     }
 
-    public String deleteFriend(DeleteFriendByUserReqDto req){
+    public String deleteById(DeleteFriendByUserReqDto req){
         Optional<Friend> findFriend = friendRepository.findById(UUID.fromString(req.getId()));
 
         if(!findFriend.isPresent()) throw new NullPointerException();
@@ -93,10 +98,17 @@ public class FriendService {
         return "SUCCESS";
     }
 
+    public void deleteByFriendId(String friendId){
+        List<Friend> friendList = friendRepository.findByFriendId(UUID.fromString(friendId));
+
+        friendList.stream().forEach(friend -> friendRepository.delete(friend));
+    }
+
     @Transactional
     public void changeAllowance(AllowanceReqDto req){
         UUID id = UUID.fromString(req.getId());
         Friend friend = friendRepository.findById(id).get();
         friend.fixAllowance();
     }
+
 }

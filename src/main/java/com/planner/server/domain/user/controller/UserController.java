@@ -1,10 +1,13 @@
 package com.planner.server.domain.user.controller;
 
+import com.planner.server.domain.friend.entity.Friend;
+import com.planner.server.domain.friend.service.FriendService;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -13,6 +16,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final FriendService friendService;
 
     /**
      * 회원가입 - 유저생성 */
@@ -55,7 +59,9 @@ public class UserController {
     /**
      * 유저 삭제*/
     @DeleteMapping("")
-    public String deleteMapping(@RequestBody DeleteUserReqDto req){
+    public String deleteUser(@RequestBody DeleteUserReqDto req){
+        String sid = req.getId().toString();
+        friendService.deleteByFriendId(sid);
         userService.deleteUser(req);
         return "SUCCESS";
     }
