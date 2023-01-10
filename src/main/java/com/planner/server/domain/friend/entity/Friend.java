@@ -56,6 +56,6 @@ public class Friend implements Serializable {
 
     public void fixAllowance(){
         boolean allowance = this.allow;
-        this.allow = allowance;
+        this.allow = !allowance;
     }
 }

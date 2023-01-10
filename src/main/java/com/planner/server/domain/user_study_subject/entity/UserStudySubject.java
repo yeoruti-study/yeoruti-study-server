@@ -13,12 +13,12 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Table(name = "user")
+@Table(name = "user_study_subject")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserStudySubject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
 
     @Type(type = "uuid-char")
@@ -26,7 +26,7 @@ public class UserStudySubject {
 
     private String title;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

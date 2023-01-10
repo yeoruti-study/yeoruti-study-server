@@ -1,5 +1,6 @@
 package com.planner.server.domain.user.service;
 
+import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
@@ -36,7 +37,7 @@ public class UserService {
                 .profileAge(reqDto.getProfileAge())
                 .profileImagePath(reqDto.getProfileImagePath())
                 .alarmPermission(reqDto.isAlarmPermission())
-                .friendAcceptance(reqDto.isAlarmPermission())
+                .friendAcceptance(reqDto.isFriendAcceptance())
                 .createdAt(LocalDateTime.now())
                 .build();
 

@@ -19,7 +19,7 @@ class UserRepositoryTest {
     @Test
     void findByProfileName() {
         User user1 = userRepository.findByProfileName("프로필이름1");
-        assertThat(user1.getUsername()).isEqualTo("히정수");
+        assertThat(user1.getUsername()).isEqualTo("김이박");
     }
 
     @Test
