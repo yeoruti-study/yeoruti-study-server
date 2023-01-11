@@ -75,7 +75,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<StudyGoal> studyGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
