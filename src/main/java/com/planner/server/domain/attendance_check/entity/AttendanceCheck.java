@@ -1,5 +1,6 @@
 package com.planner.server.domain.attendance_check.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "attendance_check")
 @Getter
-public class AttendanceCheck {
+public class AttendanceCheck implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class AttendanceCheck {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private LocalDateTime createdAt;

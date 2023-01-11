@@ -1,5 +1,6 @@
 package com.planner.server.domain.record.entity;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "record")
 @Getter
-public class Record {
+public class Record implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,11 +44,11 @@ public class Record {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_study_subject_id")
+    @JoinColumn(name = "user_study_subject_id", referencedColumnName = "id")
     private UserStudySubject userStudySubject;
 
 }
