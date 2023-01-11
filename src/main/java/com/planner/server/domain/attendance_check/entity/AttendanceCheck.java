@@ -13,16 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
 @Table(name = "attendance_check")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AttendanceCheck implements Serializable {
 
     @Id
@@ -31,6 +30,13 @@ public class AttendanceCheck implements Serializable {
     
     @Type(type = "uuid-char")
     private UUID id;
+
+    @Builder
+    public AttendanceCheck(UUID id, User user, LocalDateTime createdAt) {
+        this.id = id;
+        this.user = user;
+        this.createdAt = createdAt;
+    }
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
