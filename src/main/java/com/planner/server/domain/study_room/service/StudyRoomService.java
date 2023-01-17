@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.planner.server.domain.room_chat.dto.RoomChatDto;
+import com.planner.server.domain.room_chat.entity.RoomChat;
 import com.planner.server.domain.study_category.dto.StudyCategoryDto;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
@@ -103,6 +105,21 @@ public class StudyRoomService {
 
         if(entityOpt.isPresent()) {
             studyRoomRepository.delete(entityOpt.get());
+        }else {
+            throw new NullPointerException("존재하지 않는 데이터");
+        }
+    }
+
+    // TODO :: room chat 조회 확인
+    public List<RoomChatDto> searchStudyRoomChat(UUID studyRoomId) {
+        Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomId);
+
+        if(entityOpt.isPresent()) {
+            StudyRoom entity = entityOpt.get();
+
+            List<RoomChat> roomChats = entity.getRoomChats();
+            List<RoomChatDto> roomChatDtos = roomChats.stream().map(chat -> RoomChatDto.toDto(chat)).collect(Collectors.toList());
+            return roomChatDtos;
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }

@@ -88,4 +88,20 @@ public class StudyRoomController {
         }
         return new ResponseEntity<>(message, message.getStatus());
     }
+
+    @GetMapping("/room-chat/{studyRoomId}")
+    public ResponseEntity<?> searchStudyRoomChat(@PathVariable(name = "studyRoomId") UUID studyRoomId) {
+        Message message = new Message();
+
+        try {
+            message.setData(studyRoomService.searchStudyRoomChat(studyRoomId));
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("success");
+        } catch (Exception e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo(e.getMessage());
+        }
+        return new ResponseEntity<>(message, message.getStatus());
+    }
 }
