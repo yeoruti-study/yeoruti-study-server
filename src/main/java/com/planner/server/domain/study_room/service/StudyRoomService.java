@@ -56,29 +56,7 @@ public class StudyRoomService {
     @Transactional(readOnly = true)
     public List<StudyRoomDto> searchAll() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAll();
-        List<StudyRoomDto> studyRoomDtos = studyRooms.stream().map(entity -> {
-            StudyCategoryDto studyCategoryDto = StudyCategoryDto.builder()
-                .id(entity.getStudyCategory().getId())
-                .name(entity.getStudyCategory().getName())
-                .description(entity.getStudyCategory().getDescription())
-                .build();
-
-            StudyRoomDto dto = StudyRoomDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .maximumNumberOfPeople(entity.getMaximumNumberOfPeople())
-                .studyCategoryDto(studyCategoryDto)
-                .studyGoalTime(entity.getStudyGoalTime())
-                .roomPassword(entity.getRoomPassword())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .masterUserId(entity.getMasterUserId())
-                // .roomUsers(entity.getRoomUsers())
-                // .roomChats(entity.getRoomChats())
-                .build();
-
-            return dto;
-        }).collect(Collectors.toList());
+        List<StudyRoomDto> studyRoomDtos = studyRooms.stream().map(entity -> StudyRoomDto.toDto(entity)).collect(Collectors.toList());
     
         return studyRoomDtos;
     }

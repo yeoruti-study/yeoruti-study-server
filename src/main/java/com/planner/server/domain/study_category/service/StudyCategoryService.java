@@ -33,16 +33,7 @@ public class StudyCategoryService {
     @Transactional(readOnly = true)
     public List<StudyCategoryDto> searchAll() {
         List<StudyCategory> studyCategories = studyCategoryRepository.findAll();
-        List<StudyCategoryDto> studyCategoryDtos = studyCategories.stream().map(entity -> {
-            StudyCategoryDto dto = StudyCategoryDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .description(entity.getDescription())
-                .build();
-
-            return dto;
-        }).collect(Collectors.toList());
-    
+        List<StudyCategoryDto> studyCategoryDtos = studyCategories.stream().map(entity -> StudyCategoryDto.toDto(entity)).collect(Collectors.toList());
         return studyCategoryDtos;
     }
 
