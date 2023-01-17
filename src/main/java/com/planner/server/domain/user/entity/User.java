@@ -1,5 +1,6 @@
 package com.planner.server.domain.user.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "user")
 @Getter
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +47,8 @@ public class User {
 
     private String profileName;
 
-    private int profileAge;
+    // private int profileAge;
+    private Integer profileAge;
 
     private String profileImagePath;
 
