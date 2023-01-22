@@ -5,13 +5,13 @@ import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
-import com.planner.server.domain.user.dto.UpdateProfileReqDto;
+import com.planner.server.domain.user.dto.ProfileReqDto;
+import com.planner.server.domain.user.dto.UserDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -38,13 +38,13 @@ public class User implements Serializable {
 
     private String password;
 
-    private UUID salt;
+    private String salt;
 
     private String roles;
 
     private String profileName;
 
-    private int profileAge;
+    private String profileAge;
 
     private String profileImagePath;
 
@@ -57,7 +57,7 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(UUID id, String username, String password, UUID salt, String roles, String profileName, int profileAge, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(UUID id, String username, String password, String salt, String roles, String profileName, String profileAge, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -116,7 +116,7 @@ public class User implements Serializable {
         friend.setUser(this);
     }
 
-    public void fixProfile(UpdateProfileReqDto profileDto) {
+    public void fixProfile(ProfileReqDto profileDto) {
         this.profileName = profileDto.getProfileName();
         this.profileAge = profileDto.getProfileAge();
         this.profileImagePath = profileDto.getProfileImagePath();

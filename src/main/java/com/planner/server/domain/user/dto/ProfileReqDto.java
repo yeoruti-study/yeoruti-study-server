@@ -7,11 +7,11 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class UpdateProfileReqDto {
+public class ProfileReqDto {
 
     private UUID id;
     private String profileName;
-    private int profileAge;
+    private String profileAge;
     private String profileImagePath;
     private boolean friendAcceptance;
     private boolean alarmPermission;

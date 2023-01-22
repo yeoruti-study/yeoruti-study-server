@@ -98,8 +98,8 @@ public class FriendService {
         return "SUCCESS";
     }
 
-    public void deleteByFriendId(String friendId){
-        List<Friend> friendList = friendRepository.findByFriendId(UUID.fromString(friendId));
+    public void deleteByFriendId(UUID friendId){
+        List<Friend> friendList = friendRepository.findByFriendId(UUID.fromString(friendId.toString()));
 
         friendList.stream().forEach(friend -> friendRepository.delete(friend));
     }

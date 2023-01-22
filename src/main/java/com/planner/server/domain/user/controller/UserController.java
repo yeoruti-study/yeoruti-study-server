@@ -1,13 +1,11 @@
 package com.planner.server.domain.user.controller;
 
-import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.friend.service.FriendService;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,8 +19,8 @@ public class UserController {
     /**
      * 회원가입 - 유저생성 */
     @PostMapping ("")
-    public SaveUserResDto signIn(@RequestBody SaveUserReqDto req){
-        return userService.save(req);
+    public String signUp(@RequestBody SignUpReqDto req){
+        return userService.signUp(req);
     }
 
     /**
@@ -50,7 +48,7 @@ public class UserController {
     /**
      * 유저 프로필 수정 (수정 예정)*/
     @PutMapping ("/profile")
-    public String updateUserProfile(@RequestBody UpdateProfileReqDto req){
+    public String updateUserProfile(@RequestBody ProfileReqDto req){
         if(userService.changeProfile(req) == true)
             return "SUCCESS";
         else return "FAIL";
@@ -59,9 +57,8 @@ public class UserController {
     /**
      * 유저 삭제*/
     @DeleteMapping("")
-    public String deleteUser(@RequestBody DeleteUserReqDto req){
-        String sid = req.getId().toString();
-        friendService.deleteByFriendId(sid);
+    public String deleteUser(@RequestBody DeleteReqDto req){
+        friendService.deleteByFriendId(req.getId());
         userService.deleteUser(req);
         return "SUCCESS";
     }

@@ -1,6 +1,5 @@
 package com.planner.server.domain.user.service;
 
-import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
@@ -20,15 +19,14 @@ public class UserService {
     // private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
-    public SaveUserResDto save(SaveUserReqDto reqDto){
+    public String signUp(SignUpReqDto reqDto){
 
-        UUID id = UUID.randomUUID();
-        UUID salt = UUID.randomUUID();
+        String salt = UUID.randomUUID().toString();
 //        String password = encoder.encode(reqDto.getPassword()+ salt.toString());
         String password = reqDto.getPassword() + salt;
 
         User user = User.builder()
-                .id(id)
+                .id(UUID.randomUUID())
                 .username(reqDto.getUsername())
                 .password(password)
                 .salt(salt)
@@ -41,13 +39,12 @@ public class UserService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return SaveUserResDto.toDto(userRepository.save(user));
+        return "SUCESS";
     }
 
 
     public User findById(UUID id){
         Optional<User> findUser = userRepository.findById(id);
-
         if(!findUser.isPresent()) {
             throw new IllegalArgumentException();
         }
@@ -66,7 +63,7 @@ public class UserService {
     }
 
     @Transactional
-    public boolean changeProfile(UpdateProfileReqDto req){
+    public boolean changeProfile(ProfileReqDto req){
         Optional<User> user = userRepository.findById(req.getId());
 
         if(!user.isPresent()){
@@ -77,7 +74,7 @@ public class UserService {
         return true;
     }
 
-    public String deleteUser(DeleteUserReqDto req){
+    public String deleteUser(DeleteReqDto req){
         Optional<User> findUser = userRepository.findById(req.getId());
         if(!findUser.isPresent()){
             throw new NullPointerException();

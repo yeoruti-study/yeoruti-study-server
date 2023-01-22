@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class DeleteUserReqDto {
+public class DeleteReqDto {
 
     private UUID id;
     private String password;

@@ -1,9 +1,6 @@
 package com.planner.server.domain.user.service;
 
 import com.planner.server.domain.user.dto.SaveUserReqDto;
-import com.planner.server.domain.user.dto.SaveUserResDto;
-import com.planner.server.domain.user.dto.UserDto;
-import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
