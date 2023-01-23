@@ -43,8 +43,7 @@ public class StudyCategoryService {
         if(entityOpt.isPresent()) {
             StudyCategory entity = entityOpt.get();
 
-            entity.setName(studyCategoryDto.getName())
-                .setDescription(studyCategoryDto.getDescription());
+            entity.setName(studyCategoryDto.getName()).setDescription(studyCategoryDto.getDescription());
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }

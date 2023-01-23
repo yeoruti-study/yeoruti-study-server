@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.planner.server.domain.room_chat.dto.RoomChatDto;
 import com.planner.server.domain.study_category.dto.StudyCategoryDto;
+import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_room.entity.StudyRoom;
 
 import lombok.AllArgsConstructor;
@@ -37,7 +38,14 @@ public class StudyRoomDto {
     private List<RoomChatDto> roomChatDtos = new ArrayList<>();
 
     public static StudyRoomDto toDto(StudyRoom entity) {
-        StudyCategoryDto studyCategoryDto = StudyCategoryDto.toDto(entity.getStudyCategory());
+        // StudyCategoryDto studyCategoryDto = StudyCategoryDto.toDto(entity.getStudyCategory());
+        StudyCategory studyCategory = entity.getStudyCategory();
+        StudyCategoryDto studyCategoryDto = StudyCategoryDto.builder()
+            .id(studyCategory.getId())
+            .name(studyCategory.getName())
+            .description(studyCategory.getDescription())
+            .build();
+            
         List<RoomChatDto> roomChatDtos = entity.getRoomChats().stream().map(chat -> RoomChatDto.toDto(chat)).collect(Collectors.toList());
 
         return StudyRoomDto.builder()
