@@ -3,15 +3,11 @@ package com.planner.server.domain.friend.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
-public class SaveFriendResDto {
+public class FriendReqDto {
 
-    private Long cid;
     private String userProfileName;
     private String friendProfileName;
-    private LocalDateTime createdAt;
 
 }

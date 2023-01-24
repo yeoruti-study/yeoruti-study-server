@@ -22,7 +22,9 @@ public class UserDto {
     public static UserDto toDto(User user) {
 
         return UserDto.builder()
+                .id(user.getId())
                 .username(user.getUsername())
+                .roles(user.getRoles())
                 .profileName(user.getProfileName())
                 .profileAge(user.getProfileAge())
                 .alarmPermission(user.isAlarmPermission())
