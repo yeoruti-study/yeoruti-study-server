@@ -19,4 +19,8 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     @Query("select f from Friend f where f.friend.id = :id")
     List<Friend> findByFriendId(@Param("id") UUID id);
 
+    @Query("select f from Friend f where f.user.id = :userId and f.friend.id = :friendId")
+    Optional<Friend> alreadyExists(@Param("userId") UUID userId,
+                                   @Param("friendId") UUID friendId);
+
 }

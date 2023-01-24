@@ -24,28 +24,36 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
-    public FriendDto save(SaveFriendReqDto req, int flag){
+    public FriendDto save(FriendReqDto req, int flag) throws Exception {
 
-        User user = userRepository.findByProfileName(req.getUserProfileName());
-        User friend = userRepository.findByProfileName(req.getFriendProfileName());
+        Optional<User> findUser = userRepository.findByProfileName(req.getUserProfileName());
+        Optional<User> findFriend = userRepository.findByProfileName(req.getFriendProfileName());
+        if(!findUser.isPresent() || !findFriend.isPresent())
+            throw new Exception("자신 또는 친구가 존재하지 않습니다. id 값을 확인해주세요.");
 
-        if(!user.isFriendAcceptance() || !friend.isFriendAcceptance())
-            throw new IllegalArgumentException();
-        if(user == friend)
-            throw new IllegalArgumentException();
+        User user = findUser.get();
+        User friend = findFriend.get();
+
+        if(flag == 1){
+            Optional<Friend> tmp = friendRepository.alreadyExists(user.getId(), friend.getId());
+            if(tmp.isPresent()){
+                friendRepository.delete(tmp.get());
+            }
+        }
+
+        if(alreadyExists(user, friend)){
+            throw new Exception("이미 전에 보냈던 친구 요청입니다.");
+        }
+
+        validateUserAndFriend(user, friend);
 
         UUID id = UUID.randomUUID();
+        Friend friendEntity = buildFriend(user, friend, id);
 
-        Friend friendEntity = Friend.builder()
-                .id(id)
-                .user(user)
-                .friend(friend)
-                .allow(false)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        if(flag == 1)
+        if(flag == 1){
             friendEntity.fixAllowance();
+            alreadyExists(user, friend);
+        }
 
         Friend savedFriend = friendRepository.save(friendEntity);
 
@@ -57,21 +65,59 @@ public class FriendService {
                 .build();
     }
 
-    public Friend findById(String sid){
-        UUID id = UUID.fromString(sid);
-        Friend friend = friendRepository.findById(id).get();
+    public boolean alreadyExists(User user, User friend){
+        UUID userId = user.getId();
+        UUID friendId = friend.getId();
+        Optional<Friend> findFriend = friendRepository.alreadyExists(userId, friendId);
+
+        if(findFriend.isPresent())
+            return true;
+
+        return false;
+    }
+
+    private static Friend buildFriend(User user, User friend, UUID id) {
+        Friend friendEntity = Friend.builder()
+                .id(id)
+                .user(user)
+                .friend(friend)
+                .allow(false)
+                .createdAt(LocalDateTime.now())
+                .build();
+        return friendEntity;
+    }
+
+    private static void validateUserAndFriend(User user, User friend) throws Exception {
+        if(!user.isFriendAcceptance())
+            throw new Exception("자신의 \"친구수락 여부\"를 \"허용\"으로 바꿔주세요");
+        if(!friend.isFriendAcceptance())
+            throw new Exception("상대방이 친수수락 여부를 \"거부\"로 설정되어 있어 친구요청을 보낼 수 없습니다.");
+        if(user == friend)
+            throw new IllegalArgumentException("자기 자신에게는 요청을 보낼 수 없습니다.");
+    }
+
+    public Friend findById(UUID id) throws Exception {
+        Friend friend = null;
+        try{friend = friendRepository.findById(id).get();}
+        catch (Exception e){
+            throw new Exception("입력받은 ID로 친구를 찾을 수 없습니다.");
+        }
         return friend;
     }
 
-    public FriendResDto findByUserId(String userId){
-        UUID id = UUID.fromString(userId);
-        String profileName = userRepository.findById(id).get().getProfileName();
+    public FriendListDto findByUserId(UUID id) throws Exception {
+        List<Friend> friendList = new ArrayList<>();
 
-        List<Friend> friendList = friendRepository.findByUserId(id);
-
+        try{
+            friendList = friendRepository.findByUserId(id);
+        }
+        catch (Exception e){
+            throw new Exception("입력받은 유저의 id로 친구를 찾을 수 없습니다.");
+        }
         List<FriendDto> friendDtoList = new ArrayList<>();
-        friendList.stream().forEach(friend -> friendDtoList.add(FriendDto.toDto(friend)));
-        return FriendResDto.toDto(profileName, friendDtoList);
+        friendList.forEach(f -> friendDtoList.add(FriendDto.toDto(f)));
+
+        return FriendListDto.toDto(friendDtoList);
     }
 
     public List<Friend> findByFriendId(String friendId) {
@@ -88,14 +134,13 @@ public class FriendService {
         return FriendListDto.toDto(friendDtoList);
     }
 
-    public String deleteById(DeleteFriendByUserReqDto req){
+    public void deleteById(FriendDeleteReqDto req) throws Exception {
         Optional<Friend> findFriend = friendRepository.findById(UUID.fromString(req.getId()));
 
-        if(!findFriend.isPresent()) throw new NullPointerException();
+        if(!findFriend.isPresent()) throw new Exception("친구가 존재하지 않습니다.");
 
         Friend friend = findFriend.get();
         friendRepository.delete(friend);
-        return "SUCCESS";
     }
 
     public void deleteByFriendId(UUID friendId){
@@ -106,7 +151,7 @@ public class FriendService {
 
     @Transactional
     public void changeAllowance(AllowanceReqDto req){
-        UUID id = UUID.fromString(req.getId());
+        UUID id = req.getId();
         Friend friend = friendRepository.findById(id).get();
         friend.fixAllowance();
     }

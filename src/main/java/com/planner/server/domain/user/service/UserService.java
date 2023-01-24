@@ -19,11 +19,14 @@ public class UserService {
     // private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
-    public String signUp(SignUpReqDto reqDto){
+    public void signUp(SignUpReqDto reqDto) throws Exception{
 
         String salt = UUID.randomUUID().toString();
-//        String password = encoder.encode(reqDto.getPassword()+ salt.toString());
         String password = reqDto.getPassword() + salt;
+
+        if(userRepository.findByUsername(reqDto.getUsername()).isPresent()){
+            throw new Exception("해당 유저네임이 이미 존재합니다. 다른 이름을 입력해주세요.");
+        }
 
         User user = User.builder()
                 .id(UUID.randomUUID())
@@ -39,14 +42,17 @@ public class UserService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return "SUCESS";
+        userRepository.save(user);
     }
 
 
-    public User findById(UUID id){
+    public User findById(UUID id) throws Exception {
+        if(id==null) {
+            throw new IllegalArgumentException("parameter:[id] is null");
+        }
         Optional<User> findUser = userRepository.findById(id);
         if(!findUser.isPresent()) {
-            throw new IllegalArgumentException();
+            throw new Exception("parameter:[id] is wrong");
         }
         return findUser.get();
     }
@@ -59,19 +65,18 @@ public class UserService {
     }
 
     public UserDto findByProfileName(String profileName){
-        return UserDto.toDto(userRepository.findByProfileName(profileName));
+        return UserDto.toDto(userRepository.findByProfileName(profileName).get());
     }
 
     @Transactional
-    public boolean changeProfile(ProfileReqDto req){
+    public void changeProfile(ProfileReqDto req) throws IllegalArgumentException{
         Optional<User> user = userRepository.findById(req.getId());
 
         if(!user.isPresent()){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("id에 부합하는 유저가 존재하지 않습니다. 다시 입력해주세요.");
         }
         User findUser = user.get();
         findUser.fixProfile(req);
-        return true;
     }
 
     public String deleteUser(DeleteReqDto req){
