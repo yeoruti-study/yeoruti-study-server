@@ -48,7 +48,7 @@ public class User implements Serializable {
     private String profileName;
 
     // private int profileAge;
-    private Integer profileAge;
+    private String profileBirth;
 
     private String profileImagePath;
 
