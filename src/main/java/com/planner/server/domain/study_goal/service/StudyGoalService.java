@@ -1,6 +1,6 @@
 package com.planner.server.domain.study_goal.service;
 
-import com.planner.server.domain.study_goal.dto.ResDto;
+import com.planner.server.domain.study_goal.dto.DeleteReqDto;
 import com.planner.server.domain.study_goal.dto.SaveReqDto;
 import com.planner.server.domain.study_goal.dto.StudyGoalDto;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,10 +24,17 @@ public class StudyGoalService {
     private final StudyGoalRepository studyGoalRepository;
     private final UserRepository userRepository;
 
-    public StudyGoalDto save(SaveReqDto req){
+    public StudyGoalDto save(SaveReqDto req) throws Exception{
 
-        String userId = req.getUserId();
-        User user = userRepository.findById(UUID.fromString(userId)).get();
+        UUID userId = req.getUserId();
+        User user = null;
+
+        try{
+            user = userRepository.findById(userId).get();
+        }
+        catch (Exception e){
+            throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
+        }
 
         // goalTime 형식 = "PT8H30M" // PT(시간)H(분)M
         Duration goalTime = Duration.parse(req.getGoalTime());
@@ -49,19 +58,28 @@ public class StudyGoalService {
 
         StudyGoal savedStudyGoal = studyGoalRepository.save(studyGoal);
 
-        return StudyGoalDto.toDto(studyGoal, user.getProfileName());
+        return StudyGoalDto.toDto(studyGoal);
     }
 
-    public ResDto findById(String sid){
-        UUID id = UUID.fromString(sid);
-        StudyGoal studyGoal = studyGoalRepository.findById(id).get();
+    public StudyGoalDto findById(UUID id) throws Exception {
+        StudyGoal studyGoal;
+        try{
+            studyGoal = studyGoalRepository.findById(id).get();
+        }catch(Exception e){
+            throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
+        }
 
-        return ResDto.toDto(studyGoal);
+        return StudyGoalDto.toDto(studyGoal);
     }
 
-    public void deleteById(String sid) {
-        UUID id = UUID.fromString(sid);
-        StudyGoal studyGoal = studyGoalRepository.findById(id).get();
-        studyGoalRepository.delete(studyGoal);
+    public void deleteById(DeleteReqDto req){
+        UUID id = req.getId();
+        Optional<StudyGoal> studyGoal;
+
+        studyGoal = studyGoalRepository.findById(id);
+        if(!studyGoal.isPresent()){
+            throw new NoSuchElementException("[id] 확인 요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
+        }
+        studyGoalRepository.delete(studyGoal.get());
     }
 }

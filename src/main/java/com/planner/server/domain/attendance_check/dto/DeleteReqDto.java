@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class AttendanceReqDto {
+public class DeleteReqDto {
 
-    private UUID userId;
+    private UUID id;
 }

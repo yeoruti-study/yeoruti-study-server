@@ -9,16 +9,16 @@ import java.util.List;
 
 @Data
 @Builder
-public class AttendanceResDtoList {
+public class AttendanceListDto {
 
     private List<AttendanceResDto> attendanceDtos = new ArrayList<>();
 
-    public static AttendanceResDtoList toDtoList(List<AttendanceCheck> attendances){
+    public static AttendanceListDto toDtoList(List<AttendanceCheck> attendances){
         List<AttendanceResDto> temp =new ArrayList<>();
         attendances.stream()
                 .forEach(attendance -> temp.add(AttendanceResDto.toDto(attendance)));
 
-        return AttendanceResDtoList.builder()
+        return AttendanceListDto.builder()
                 .attendanceDtos(temp)
                 .build();
     }
