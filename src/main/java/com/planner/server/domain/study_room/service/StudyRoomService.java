@@ -9,12 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.planner.server.domain.room_chat.dto.RoomChatDto;
+import com.planner.server.domain.room_chat.dto.RoomChatRes;
 import com.planner.server.domain.room_chat.entity.RoomChat;
-import com.planner.server.domain.study_category.dto.StudyCategoryDto;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
-import com.planner.server.domain.study_room.dto.StudyRoomDto;
+import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 import com.planner.server.domain.study_room.entity.StudyRoom;
 import com.planner.server.domain.study_room.repository.StudyRoomRepository;
 
@@ -28,7 +27,7 @@ public class StudyRoomService {
     private final StudyCategoryRepository studyCategoryRepository;
 
     // TODO :: masterUserId
-    public void createOne(StudyRoomDto studyRoomDto) {
+    public void createOne(StudyRoomResDto studyRoomDto) {
         UUID studyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
 
         // 1. study category 조회
@@ -54,14 +53,14 @@ public class StudyRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudyRoomDto> searchAll() {
+    public List<StudyRoomResDto> searchAll() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAll();
-        List<StudyRoomDto> studyRoomDtos = studyRooms.stream().map(entity -> StudyRoomDto.toDto(entity)).collect(Collectors.toList());
+        List<StudyRoomResDto> studyRoomDtos = studyRooms.stream().map(entity -> StudyRoomResDto.toDto(entity)).collect(Collectors.toList());
     
         return studyRoomDtos;
     }
 
-    public void updateOne(StudyRoomDto studyRoomDto) {
+    public void updateOne(StudyRoomResDto studyRoomDto) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomDto.getId());
 
         if(entityOpt.isPresent()) {
@@ -89,14 +88,14 @@ public class StudyRoomService {
     }
 
     // TODO :: room chat 조회 확인
-    public List<RoomChatDto> searchStudyRoomChat(UUID studyRoomId) {
+    public List<RoomChatRes> searchStudyRoomChat(UUID studyRoomId) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomId);
 
         if(entityOpt.isPresent()) {
             StudyRoom entity = entityOpt.get();
 
             List<RoomChat> roomChats = entity.getRoomChats();
-            List<RoomChatDto> roomChatDtos = roomChats.stream().map(chat -> RoomChatDto.toDto(chat)).collect(Collectors.toList());
+            List<RoomChatRes> roomChatDtos = roomChats.stream().map(chat -> RoomChatRes.toDto(chat)).collect(Collectors.toList());
             return roomChatDtos;
         }else {
             throw new NullPointerException("존재하지 않는 데이터");

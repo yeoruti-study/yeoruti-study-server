@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.study_category.dto.StudyCategoryDto;
+import com.planner.server.domain.study_category.dto.StudyCategoryReqDto;
 import com.planner.server.domain.study_category.service.StudyCategoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class StudyCategoryController {
     private final StudyCategoryService studyCategoryService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody StudyCategoryDto studyCategoryDto) {
+    public ResponseEntity<?> createOne(@RequestBody StudyCategoryReqDto studyCategoryDto) {
         Message message = new Message();
 
         try {
@@ -58,7 +58,7 @@ public class StudyCategoryController {
     }
 
     @PutMapping("/one")
-    public ResponseEntity<?> updateOne(@RequestBody StudyCategoryDto studyCategoryDto) {
+    public ResponseEntity<?> updateOne(@RequestBody StudyCategoryReqDto studyCategoryDto) {
         Message message = new Message();
 
         try {

@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.planner.server.domain.study_category.entity.StudyCategory;
-import com.planner.server.domain.study_room.dto.StudyRoomDto;
+import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,16 +19,16 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudyCategoryDto {
+public class StudyCategoryResDto {
     private UUID id;
     private String name;
     private String description;
-    private List<StudyRoomDto> studyRoomDtos = new ArrayList<>();
+    private List<StudyRoomResDto> studyRoomDtos = new ArrayList<>();
 
-    public static StudyCategoryDto toDto(StudyCategory entity) {
-        List<StudyRoomDto> studyRoomDtos = entity.getStudyRooms().stream().map(room -> StudyRoomDto.toDto(room)).collect(Collectors.toList());
+    public static StudyCategoryResDto toDto(StudyCategory entity) {
+        List<StudyRoomResDto> studyRoomDtos = entity.getStudyRooms().stream().map(room -> StudyRoomResDto.toDto(room)).collect(Collectors.toList());
         
-        return StudyCategoryDto.builder()
+        return StudyCategoryResDto.builder()
             .id(entity.getId())
             .name(entity.getName())
             .description(entity.getDescription())

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.room_user.dto.RoomUserDto;
+import com.planner.server.domain.room_user.dto.RoomUserResDto;
 import com.planner.server.domain.room_user.service.RoomUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class RoomUserController {
     private final RoomUserService roomUserService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody RoomUserDto roomUserDto) {
+    public ResponseEntity<?> createOne(@RequestBody RoomUserResDto roomUserDto) {
         Message message = new Message();
 
         try {
@@ -39,22 +39,6 @@ public class RoomUserController {
         }
         return new ResponseEntity<>(message, message.getStatus());
     }
-
-    // @GetMapping("/list/user/{userId}")
-    // public ResponseEntity<?> searchListByUserId(@PathVariable(value = "userId") UUID userId) {
-    //     Message message = new Message();
-
-    //     try {
-    //         message.setData(roomUserService.searchListByUserId(userId));
-    //         message.setStatus(HttpStatus.OK);
-    //         message.setMessage("success");
-    //     } catch (Exception e) {
-    //         message.setStatus(HttpStatus.BAD_REQUEST);
-    //         message.setMessage("error");
-    //         message.setMemo(e.getMessage());
-    //     }
-    //     return new ResponseEntity<>(message, message.getStatus());
-    // }
 
     @GetMapping("/list/study-room/{studyRoomId}")
     public ResponseEntity<?> searchListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {

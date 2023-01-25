@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.planner.server.domain.study_category.dto.StudyCategoryDto;
+import com.planner.server.domain.study_category.dto.StudyCategoryReqDto;
+import com.planner.server.domain.study_category.dto.StudyCategoryResDto;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
 
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class StudyCategoryService {
     private final StudyCategoryRepository studyCategoryRepository;
 
-    public void createOne(StudyCategoryDto studyCategoryDto) {
+    public void createOne(StudyCategoryReqDto studyCategoryDto) {
         StudyCategory studyCategory = StudyCategory.builder()
             .id(UUID.randomUUID())
             .name(studyCategoryDto.getName())
@@ -31,13 +32,13 @@ public class StudyCategoryService {
     }
     
     @Transactional(readOnly = true)
-    public List<StudyCategoryDto> searchAll() {
+    public List<StudyCategoryResDto> searchAll() {
         List<StudyCategory> studyCategories = studyCategoryRepository.findAll();
-        List<StudyCategoryDto> studyCategoryDtos = studyCategories.stream().map(entity -> StudyCategoryDto.toDto(entity)).collect(Collectors.toList());
+        List<StudyCategoryResDto> studyCategoryDtos = studyCategories.stream().map(entity -> StudyCategoryResDto.toDto(entity)).collect(Collectors.toList());
         return studyCategoryDtos;
     }
 
-    public void updateOne(StudyCategoryDto studyCategoryDto) {
+    public void updateOne(StudyCategoryReqDto studyCategoryDto) {
         Optional<StudyCategory> entityOpt = studyCategoryRepository.findById(studyCategoryDto.getId());
 
         if(entityOpt.isPresent()) {

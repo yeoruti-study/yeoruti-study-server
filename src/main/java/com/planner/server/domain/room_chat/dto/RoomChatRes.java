@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.planner.server.domain.room_chat.entity.RoomChat;
-import com.planner.server.domain.study_room.dto.StudyRoomDto;
+import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,16 +17,16 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomChatDto {
+public class RoomChatRes {
     private UUID id;
     private String content;
-    private StudyRoomDto studyRoomDto;
+    private StudyRoomResDto studyRoomDto;
     private LocalDateTime createdAt;
 
-    public static RoomChatDto toDto(RoomChat entity) {
-        StudyRoomDto studyRoomDto = StudyRoomDto.toDto(entity.getStudyRoom());
+    public static RoomChatRes toDto(RoomChat entity) {
+        StudyRoomResDto studyRoomDto = StudyRoomResDto.toDto(entity.getStudyRoom());
 
-        return RoomChatDto.builder()
+        return RoomChatRes.builder()
             .id(entity.getId())
             .content(entity.getContent())
             .studyRoomDto(studyRoomDto)
