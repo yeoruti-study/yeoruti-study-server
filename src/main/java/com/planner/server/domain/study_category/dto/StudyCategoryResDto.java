@@ -23,16 +23,35 @@ public class StudyCategoryResDto {
     private UUID id;
     private String name;
     private String description;
-    private List<StudyRoomResDto> studyRoomDtos = new ArrayList<>();
 
     public static StudyCategoryResDto toDto(StudyCategory entity) {
-        List<StudyRoomResDto> studyRoomDtos = entity.getStudyRooms().stream().map(room -> StudyRoomResDto.toDto(room)).collect(Collectors.toList());
-        
         return StudyCategoryResDto.builder()
             .id(entity.getId())
             .name(entity.getName())
             .description(entity.getDescription())
-            .studyRoomDtos(studyRoomDtos)
             .build();
     }
+
+    // @Getter
+    // @Builder
+    // @ToString
+    // @AllArgsConstructor
+    // @NoArgsConstructor
+    // private static class StudyCategoryAndStudyRoom {
+    //     private UUID id;
+    //     private String name;
+    //     private String description;
+    //     private List<StudyRoomResDto> studyRoomDtos = new ArrayList<>();
+
+    //     public static StudyCategoryAndStudyRoom toDto(StudyCategory entity) {
+    //         List<StudyRoomResDto> studyRoomDtos = entity.getStudyRooms().stream().map(room -> StudyRoomResDto.toDto(room)).collect(Collectors.toList());
+            
+    //         return StudyCategoryAndStudyRoom.builder()
+    //             .id(entity.getId())
+    //             .name(entity.getName())
+    //             .description(entity.getDescription())
+    //             .studyRoomDtos(studyRoomDtos)
+    //             .build();
+    //     }
+    // }
 }
