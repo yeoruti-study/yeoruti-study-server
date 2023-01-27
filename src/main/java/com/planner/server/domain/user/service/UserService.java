@@ -19,7 +19,7 @@ public class UserService {
     // private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
-    public void signUp(SignUpReqDto reqDto) throws Exception{
+    public void signUp(UserReqDto reqDto) throws Exception{
 
         String salt = UUID.randomUUID().toString();
         String password = reqDto.getPassword() + salt;
@@ -57,19 +57,20 @@ public class UserService {
         return findUser.get();
     }
 
-    public UserListDto findAll() {
+    public UserGetDto findAll() {
         List<User> users = userRepository.findAll();
-        UserListDto userListDto = new UserListDto();
-        userListDto.work(users);
-        return userListDto;
+        UserGetDto userGetDto = new UserGetDto();
+
+        userGetDto.work(users);
+        return userGetDto;
     }
 
-    public UserDto findByProfileName(String profileName){
-        return UserDto.toDto(userRepository.findByProfileName(profileName).get());
+    public UserResDto findByProfileName(String profileName){
+        return UserResDto.toDto(userRepository.findByProfileName(profileName).get());
     }
 
     @Transactional
-    public void changeProfile(ProfileReqDto req) throws IllegalArgumentException{
+    public void changeProfile(UserReqDto req) throws IllegalArgumentException{
         Optional<User> user = userRepository.findById(req.getId());
 
         if(!user.isPresent()){
@@ -79,10 +80,10 @@ public class UserService {
         findUser.fixProfile(req);
     }
 
-    public String deleteUser(DeleteReqDto req){
+    public String deleteUser(UserReqDto req) throws Exception {
         Optional<User> findUser = userRepository.findById(req.getId());
         if(!findUser.isPresent()){
-            throw new NullPointerException();
+            throw new Exception("유저가 존재하지 않습니다.");
         }
         try{
             userRepository.delete(findUser.get());

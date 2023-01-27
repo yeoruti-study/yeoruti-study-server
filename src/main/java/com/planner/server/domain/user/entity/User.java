@@ -5,8 +5,7 @@ import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
-import com.planner.server.domain.user.dto.ProfileReqDto;
-import com.planner.server.domain.user.dto.UserDto;
+import com.planner.server.domain.user.dto.UserReqDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -116,12 +115,12 @@ public class User implements Serializable {
         friend.setUser(this);
     }
 
-    public void fixProfile(ProfileReqDto profileDto) {
-        this.profileName = profileDto.getProfileName();
-        this.profileAge = profileDto.getProfileAge();
-        this.profileImagePath = profileDto.getProfileImagePath();
-        this.friendAcceptance = profileDto.isFriendAcceptance();
-        this.alarmPermission = profileDto.isAlarmPermission();
+    public void fixProfile(UserReqDto reqDto) {
+        this.profileName = reqDto.getProfileName();
+        this.profileAge = reqDto.getProfileAge();
+        this.profileImagePath = reqDto.getProfileImagePath();
+        this.friendAcceptance = reqDto.isFriendAcceptance();
+        this.alarmPermission = reqDto.isAlarmPermission();
     }
 
     public void fixPassword(String password){

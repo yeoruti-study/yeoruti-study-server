@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FriendReqDto {
+public class SaveReqDto {
 
     private String userProfileName;
     private String friendProfileName;

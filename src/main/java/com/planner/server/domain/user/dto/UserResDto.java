@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class UserDto {
+public class UserResDto {
 
     private UUID id;
     private String username;
@@ -19,9 +19,9 @@ public class UserDto {
     private boolean alarmPermission;
     private boolean friendAcceptance;
 
-    public static UserDto toDto(User user) {
+    public static UserResDto toDto(User user) {
 
-        return UserDto.builder()
+        return UserResDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .roles(user.getRoles())

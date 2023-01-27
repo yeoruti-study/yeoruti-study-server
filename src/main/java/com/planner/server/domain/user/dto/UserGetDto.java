@@ -9,14 +9,14 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class UserListDto {
+public class UserGetDto {
 
-    public List<UserDto> userDtos = new ArrayList<>();
+    public List<UserResDto> userResDtos = new ArrayList<>();
 
     public void work(List<User> users){
         for (User user : users) {
-            UserDto userDto = UserDto.toDto(user);
-            this.userDtos.add(userDto);
+            UserResDto userResDto = UserResDto.toDto(user);
+            this.userResDtos.add(userResDto);
         }
     }
 

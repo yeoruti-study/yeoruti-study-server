@@ -8,20 +8,19 @@ import java.util.List;
 
 @Data
 @Builder
-public class FriendListDto {
+public class FriendGetDto {
 
     private int count;
     private List<FriendDto> friendList = new ArrayList<>();
-
     public void addFriendDto(FriendDto friendDto){
         this.friendList.add(friendDto);
     }
 
-    public static FriendListDto toDto(List<FriendDto> friendDtos){
+    public static FriendGetDto toDto(List<FriendDto> friendDtos){
         List<FriendDto> temp = new ArrayList<>();
         friendDtos.stream().forEach(friendDto -> temp.add(friendDto));
 
-        return FriendListDto.builder()
+        return FriendGetDto.builder()
                 .count(temp.size())
                 .friendList(temp)
                 .build();

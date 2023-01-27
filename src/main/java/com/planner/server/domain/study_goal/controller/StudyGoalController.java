@@ -5,7 +5,6 @@ import com.planner.server.domain.study_goal.dto.DeleteReqDto;
 import com.planner.server.domain.study_goal.dto.SaveReqDto;
 import com.planner.server.domain.study_goal.dto.StudyGoalDto;
 import com.planner.server.domain.study_goal.service.StudyGoalService;
-import com.planner.server.validate.Validate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +45,6 @@ public class StudyGoalController {
     public ResponseEntity<?> getById(@RequestParam UUID id){
         StudyGoalDto studyGoalDto;
         try {
-            Validate.validateId(id);
             studyGoalDto = studyGoalService.findById(id);
         } catch (Exception e) {
             Message message = Message.builder()

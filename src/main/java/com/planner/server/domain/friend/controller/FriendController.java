@@ -22,8 +22,8 @@ public class FriendController {
     private final FriendService friendService;
     private final UserService userService;
 
-    @PostMapping("")
-    public ResponseEntity<?> save(@RequestBody FriendReqDto req){
+    @PostMapping("/one")
+    public ResponseEntity<?> save(@RequestBody SaveReqDto req){
         try {
             FriendDto savedFriend = friendService.save(req, 0);
         } catch (Exception e) {
@@ -43,21 +43,21 @@ public class FriendController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllFriends(){
-        FriendListDto friendListDto = friendService.findAll();
+        FriendGetDto friendGetDto = friendService.findAll();
 
         Message message = Message.builder()
-                .data(friendListDto)
+                .data(friendGetDto)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/list")
     public ResponseEntity<?> getFriendsByUserId(@RequestParam UUID id){
-        FriendListDto friendListDto = null;
+        FriendGetDto friendGetDto = null;
         try {
-            friendListDto = friendService.findByUserId(id);
+            friendGetDto = friendService.findByUserId(id);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -67,16 +67,16 @@ public class FriendController {
         }
 
         Message message = Message.builder()
-                .data(friendListDto)
+                .data(friendGetDto)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @PatchMapping("")
+    @PatchMapping("/one")
     // 한 번 사용하면 다시 못 사용하도록 추후에 조치하기(allow : false -> true 면 거기서 끝!)
-    public ResponseEntity<?> changeAllowance(@RequestBody AllowanceReqDto req){
+    public ResponseEntity<?> changeAllowance(@RequestBody FriendDto req){
         friendService.changeAllowance(req);
 
         Friend friendEntity = null;
@@ -93,7 +93,7 @@ public class FriendController {
         User user = friendEntity.getUser();
         User friend = friendEntity.getFriend();
 
-        FriendReqDto reqDto = FriendReqDto.builder()
+        SaveReqDto reqDto = SaveReqDto.builder()
                 .userProfileName(friend.getProfileName())
                 .friendProfileName(user.getProfileName())
                 .build();
@@ -119,8 +119,8 @@ public class FriendController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteFriend(@RequestBody FriendDeleteReqDto req){
+    @DeleteMapping("/one")
+    public ResponseEntity<?> deleteFriend(@RequestBody FriendDto req){
         try {
             friendService.deleteById(req);
         } catch (Exception e) {

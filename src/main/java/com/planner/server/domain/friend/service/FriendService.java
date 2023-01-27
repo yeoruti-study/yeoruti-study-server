@@ -4,7 +4,7 @@ package com.planner.server.domain.friend.service;
 import com.planner.server.domain.friend.dto.*;
 import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.friend.repository.FriendRepository;
-import com.planner.server.domain.user.dto.UserDto;
+import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
-    public FriendDto save(FriendReqDto req, int flag) throws Exception {
+    public FriendDto save(SaveReqDto req, int flag) throws Exception {
 
         Optional<User> findUser = userRepository.findByProfileName(req.getUserProfileName());
         Optional<User> findFriend = userRepository.findByProfileName(req.getFriendProfileName());
@@ -58,8 +58,8 @@ public class FriendService {
         Friend savedFriend = friendRepository.save(friendEntity);
 
         return FriendDto.builder()
-                .user(UserDto.toDto(user))
-                .friend(UserDto.toDto(friend))
+                .user(UserResDto.toDto(user))
+                .friend(UserResDto.toDto(friend))
                 .allow(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -105,7 +105,7 @@ public class FriendService {
         return friend;
     }
 
-    public FriendListDto findByUserId(UUID id) throws Exception {
+    public FriendGetDto findByUserId(UUID id) throws Exception {
         List<Friend> friendList = new ArrayList<>();
 
         try{
@@ -117,7 +117,7 @@ public class FriendService {
         List<FriendDto> friendDtoList = new ArrayList<>();
         friendList.forEach(f -> friendDtoList.add(FriendDto.toDto(f)));
 
-        return FriendListDto.toDto(friendDtoList);
+        return FriendGetDto.toDto(friendDtoList);
     }
 
     public List<Friend> findByFriendId(String friendId) {
@@ -125,17 +125,17 @@ public class FriendService {
         return friendRepository.findByFriendId(id);
     }
 
-    public FriendListDto findAll(){
+    public FriendGetDto findAll(){
         List<Friend> friendList = friendRepository.findAll();
 
         List<FriendDto> friendDtoList = new ArrayList<>();
         friendList.stream().forEach(friend -> friendDtoList.add(FriendDto.toDto(friend)));
 
-        return FriendListDto.toDto(friendDtoList);
+        return FriendGetDto.toDto(friendDtoList);
     }
 
-    public void deleteById(FriendDeleteReqDto req) throws Exception {
-        Optional<Friend> findFriend = friendRepository.findById(UUID.fromString(req.getId()));
+    public void deleteById(FriendDto req) throws Exception {
+        Optional<Friend> findFriend = friendRepository.findById(req.getId());
 
         if(!findFriend.isPresent()) throw new Exception("친구가 존재하지 않습니다.");
 
@@ -150,7 +150,7 @@ public class FriendService {
     }
 
     @Transactional
-    public void changeAllowance(AllowanceReqDto req){
+    public void changeAllowance(FriendDto req){
         UUID id = req.getId();
         Friend friend = friendRepository.findById(id).get();
         friend.fixAllowance();
