@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class StudyGoalDto {
+public class StudyGoalReqDto {
 
     private UUID id;
     private String title;
@@ -19,17 +19,17 @@ public class StudyGoalDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Duration goalTime;
-    private String userProfileName;
+    private UUID userId;
 
-    public static StudyGoalDto toDto(StudyGoal studyGoal){
-        return StudyGoalDto.builder()
+    public static StudyGoalReqDto toDto(StudyGoal studyGoal){
+        return StudyGoalReqDto.builder()
                 .id(studyGoal.getId())
                 .title(studyGoal.getGoalTitle())
                 .detail(studyGoal.getGoalDetail())
                 .startDate(studyGoal.getStartDate())
                 .endDate(studyGoal.getEndDate())
                 .goalTime(studyGoal.getGoalTime())
-                .userProfileName(studyGoal.getUser().getProfileName())
+                .userId(studyGoal.getUser().getId())
                 .build();
     }
 }

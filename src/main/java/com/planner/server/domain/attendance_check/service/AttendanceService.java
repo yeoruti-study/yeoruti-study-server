@@ -1,12 +1,13 @@
 package com.planner.server.domain.attendance_check.service;
 
-import com.planner.server.domain.attendance_check.dto.AttendanceDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceListDto;
+import com.planner.server.domain.attendance_check.dto.AttendanceResDto;
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
 import com.planner.server.domain.attendance_check.repository.AttendanceRepository;
-import com.planner.server.domain.user.dto.UserDto;
+import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,20 +20,19 @@ public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
     private final UserRepository userRepository;
-    public AttendanceDto save(UUID userId) {
-        Optional<User> findUser = userRepository.findById(userId);
-        if(!findUser.isPresent()){
-            throw new NoSuchElementException("[id] 확인 요망.");
-        }
-        User user = findUser.get();
+    private final UserService userService;
+
+    public AttendanceResDto save(UUID userId) throws Exception {
+        User findUser = userService.findById(userId);
 
         AttendanceCheck attendanceCheck = AttendanceCheck.builder()
                 .id(UUID.randomUUID())
-                .user(user)
+                .user(findUser)
                 .createdAt(LocalDateTime.now())
                 .build();
         AttendanceCheck saveAttendance = attendanceRepository.save(attendanceCheck);
-        return AttendanceDto.toDto(saveAttendance, UserDto.toDto(user));
+
+        return AttendanceResDto.toDto(saveAttendance);
     }
 
     public AttendanceListDto findByUserId(UUID userId) {

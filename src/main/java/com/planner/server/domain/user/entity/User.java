@@ -77,7 +77,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<StudyGoal> studyGoals = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<AttendanceCheck> attendanceChecks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -87,7 +87,7 @@ public class User implements Serializable {
     private List<Friend> friends = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserStudySubject> userStudySubjects = new ArrayList<>();
 
     public void addRoomUser(RoomUser roomUser) {

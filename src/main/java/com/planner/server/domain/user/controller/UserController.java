@@ -21,9 +21,8 @@ public class UserController {
 
     /**
      * 회원가입 - 유저생성 */
-    @PostMapping ("")
-    public ResponseEntity<?> signUp(@RequestBody SignUpReqDto req){
-
+    @PostMapping ("/one")
+    public ResponseEntity<?> signUp(@RequestBody UserReqDto req){
         try {
             userService.signUp(req);
         } catch (Exception e) {
@@ -46,7 +45,7 @@ public class UserController {
      * 전체 유저 조회 */
     @GetMapping("/all")
     public ResponseEntity<?> findAll(){
-        UserListDto result = userService.findAll();
+        UserGetDto result = userService.findAll();
         Message message = Message.builder()
                 .data(result)
                 .status(HttpStatus.OK)
@@ -57,12 +56,12 @@ public class UserController {
 
     /**
      * 유저 id(UUID)로 조회 */
-    @GetMapping("/id")
+    @GetMapping("/one")
     public ResponseEntity<?> findOne(@RequestParam UUID id){
-        UserDto userDto = null;
+        UserResDto userResDto = null;
 
         try {
-            userDto = UserDto.toDto(userService.findById(id));
+            userResDto = UserResDto.toDto(userService.findById(id));
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -72,7 +71,7 @@ public class UserController {
         }
 
         Message message = Message.builder()
-                .data(userDto)
+                .data(userResDto)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
@@ -83,9 +82,9 @@ public class UserController {
 //     * 프로필 이름으로 조회 */
 //    @GetMapping("/profile")
 //    public ResponseEntity<?> findByProfileName(@RequestParam String profileName) {
-//        UserDto userDto = userService.findByProfileName(profileName);
+//        UserResDto userResDto = userService.findByProfileName(profileName);
 //        Message message = Message.builder()
-//                .data(userDto)
+//                .data(userResDto)
 //                .status(HttpStatus.OK)
 //                .message("success")
 //                .build();
@@ -94,8 +93,8 @@ public class UserController {
 
     /**
      * 유저 프로필 수정 (수정 예정)*/
-    @PutMapping ("/profile")
-    public ResponseEntity<?> updateUserProfile(@RequestBody ProfileReqDto req){
+    @PutMapping ("/profile/one")
+    public ResponseEntity<?> updateUserProfile(@RequestBody UserReqDto req){
         try{
             userService.changeProfile(req);
         }
@@ -116,10 +115,18 @@ public class UserController {
 
     /**
      * 유저 삭제*/
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteUser(@RequestBody DeleteReqDto req){
+    @DeleteMapping("/one")
+    public ResponseEntity<?> deleteUser(@RequestBody UserReqDto req){
         friendService.deleteByFriendId(req.getId());
-        userService.deleteUser(req);
+        try {
+            userService.deleteUser(req);
+        } catch (Exception e) {
+            Message message = Message.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
 
         Message message = Message.builder()
                 .status(HttpStatus.OK)

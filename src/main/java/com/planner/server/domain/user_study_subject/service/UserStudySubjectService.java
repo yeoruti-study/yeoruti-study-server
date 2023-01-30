@@ -2,10 +2,8 @@ package com.planner.server.domain.user_study_subject.service;
 
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
-import com.planner.server.domain.user_study_subject.dto.DeleteReqDto;
-import com.planner.server.domain.user_study_subject.dto.SaveReqDto;
-import com.planner.server.domain.user_study_subject.dto.UserSubjectDto;
-import com.planner.server.domain.user_study_subject.dto.UserSubjectListDto;
+import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
+import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import com.planner.server.domain.user_study_subject.repository.UserStudySubjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,7 @@ public class UserStudySubjectService {
     private final UserStudySubjectRepository userStudySubjectRepository;
     private final UserRepository userRepository;
 
-    public void save(SaveReqDto req) throws Exception {
+    public void save(UserStudySubjectReqDto req) throws Exception {
         Optional<UserStudySubject> byTitle = userStudySubjectRepository.findByTitle(req.getTitle());
         if(byTitle.isPresent()){
             throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
@@ -43,9 +41,9 @@ public class UserStudySubjectService {
         userStudySubjectRepository.save(userStudySubject);
     }
 
-    public UserSubjectListDto findByUserId(UUID userId) throws Exception {
+    public List<UserStudySubjectResDto> findByUserId(UUID userId) throws Exception {
 
-        List<UserStudySubject> subjectList;
+        List<UserStudySubject> subjectList = new ArrayList<>();
         try{
             subjectList = userStudySubjectRepository.findByUserId(userId);
         }
@@ -53,24 +51,23 @@ public class UserStudySubjectService {
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }
 
-        List<UserSubjectDto> userSubjectDtoList = new ArrayList<>();
-        subjectList.forEach(s->userSubjectDtoList.add(UserSubjectDto.toDto(s)));
+        List<UserStudySubjectResDto> userStudySubjectResDtoList = new ArrayList<>();
+        subjectList.forEach(s-> userStudySubjectResDtoList.add(UserStudySubjectResDto.toDto(s)));
 
-        return UserSubjectListDto.toDto(userSubjectDtoList);
+        return userStudySubjectResDtoList;
     }
 
 
-    public UserSubjectDto findById(UUID id) throws Exception {
+    public UserStudySubjectResDto findById(UUID id) throws Exception {
         Optional<UserStudySubject> byId = userStudySubjectRepository.findById(id);
         if(!byId.isPresent())
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
 
         UserStudySubject userStudySubject = byId.get();
-        UserSubjectDto userSubjectDto = UserSubjectDto.toDto(userStudySubject);
-        return userSubjectDto;
+        return UserStudySubjectResDto.toDto(userStudySubject);
     }
 
-    public void deleteById(DeleteReqDto req) throws Exception {
+    public void deleteById(UserStudySubjectReqDto req) throws Exception {
         Optional<UserStudySubject> byId = userStudySubjectRepository.findById(req.getId());
         if(!byId.isPresent()){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
@@ -79,7 +76,7 @@ public class UserStudySubjectService {
         userStudySubjectRepository.delete(userStudySubject);
     }
 
-    public void deleteByUserId(DeleteReqDto req) throws Exception {
+    public void deleteByUserId(UserStudySubjectReqDto req) throws Exception {
         List<UserStudySubject> subjectList;
         try{
             subjectList = userStudySubjectRepository.findByUserId(req.getUserId());

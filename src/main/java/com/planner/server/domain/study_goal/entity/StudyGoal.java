@@ -38,8 +38,10 @@ public class StudyGoal implements Serializable {
 
     private Duration goalTime;
 
+   // @Type(type = "DATETIME(6)")
     private LocalDateTime startDate;
 
+    //@Type(type = "DATETIME(6)")
     private LocalDateTime endDate;
 
     @Builder

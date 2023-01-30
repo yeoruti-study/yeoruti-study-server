@@ -26,8 +26,8 @@ public class FriendService {
 
     public FriendDto save(SaveReqDto req, int flag) throws Exception {
 
-        Optional<User> findUser = userRepository.findByProfileName(req.getUserProfileName());
-        Optional<User> findFriend = userRepository.findByProfileName(req.getFriendProfileName());
+        Optional<User> findUser = userRepository.findById(req.getUserId());
+        Optional<User> findFriend = userRepository.findById(req.getFriendId());
         if(!findUser.isPresent() || !findFriend.isPresent())
             throw new Exception("자신 또는 친구가 존재하지 않습니다. id 값을 확인해주세요.");
 

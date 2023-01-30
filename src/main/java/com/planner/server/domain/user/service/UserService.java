@@ -65,10 +65,6 @@ public class UserService {
         return userGetDto;
     }
 
-    public UserResDto findByProfileName(String profileName){
-        return UserResDto.toDto(userRepository.findByProfileName(profileName).get());
-    }
-
     @Transactional
     public void changeProfile(UserReqDto req) throws IllegalArgumentException{
         Optional<User> user = userRepository.findById(req.getId());

@@ -1,16 +1,16 @@
 package com.planner.server.domain.user_study_subject.controller;
 
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.user_study_subject.dto.DeleteReqDto;
-import com.planner.server.domain.user_study_subject.dto.SaveReqDto;
-import com.planner.server.domain.user_study_subject.dto.UserSubjectDto;
-import com.planner.server.domain.user_study_subject.dto.UserSubjectListDto;
+import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
+import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,8 +20,8 @@ public class UserStudySubjectController {
 
     private final UserStudySubjectService userStudySubjectService;
 
-    @PostMapping("")
-    public ResponseEntity<?> save(@RequestBody SaveReqDto req){
+    @PostMapping("/one")
+    public ResponseEntity<?> save(@RequestBody UserStudySubjectReqDto req){
         try{
             userStudySubjectService.save(req);
         }catch (Exception e){
@@ -39,11 +39,11 @@ public class UserStudySubjectController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<?> findByUser(@RequestParam UUID id){
-        UserSubjectListDto userSubjectListDto;
+    @GetMapping("/user/one")
+    public ResponseEntity<?> findByUser(@RequestParam UUID userId){
+        List<UserStudySubjectResDto> list = new ArrayList<>();
         try {
-            userSubjectListDto = userStudySubjectService.findByUserId(id);
+            list = userStudySubjectService.findByUserId(userId);
         }catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -53,7 +53,7 @@ public class UserStudySubjectController {
         }
 
         Message message = Message.builder()
-                .data(userSubjectListDto)
+                .data(list)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
@@ -61,9 +61,9 @@ public class UserStudySubjectController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("/one")
     public ResponseEntity<?> findById(@RequestParam UUID id){
-        UserSubjectDto byId;
+        UserStudySubjectResDto byId;
         try {
             byId = userStudySubjectService.findById(id);
         } catch (Exception e) {
@@ -82,8 +82,8 @@ public class UserStudySubjectController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteById(@RequestBody DeleteReqDto req){
+    @DeleteMapping("/one")
+    public ResponseEntity<?> deleteById(@RequestBody UserStudySubjectReqDto req){
         try {
             userStudySubjectService.deleteById(req);
         }catch (Exception e) {
@@ -100,8 +100,8 @@ public class UserStudySubjectController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/user")
-    public ResponseEntity<?> deleteByUserId(@RequestBody DeleteReqDto req){
+    @DeleteMapping("/user/one")
+    public ResponseEntity<?> deleteByUserId(@RequestBody UserStudySubjectReqDto req){
         try {
             userStudySubjectService.deleteByUserId(req);
         }catch (Exception e) {

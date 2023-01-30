@@ -94,8 +94,8 @@ public class FriendController {
         User friend = friendEntity.getFriend();
 
         SaveReqDto reqDto = SaveReqDto.builder()
-                .userProfileName(friend.getProfileName())
-                .friendProfileName(user.getProfileName())
+                .userId(friend.getId())
+                .friendId(user.getId())
                 .build();
 
         try {

@@ -1,9 +1,8 @@
 package com.planner.server.domain.attendance_check.controller;
 
-import com.planner.server.domain.attendance_check.dto.AttendanceDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceListDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceReqDto;
-import com.planner.server.domain.attendance_check.dto.DeleteReqDto;
+import com.planner.server.domain.attendance_check.dto.AttendanceResDto;
 import com.planner.server.domain.attendance_check.service.AttendanceService;
 import com.planner.server.domain.message.Message;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +20,12 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
-    @PostMapping("")
+    @PostMapping("/one")
     public ResponseEntity<?> save(@RequestBody AttendanceReqDto req){
-        AttendanceDto attendanceDto;
+        AttendanceResDto attendanceDto;
         try{
             attendanceDto = attendanceService.save(req.getUserId());
-        }
-        catch (NoSuchElementException e){
+        } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
@@ -42,7 +40,7 @@ public class AttendanceController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("")
+    @GetMapping("/user/one")
     public ResponseEntity<?> findByUserId(@RequestParam UUID userId){
         AttendanceListDto attendanceListDto;
         try{
@@ -64,8 +62,8 @@ public class AttendanceController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteById(@RequestBody DeleteReqDto req){
+    @DeleteMapping("/one")
+    public ResponseEntity<?> deleteById(@RequestBody AttendanceReqDto req){
         try{
             attendanceService.deleteById(req.getId());
         }
