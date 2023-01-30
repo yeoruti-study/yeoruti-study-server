@@ -2,6 +2,7 @@ package com.planner.server.domain.study_room.controller;
 
 import java.util.UUID;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.study_room.dto.StudyRoomResDto;
+import com.planner.server.domain.study_room.dto.StudyRoomReqDto;
 import com.planner.server.domain.study_room.service.StudyRoomService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/study-room")
+@RequestMapping("/api/study-room")
 @RequiredArgsConstructor
 public class StudyRoomController {
     private final StudyRoomService studyRoomService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody StudyRoomResDto studyRoomDto) {
+    public ResponseEntity<?> createOne(@RequestBody StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         Message message = new Message();
 
         try {
@@ -58,7 +59,7 @@ public class StudyRoomController {
     }
 
     @PutMapping("/one")
-    public ResponseEntity<?> updateOne(@RequestBody StudyRoomResDto studyRoomDto) {
+    public ResponseEntity<?> updateOne(@RequestBody StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         Message message = new Message();
 
         try {
@@ -81,6 +82,10 @@ public class StudyRoomController {
             studyRoomService.deleteOne(studyRoomId);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
+        } catch(ConstraintViolationException e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo("삭제할 수 없는 데이터입니다.");
         } catch (Exception e) {
             message.setStatus(HttpStatus.BAD_REQUEST);
             message.setMessage("error");
@@ -89,19 +94,19 @@ public class StudyRoomController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/room-chat/{studyRoomId}")
-    public ResponseEntity<?> searchStudyRoomChat(@PathVariable(name = "studyRoomId") UUID studyRoomId) {
-        Message message = new Message();
+    // @GetMapping("/room-chat/{studyRoomId}")
+    // public ResponseEntity<?> searchStudyRoomChat(@PathVariable(name = "studyRoomId") UUID studyRoomId) {
+    //     Message message = new Message();
 
-        try {
-            message.setData(studyRoomService.searchStudyRoomChat(studyRoomId));
-            message.setStatus(HttpStatus.OK);
-            message.setMessage("success");
-        } catch (Exception e) {
-            message.setStatus(HttpStatus.BAD_REQUEST);
-            message.setMessage("error");
-            message.setMemo(e.getMessage());
-        }
-        return new ResponseEntity<>(message, message.getStatus());
-    }
+    //     try {
+    //         message.setData(studyRoomService.searchStudyRoomChat(studyRoomId));
+    //         message.setStatus(HttpStatus.OK);
+    //         message.setMessage("success");
+    //     } catch (Exception e) {
+    //         message.setStatus(HttpStatus.BAD_REQUEST);
+    //         message.setMessage("error");
+    //         message.setMemo(e.getMessage());
+    //     }
+    //     return new ResponseEntity<>(message, message.getStatus());
+    // }
 }

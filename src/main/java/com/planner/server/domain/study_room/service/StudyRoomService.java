@@ -13,6 +13,7 @@ import com.planner.server.domain.room_chat.dto.RoomChatRes;
 import com.planner.server.domain.room_chat.entity.RoomChat;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
+import com.planner.server.domain.study_room.dto.StudyRoomReqDto;
 import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 import com.planner.server.domain.study_room.entity.StudyRoom;
 import com.planner.server.domain.study_room.repository.StudyRoomRepository;
@@ -26,8 +27,8 @@ public class StudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
     private final StudyCategoryRepository studyCategoryRepository;
 
-    // TODO :: masterUserId
-    public void createOne(StudyRoomResDto studyRoomDto) {
+    // TODO :: masterUserId - userService : getUserId 사용하기
+    public void createOne(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         UUID studyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
 
         // 1. study category 조회
@@ -60,13 +61,23 @@ public class StudyRoomService {
         return studyRoomDtos;
     }
 
-    public void updateOne(StudyRoomResDto studyRoomDto) {
+    public void updateOne(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomDto.getId());
-
+        Optional<StudyCategory> studyCategoryOpt = null;
+        
         if(entityOpt.isPresent()) {
-            StudyRoom entity = entityOpt.get();
+            UUID updatedStudyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
+            if(!entityOpt.get().getStudyCategory().getId().equals(updatedStudyCategoryId)){
+                studyCategoryOpt = studyCategoryRepository.findById(updatedStudyCategoryId);
 
+                if(studyCategoryOpt.isPresent()) {
+                    throw new NullPointerException("존재하지 않는 데이터");
+                }
+            }
+
+            StudyRoom entity = entityOpt.get();
             entity.setName(studyRoomDto.getName())
+                .setStudyCategory(studyCategoryOpt.get())
                 .setMaximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople())
                 .setStudyGoalTime(studyRoomDto.getStudyGoalTime())
                 .setRoomPassword(studyRoomDto.getRoomPassword())
@@ -90,6 +101,8 @@ public class StudyRoomService {
     // TODO :: room chat 조회 확인
     public List<RoomChatRes> searchStudyRoomChat(UUID studyRoomId) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomId);
+
+        System.out.println(entityOpt);
 
         if(entityOpt.isPresent()) {
             StudyRoom entity = entityOpt.get();

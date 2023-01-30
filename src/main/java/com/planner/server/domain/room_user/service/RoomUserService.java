@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.planner.server.domain.room_user.dto.RoomUserReqDto;
 import com.planner.server.domain.room_user.dto.RoomUserResDto;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.room_user.repository.RoomUserRepository;
@@ -25,7 +26,7 @@ public class RoomUserService {
     private final UserRepository userRepository;
     private final StudyRoomRepository studyRoomRepository;
 
-    public void createOne(RoomUserResDto roomUserDto) {
+    public void createOne(RoomUserReqDto roomUserDto) {
         UUID userId = roomUserDto.getUserDto().getId();
         UUID studyRoomId = roomUserDto.getStudyRoomDto().getId();
         

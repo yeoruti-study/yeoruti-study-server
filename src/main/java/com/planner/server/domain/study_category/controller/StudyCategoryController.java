@@ -2,6 +2,7 @@ package com.planner.server.domain.study_category.controller;
 
 import java.util.UUID;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/study-category")
+@RequestMapping("/api/study-category")
 public class StudyCategoryController {
     private final StudyCategoryService studyCategoryService;
 
@@ -81,6 +82,10 @@ public class StudyCategoryController {
             studyCategoryService.deleteOne(studyCategoryId);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
+        } catch(ConstraintViolationException e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo("삭제할 수 없는 데이터입니다.");
         } catch (Exception e) {
             message.setStatus(HttpStatus.BAD_REQUEST);
             message.setMessage("error");

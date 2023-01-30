@@ -50,12 +50,13 @@ public class StudyCategoryService {
         }
     }
 
+    
     public void deleteOne(UUID studyCategoryId) {
         Optional<StudyCategory> entityOpt = studyCategoryRepository.findById(studyCategoryId);
 
         if(entityOpt.isPresent()) {
             studyCategoryRepository.delete(entityOpt.get());
-        }else {
+        } else {
             throw new NullPointerException("존재하지 않는 데이터");
         }
     }

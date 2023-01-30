@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.room_user.dto.RoomUserResDto;
+import com.planner.server.domain.room_user.dto.RoomUserReqDto;
 import com.planner.server.domain.room_user.service.RoomUserService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/room-user")
+@RequestMapping("/api/room-user")
 public class RoomUserController {
     private final RoomUserService roomUserService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody RoomUserResDto roomUserDto) {
+    public ResponseEntity<?> createOne(@RequestBody RoomUserReqDto roomUserDto) {
         Message message = new Message();
 
         try {
@@ -40,7 +40,7 @@ public class RoomUserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/list/study-room/{studyRoomId}")
+    @GetMapping("/many/study-room/{studyRoomId}")
     public ResponseEntity<?> searchListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {
         Message message = new Message();
 
