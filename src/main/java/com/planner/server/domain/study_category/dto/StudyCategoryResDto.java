@@ -37,7 +37,7 @@ public class StudyCategoryResDto {
     // @ToString
     // @AllArgsConstructor
     // @NoArgsConstructor
-    // private static class StudyCategoryAndStudyRoom {
+    // public static class JoinStudyRoom {
     //     private UUID id;
     //     private String name;
     //     private String description;

@@ -1,12 +1,6 @@
 package com.planner.server.domain.study_category.dto;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import com.planner.server.domain.study_category.entity.StudyCategory;
-import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

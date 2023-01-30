@@ -26,27 +26,21 @@ import lombok.ToString;
 public class StudyRoomResDto {
     private UUID id;
     private String name;
-    private StudyCategoryResDto studyCategoryDto;
+    private StudyCategoryResDto studyCategoryDto;   // study room을 조회할 때, 카테고리는 항상 포함
     private int maximumNumberOfPeople;
     private Duration studyGoalTime;
     private String roomPassword;
     private UUID masterUserId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    // TODO :: DTO생성되면 넣어야할 객체들
-    // private List<RoomUserDto> roomUserDtos = new ArrayList<>();
-    private List<RoomChatRes> roomChatDtos = new ArrayList<>();
 
     public static StudyRoomResDto toDto(StudyRoom entity) {
-        // StudyCategoryDto studyCategoryDto = StudyCategoryDto.toDto(entity.getStudyCategory());
         StudyCategory studyCategory = entity.getStudyCategory();
         StudyCategoryResDto studyCategoryDto = StudyCategoryResDto.builder()
             .id(studyCategory.getId())
             .name(studyCategory.getName())
             .description(studyCategory.getDescription())
             .build();
-            
-        List<RoomChatRes> roomChatDtos = entity.getRoomChats().stream().map(chat -> RoomChatRes.toDto(chat)).collect(Collectors.toList());
 
         return StudyRoomResDto.builder()
             .id(entity.getId())
@@ -58,7 +52,53 @@ public class StudyRoomResDto {
             .masterUserId(entity.getMasterUserId())
             .createdAt(entity.getCreatedAt())
             .updatedAt(entity.getUpdatedAt())
-            .roomChatDtos(roomChatDtos)
             .build();
     }
+
+    // @Getter
+    // @Builder
+    // @ToString
+    // @AllArgsConstructor
+    // @NoArgsConstructor
+    // private static class StudyRoomAndStudyCategoryAndRoomUserAndRoomChat {
+    //     private UUID id;
+    //     private String name;
+    //     private StudyCategoryResDto studyCategoryDto;
+    //     private int maximumNumberOfPeople;
+    //     private Duration studyGoalTime;
+    //     private String roomPassword;
+    //     private UUID masterUserId;
+    //     private LocalDateTime createdAt;
+    //     private LocalDateTime updatedAt;
+    //     // TODO :: DTO생성되면 넣어야할 객체들
+    //     // private List<RoomUserDto> roomUserDtos = new ArrayList<>();
+    //     private List<RoomChatRes> roomChatDtos = new ArrayList<>();
+
+    //     public static StudyRoomResDto toDto(StudyRoom entity) {
+    //         // StudyCategoryDto studyCategoryDto =
+    //         // StudyCategoryDto.toDto(entity.getStudyCategory());
+    //         StudyCategory studyCategory = entity.getStudyCategory();
+    //         StudyCategoryResDto studyCategoryDto = StudyCategoryResDto.builder()
+    //                 .id(studyCategory.getId())
+    //                 .name(studyCategory.getName())
+    //                 .description(studyCategory.getDescription())
+    //                 .build();
+
+    //         List<RoomChatRes> roomChatDtos = entity.getRoomChats().stream().map(chat -> RoomChatRes.toDto(chat))
+    //                 .collect(Collectors.toList());
+
+    //         return StudyRoomResDto.builder()
+    //                 .id(entity.getId())
+    //                 .name(entity.getName())
+    //                 .studyCategoryDto(studyCategoryDto)
+    //                 .maximumNumberOfPeople(entity.getMaximumNumberOfPeople())
+    //                 .studyGoalTime(entity.getStudyGoalTime())
+    //                 // .roomPassword(entity.getRoomPassword())
+    //                 .masterUserId(entity.getMasterUserId())
+    //                 .createdAt(entity.getCreatedAt())
+    //                 .updatedAt(entity.getUpdatedAt())
+    //                 .roomChatDtos(roomChatDtos)
+    //                 .build();
+    //     }
+    // }
 }
