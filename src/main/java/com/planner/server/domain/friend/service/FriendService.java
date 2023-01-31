@@ -7,10 +7,15 @@ import com.planner.server.domain.friend.repository.FriendRepository;
 import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.Console;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +24,22 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
+
+    Logger logger = LoggerFactory.getLogger(FriendService.class);
 
     public FriendDto save(SaveReqDto req, int flag) throws Exception {
 
-        Optional<User> findUser = userRepository.findById(req.getUserId());
-        Optional<User> findFriend = userRepository.findById(req.getFriendId());
-        if(!findUser.isPresent() || !findFriend.isPresent())
-            throw new Exception("자신 또는 친구가 존재하지 않습니다. id 값을 확인해주세요.");
+        User user = userService.findById(req.getUserId());
+        User friend = userService.findById(req.getFriendId());
 
-        User user = findUser.get();
-        User friend = findFriend.get();
+        if(flag == 0)
+            validateUserAndFriend(user, friend);
 
         if(flag == 1){
             Optional<Friend> tmp = friendRepository.alreadyExists(user.getId(), friend.getId());
@@ -40,19 +47,15 @@ public class FriendService {
                 friendRepository.delete(tmp.get());
             }
         }
-
-        if(alreadyExists(user, friend)){
+        else if(alreadyExists(user, friend)){
             throw new Exception("이미 전에 보냈던 친구 요청입니다.");
         }
-
-        validateUserAndFriend(user, friend);
 
         UUID id = UUID.randomUUID();
         Friend friendEntity = buildFriend(user, friend, id);
 
         if(flag == 1){
             friendEntity.fixAllowance();
-            alreadyExists(user, friend);
         }
 
         Friend savedFriend = friendRepository.save(friendEntity);
@@ -98,11 +101,10 @@ public class FriendService {
 
     public Friend findById(UUID id) throws Exception {
         Friend friend = null;
-        try{friend = friendRepository.findById(id).get();}
-        catch (Exception e){
-            throw new Exception("입력받은 ID로 친구를 찾을 수 없습니다.");
-        }
-        return friend;
+        Optional<Friend> byId = friendRepository.findById(id);
+        if(!byId.isPresent())
+            throw new Exception("[id]확인 요망. 친구가 존재하지 않습니다.");
+        return byId.get();
     }
 
     public FriendGetDto findByUserId(UUID id) throws Exception {
@@ -135,12 +137,15 @@ public class FriendService {
     }
 
     public void deleteById(FriendDto req) throws Exception {
+        logger.info("FriendService - deleteById 실행");
         Optional<Friend> findFriend = friendRepository.findById(req.getId());
+        logger.info("FriendRepository - findById 실행 완료");
 
-        if(!findFriend.isPresent()) throw new Exception("친구가 존재하지 않습니다.");
+        if(!findFriend.isPresent()) throw new Exception("[id] 확인 요망. id에 해당하는 친구요청이 존재하지 않습니다.");
 
         Friend friend = findFriend.get();
         friendRepository.delete(friend);
+        logger.info("FriendService - deleteById 실행 완료");
     }
 
     public void deleteByFriendId(UUID friendId){
@@ -150,10 +155,15 @@ public class FriendService {
     }
 
     @Transactional
-    public void changeAllowance(FriendDto req){
+    public Friend changeAllowance(FriendDto req) throws Exception {
         UUID id = req.getId();
-        Friend friend = friendRepository.findById(id).get();
-        friend.fixAllowance();
+        Optional<Friend> friend = friendRepository.findById(id);
+        logger.info("FriendRepository - findById 실행 완료");
+        if(!friend.isPresent()){
+            throw new Exception("[id]확인 요망. 해당 id의 친구요청이 존재하지 않습니다.");
+        }
+        friend.get().fixAllowance();
+        return friend.get();
     }
 
 }

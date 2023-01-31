@@ -1,30 +1,38 @@
-package com.planner.server.domain.user.controller;
+package com.planner.server.domain.record.controller;
 
-import com.planner.server.domain.friend.service.FriendService;
+import com.planner.server.domain.friend.dto.FriendDto;
+import com.planner.server.domain.friend.dto.SaveReqDto;
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.user.dto.*;
+import com.planner.server.domain.record.dto.RecordReqDto;
+import com.planner.server.domain.record.dto.RecordResDto;
+import com.planner.server.domain.record.service.RecordService;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
-public class UserController {
+@RequestMapping("/api/record")
+public class RecordController {
 
+    private final RecordService recordService;
     private final UserService userService;
-    private final FriendService friendService;
 
-    /**
-     * 회원가입 - 유저생성 */
-    @PostMapping ("/one")
-    public ResponseEntity<?> signUp(@RequestBody UserReqDto req){
+    Logger logger = LoggerFactory.getLogger(RecordService.class);
+
+    @PostMapping("/one")
+    public ResponseEntity<?> save(@RequestBody RecordReqDto req){
         try {
-            userService.signUp(req);
+            RecordResDto savedRecord = recordService.save(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -37,31 +45,26 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
-
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    /**
-     * 전체 유저 조회 */
     @GetMapping("/all")
-    public ResponseEntity<?> findAll(){
-        UserGetDto result = userService.findAll();
+    public ResponseEntity<?> getAll(){
+        List<RecordResDto> recordResDtoList = recordService.getAll();
+
         Message message = Message.builder()
-                .data(result)
+                .data(recordResDtoList)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    /**
-     * id(UUID)로 조회 */
-    @GetMapping("/one")
-    public ResponseEntity<?> findOne(@RequestParam UUID id){
-        UserResDto userResDto = null;
-
+    @GetMapping("/user/list")
+    public ResponseEntity<?> getByUserId(@RequestParam("userId") UUID req){
+        List<RecordResDto> recordResDtoList = null;
         try {
-            userResDto = UserResDto.toDto(userService.findById(id));
+            recordResDtoList = recordService.getByUserId(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -71,22 +74,19 @@ public class UserController {
         }
 
         Message message = Message.builder()
-                .data(userResDto)
+                .data(recordResDtoList)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-
-    /**
-     * 유저 프로필 수정 (수정 예정)*/
-    @PutMapping ("/profile/one")
-    public ResponseEntity<?> updateUserProfile(@RequestBody UserReqDto req){
-        try{
-            userService.changeProfile(req);
-        }
-        catch (IllegalArgumentException e){
+    @GetMapping("/user-study-subject/list")
+    public ResponseEntity<?> getByUserStudySubjectId(@RequestParam("id") UUID req){
+        List<RecordResDto> recordResDtoList = null;
+        try {
+            recordResDtoList = recordService.getByUserStudySubjectId(req);
+        } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
@@ -95,19 +95,17 @@ public class UserController {
         }
 
         Message message = Message.builder()
+                .data(recordResDtoList)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    /**
-     * 유저 삭제*/
     @DeleteMapping("/one")
-    public ResponseEntity<?> deleteUser(@RequestBody UserReqDto req){
-        friendService.deleteByFriendId(req.getId());
+    public ResponseEntity<?> delete(@RequestBody RecordReqDto req){
         try {
-            userService.deleteUser(req);
+            recordService.deleteById(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)

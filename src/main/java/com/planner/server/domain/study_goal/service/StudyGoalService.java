@@ -74,7 +74,6 @@ public class StudyGoalService {
 
     public List<StudyGoalResDto> findByUserId(UUID id) throws Exception {
         userService.findById(id);
-
         List<StudyGoal> studyGoals;
         try{
             studyGoals = studyGoalRepository.findByUserId(id);

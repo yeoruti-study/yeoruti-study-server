@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
@@ -25,6 +27,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "record")
 @Getter
+@NoArgsConstructor
 public class Record implements Serializable {
     
     @Id
@@ -51,4 +54,15 @@ public class Record implements Serializable {
     @JoinColumn(name = "user_study_subject_id", referencedColumnName = "id")
     private UserStudySubject userStudySubject;
 
+    @Builder
+    public Record(Long cid, UUID id, LocalDateTime startTime, LocalDateTime endTime, Duration totalStudyTime, boolean studying, User user, UserStudySubject userStudySubject) {
+        this.cid = cid;
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.totalStudyTime = totalStudyTime;
+        this.studying = studying;
+        this.user = user;
+        this.userStudySubject = userStudySubject;
+    }
 }
