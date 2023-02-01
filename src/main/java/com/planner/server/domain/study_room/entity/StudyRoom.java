@@ -1,5 +1,6 @@
 package com.planner.server.domain.study_room.entity;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,13 +23,23 @@ import com.planner.server.domain.room_chat.entity.RoomChat;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "study_room")
 @Getter
-public class StudyRoom {
+@ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
+public class StudyRoom implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,25 +48,31 @@ public class StudyRoom {
     @Type(type = "uuid-char")
     private UUID id;
 
+    @Setter
     private String name;
 
+    @Setter
     private int maximumNumberOfPeople;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_category_id")
+    @JoinColumn(name = "study_category_id", referencedColumnName="id")
     private StudyCategory studyCategory;
 
+    @Setter
     private Duration studyGoalTime;
 
+    @Setter
     private String roomPassword;
     
     private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
-
+    @Setter
     @Type(type = "uuid-char")
     private UUID masterUserId;
+
+    @Setter
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "studyRoom")
     private List<RoomUser> roomUsers = new ArrayList<>();

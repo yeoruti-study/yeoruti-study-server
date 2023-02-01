@@ -39,4 +39,8 @@ public class RoomChat {
     private StudyRoom studyRoom;
 
     private LocalDateTime createdAt;
+
+    private String username;
+
+    private String userProfileName;
 }

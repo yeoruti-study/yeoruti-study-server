@@ -1,5 +1,6 @@
 package com.planner.server.domain.study_category.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,12 +16,23 @@ import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.study_room.entity.StudyRoom;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "study_category")
+@ToString(exclude = "studyRooms")
 @Getter
-public class StudyCategory {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
+public class StudyCategory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +41,10 @@ public class StudyCategory {
     @Type(type = "uuid-char")
     private UUID id;
 
+    @Setter
     private String name;
 
+    @Setter
     private String description;
 
     @OneToMany(mappedBy = "studyCategory")

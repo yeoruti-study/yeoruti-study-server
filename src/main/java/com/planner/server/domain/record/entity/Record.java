@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
+import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 
 import lombok.Getter;
 import lombok.Setter;
