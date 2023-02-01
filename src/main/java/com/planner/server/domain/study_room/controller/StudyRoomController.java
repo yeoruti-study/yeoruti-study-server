@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,6 +33,7 @@ public class StudyRoomController {
 
         try {
             studyRoomService.createOne(studyRoomDto);
+            // TODO :: 스터디룸 생성하면서 room user도 함께 생성하기
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
@@ -94,19 +96,37 @@ public class StudyRoomController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    // @GetMapping("/room-chat/{studyRoomId}")
-    // public ResponseEntity<?> searchStudyRoomChat(@PathVariable(name = "studyRoomId") UUID studyRoomId) {
-    //     Message message = new Message();
+    // study category로 study room 조회 - 특정 카테고리의 스터디룸 확인
+    @GetMapping("/study-category/{studyCategoryId}")
+    public ResponseEntity<?> searchListByStudyCategory(@PathVariable(name = "studyCategoryId") UUID studyCategoryId) {
+        Message message = new Message();
 
-    //     try {
-    //         message.setData(studyRoomService.searchStudyRoomChat(studyRoomId));
-    //         message.setStatus(HttpStatus.OK);
-    //         message.setMessage("success");
-    //     } catch (Exception e) {
-    //         message.setStatus(HttpStatus.BAD_REQUEST);
-    //         message.setMessage("error");
-    //         message.setMemo(e.getMessage());
-    //     }
-    //     return new ResponseEntity<>(message, message.getStatus());
-    // }
+        try {
+            message.setData(studyRoomService.searchListByStudyCategory(studyCategoryId));
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("success");
+        } catch (Exception e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo(e.getMessage());
+        }
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    // 스터디룸 비밀번호 수정
+    @PatchMapping("/room-password")
+    public ResponseEntity<?> changeRoomPassword(@RequestBody StudyRoomReqDto studyRoomDto) {
+        Message message = new Message();
+
+        try {
+            studyRoomService.changeRoomPassword(studyRoomDto);
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("success");
+        } catch (Exception e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo(e.getMessage());
+        }
+        return new ResponseEntity<>(message, message.getStatus());
+    }
 }

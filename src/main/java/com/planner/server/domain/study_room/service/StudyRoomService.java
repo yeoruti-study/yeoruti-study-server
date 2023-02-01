@@ -55,7 +55,7 @@ public class StudyRoomService {
 
     @Transactional(readOnly = true)
     public List<StudyRoomResDto> searchAll() {
-        List<StudyRoom> studyRooms = studyRoomRepository.findAll();
+        List<StudyRoom> studyRooms = studyRoomRepository.findAllAndRelatedStudyCategory();
         List<StudyRoomResDto> studyRoomDtos = studyRooms.stream().map(entity -> StudyRoomResDto.toDto(entity)).collect(Collectors.toList());
     
         return studyRoomDtos;
@@ -98,18 +98,29 @@ public class StudyRoomService {
         }
     }
 
-    // TODO :: room chat 조회 확인
-    public List<RoomChatRes> searchStudyRoomChat(UUID studyRoomId) {
-        Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomId);
+    public List<StudyRoomResDto> searchListByStudyCategory(UUID studyCategoryId) {
+        Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
 
-        System.out.println(entityOpt);
+        if(studyCategoryOpt.isPresent()) {
+            List<StudyRoom> studyRooms = studyRoomRepository.findListByStudyCategoryId(studyCategoryId);
+            List<StudyRoomResDto> studyRoomResDtos = studyRooms.stream().map(r -> StudyRoomResDto.toDto(r)).collect(Collectors.toList());
+            return studyRoomResDtos;
+        }else {
+            throw new NullPointerException("존재하지 않는 데이터");
+        }
+    }
 
-        if(entityOpt.isPresent()) {
-            StudyRoom entity = entityOpt.get();
-
-            List<RoomChat> roomChats = entity.getRoomChats();
-            List<RoomChatRes> roomChatDtos = roomChats.stream().map(chat -> RoomChatRes.toDto(chat)).collect(Collectors.toList());
-            return roomChatDtos;
+    public void changeRoomPassword(StudyRoomReqDto studyRoomDto) {
+        Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomDto.getId());
+        
+        // TODO
+        // 1. master user 확인을 위해 user 조회
+        // 2. master user id 와 user id 가 동일하다면 room password 변경 허락
+        // 3. 그렇지 않다면 room password 변경 거부
+        
+        if(studyRoomOpt.isPresent()) {
+            StudyRoom studyRoom = studyRoomOpt.get();
+            studyRoom.setRoomPassword(studyRoomDto.getRoomPassword());
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }

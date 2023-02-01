@@ -40,7 +40,7 @@ public class RoomUserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/many/study-room/{studyRoomId}")
+    @GetMapping("/list/study-room/{studyRoomId}")
     public ResponseEntity<?> searchListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {
         Message message = new Message();
 
@@ -62,6 +62,23 @@ public class RoomUserController {
 
         try {
             roomUserService.deleteOne(roomUserId);
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("success");
+        } catch (Exception e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo(e.getMessage());
+        }
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    // 유저가 속한 스터디룸 전체 조회
+    @GetMapping("/study-room/{userId}")
+    public ResponseEntity<?> searchListJoinedStudyRoom(@PathVariable(name = "userId") UUID userId) {
+        Message message = new Message();
+
+        try {
+            message.setData(roomUserService.searchListJoinedStudyRoom(userId));
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {

@@ -12,6 +12,7 @@ import com.planner.server.domain.room_user.dto.RoomUserReqDto;
 import com.planner.server.domain.room_user.dto.RoomUserResDto;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.room_user.repository.RoomUserRepository;
+import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 import com.planner.server.domain.study_room.entity.StudyRoom;
 import com.planner.server.domain.study_room.repository.StudyRoomRepository;
 import com.planner.server.domain.user.entity.User;
@@ -68,5 +69,19 @@ public class RoomUserService {
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }
+    }
+
+    public List<StudyRoomResDto> searchListJoinedStudyRoom(UUID userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if(userOpt.isPresent()) {
+            List<RoomUser> roomUsers = roomUserRepository.findByUser(userOpt.get());
+            List<RoomUserResDto> roomUserResDtos = roomUsers.stream().map(r -> RoomUserResDto.toDto(r)).collect(Collectors.toList());
+            List<StudyRoomResDto> studyRoomResDtos = roomUserResDtos.stream().map(r -> r.getStudyRoomDto()).collect(Collectors.toList());
+            return studyRoomResDtos;
+        }else {
+            throw new NullPointerException("존재하지 않는 데이터");
+        }
+
     }
 }
