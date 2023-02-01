@@ -40,7 +40,7 @@ public class UserStudySubjectController {
     }
 
     @GetMapping("/user/one")
-    public ResponseEntity<?> findByUser(@RequestParam UUID userId){
+    public ResponseEntity<?> findByUserId(@RequestParam UUID userId){
         List<UserStudySubjectResDto> list = new ArrayList<>();
         try {
             list = userStudySubjectService.findByUserId(userId);
@@ -112,7 +112,6 @@ public class UserStudySubjectController {
             return new ResponseEntity<>(message, message.getStatus());
         }
         Message message = Message.builder()
-                .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());

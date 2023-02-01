@@ -71,7 +71,7 @@ public class User implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Record> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -108,6 +108,10 @@ public class User implements Serializable {
     public void addAttendanceCheck(AttendanceCheck attendanceCheck) {
         this.attendanceChecks.add(attendanceCheck);
         attendanceCheck.setUser(this);
+    }
+
+    public void addUserStudySubject(UserStudySubject userStudySubject){
+        this.userStudySubjects.add(userStudySubject);
     }
 
     public void addFriend(Friend friend) {

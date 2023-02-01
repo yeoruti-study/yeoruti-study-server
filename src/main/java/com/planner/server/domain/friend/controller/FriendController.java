@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -28,11 +26,10 @@ public class FriendController {
 
     Logger logger = LoggerFactory.getLogger(FriendService.class);
 
-
     @PostMapping("/one")
-    public ResponseEntity<?> save(@RequestBody SaveReqDto req){
+    public ResponseEntity<?> save(@RequestBody FriendReqDto req){
         try {
-            FriendDto savedFriend = friendService.save(req, 0);
+            FriendResDto savedFriend = friendService.save(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -103,7 +100,7 @@ public class FriendController {
 
     @PatchMapping("/one")
     // 한 번 사용하면 다시 못 사용하도록 추후에 조치하기(allow : false -> true 면 거기서 끝!)
-    public ResponseEntity<?> changeAllowance(@RequestBody FriendDto req){
+    public ResponseEntity<?> changeAllowance(@RequestBody FriendReqDto req){
         Friend friendEntity = null;
         try {
             friendEntity = friendService.changeAllowance(req);
@@ -116,17 +113,14 @@ public class FriendController {
             return new ResponseEntity<>(message, message.getStatus());
         }
 
-        User user = friendEntity.getUser();
-        User friend = friendEntity.getFriend();
+        User user = friendEntity.getFriend();
+        System.out.println("user.getId() = " + user.getId());
+        User friend = friendEntity.getUser();
+        System.out.println("friend.getId() = " + friend.getId());
 
-        SaveReqDto reqDto = SaveReqDto.builder()
-                .userId(friend.getId())
-                .friendId(user.getId())
-                .build();
-
-        logger.info("friendService.save 시작");
+        logger.info("friendService.reverseSave 시작");
         try {
-            FriendDto save = friendService.save(reqDto, 1);
+            friendService.reverseSave(user, friend);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -148,7 +142,7 @@ public class FriendController {
     }
 
     @DeleteMapping("/one")
-    public ResponseEntity<?> delete(@RequestBody FriendDto req){
+    public ResponseEntity<?> delete(@RequestBody FriendReqDto req){
         try {
             friendService.deleteById(req);
         } catch (Exception e) {

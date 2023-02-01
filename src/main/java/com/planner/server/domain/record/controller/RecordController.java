@@ -1,7 +1,5 @@
 package com.planner.server.domain.record.controller;
 
-import com.planner.server.domain.friend.dto.FriendDto;
-import com.planner.server.domain.friend.dto.SaveReqDto;
 import com.planner.server.domain.message.Message;
 import com.planner.server.domain.record.dto.RecordReqDto;
 import com.planner.server.domain.record.dto.RecordResDto;
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

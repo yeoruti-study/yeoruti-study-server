@@ -3,12 +3,15 @@ package com.planner.server.domain.user.controller;
 import com.planner.server.domain.friend.service.FriendService;
 import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user.dto.*;
+import com.planner.server.domain.user.entity.User;
+import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,6 +20,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final FriendService friendService;
 
     /**
@@ -122,4 +126,5 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
+
 }

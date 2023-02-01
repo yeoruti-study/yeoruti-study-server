@@ -33,39 +33,55 @@ public class FriendService {
 
     Logger logger = LoggerFactory.getLogger(FriendService.class);
 
-    public FriendDto save(SaveReqDto req, int flag) throws Exception {
+    public FriendResDto save(FriendReqDto req) throws Exception {
 
-        User user = userService.findById(req.getUserId());
-        User friend = userService.findById(req.getFriendId());
-
-        if(flag == 0)
-            validateUserAndFriend(user, friend);
-
-        if(flag == 1){
-            Optional<Friend> tmp = friendRepository.alreadyExists(user.getId(), friend.getId());
-            if(tmp.isPresent()){
-                friendRepository.delete(tmp.get());
-            }
+        List<UUID> list = List.of(req.getUserId(), req.getFriendId());
+        List<User> users = new ArrayList<>();
+        try{
+            users = friendRepository.validateUser(list);
+        } catch (Exception e){
+            throw new Exception("[id] 확인 요망");
         }
-        else if(alreadyExists(user, friend)){
+        User user = users.get(1);
+        System.out.println("user = " + user.getId());
+        User friend = users.get(0);
+        System.out.println("friend = " + friend.getId());
+
+        validateUserAndFriend(user, friend);
+
+        if(alreadyExists(user, friend)){
             throw new Exception("이미 전에 보냈던 친구 요청입니다.");
         }
 
         UUID id = UUID.randomUUID();
         Friend friendEntity = buildFriend(user, friend, id);
 
-        if(flag == 1){
-            friendEntity.fixAllowance();
-        }
-
         Friend savedFriend = friendRepository.save(friendEntity);
 
-        return FriendDto.builder()
+        return FriendResDto.builder()
                 .user(UserResDto.toDto(user))
                 .friend(UserResDto.toDto(friend))
                 .allow(false)
                 .createdAt(LocalDateTime.now())
                 .build();
+    }
+
+    @Transactional
+    public void reverseSave(User user, User friend) throws Exception {
+
+        Optional<Friend> tmp = friendRepository.alreadyExists(user.getId(), friend.getId());
+        if(tmp.isPresent()){
+            Friend findFriend = tmp.get();
+            System.out.println("findFriend.getId() = " + findFriend.getId());
+            tmp.get().fixAllowance();
+        }
+        else {
+            UUID id = UUID.randomUUID();
+            Friend friendEntity = buildFriend(user, friend, id);
+            friendEntity.fixAllowance();
+
+            Friend savedFriend = friendRepository.save(friendEntity);
+        }
     }
 
     public boolean alreadyExists(User user, User friend){
@@ -116,27 +132,22 @@ public class FriendService {
         catch (Exception e){
             throw new Exception("입력받은 유저의 id로 친구를 찾을 수 없습니다.");
         }
-        List<FriendDto> friendDtoList = new ArrayList<>();
-        friendList.forEach(f -> friendDtoList.add(FriendDto.toDto(f)));
+        List<FriendResDto> friendDtoList = new ArrayList<>();
+        friendList.forEach(f -> friendDtoList.add(FriendResDto.toDto(f)));
 
         return FriendGetDto.toDto(friendDtoList);
-    }
-
-    public List<Friend> findByFriendId(String friendId) {
-        UUID id = UUID.fromString(friendId);
-        return friendRepository.findByFriendId(id);
     }
 
     public FriendGetDto findAll(){
         List<Friend> friendList = friendRepository.findAll();
 
-        List<FriendDto> friendDtoList = new ArrayList<>();
-        friendList.stream().forEach(friend -> friendDtoList.add(FriendDto.toDto(friend)));
+        List<FriendResDto> friendDtoList = new ArrayList<>();
+        friendList.stream().forEach(friend -> friendDtoList.add(FriendResDto.toDto(friend)));
 
         return FriendGetDto.toDto(friendDtoList);
     }
 
-    public void deleteById(FriendDto req) throws Exception {
+    public void deleteById(FriendReqDto req) throws Exception {
         logger.info("FriendService - deleteById 실행");
         Optional<Friend> findFriend = friendRepository.findById(req.getId());
         logger.info("FriendRepository - findById 실행 완료");
@@ -148,14 +159,8 @@ public class FriendService {
         logger.info("FriendService - deleteById 실행 완료");
     }
 
-    public void deleteByFriendId(UUID friendId){
-        List<Friend> friendList = friendRepository.findByFriendId(UUID.fromString(friendId.toString()));
-
-        friendList.stream().forEach(friend -> friendRepository.delete(friend));
-    }
-
     @Transactional
-    public Friend changeAllowance(FriendDto req) throws Exception {
+    public Friend changeAllowance(FriendReqDto req) throws Exception {
         UUID id = req.getId();
         Optional<Friend> friend = friendRepository.findById(id);
         logger.info("FriendRepository - findById 실행 완료");
@@ -166,4 +171,9 @@ public class FriendService {
         return friend.get();
     }
 
+    public void deleteByFriendId(UUID friendId){
+        List<Friend> friendList = friendRepository.findByFriendId(UUID.fromString(friendId.toString()));
+
+        friendList.stream().forEach(friend -> friendRepository.delete(friend));
+    }
 }

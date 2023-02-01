@@ -76,19 +76,13 @@ public class UserService {
         findUser.fixProfile(req);
     }
 
-    public String deleteUser(UserReqDto req) throws Exception {
-        Optional<User> findUser = userRepository.findById(req.getId());
-        if(!findUser.isPresent()){
-            throw new Exception("유저가 존재하지 않습니다.");
+    @Transactional
+    public void deleteUser(UserReqDto req) throws Exception {
+        Optional<User> byId = userRepository.findById(req.getId());
+        if(!byId.isPresent()){
+            throw new Exception("[id] 값 확인요망. 유저 데이터가 없습니다.");
         }
-        try{
-            userRepository.delete(findUser.get());
-        }
-        catch (NullPointerException e){
-            throw new NullPointerException(e.getMessage());
-        }
-        return "SUCCESS";
+        userRepository.delete(byId.get());
     }
-
 
 }

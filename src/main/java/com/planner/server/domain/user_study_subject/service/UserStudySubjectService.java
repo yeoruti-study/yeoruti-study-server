@@ -2,6 +2,7 @@ package com.planner.server.domain.user_study_subject.service;
 
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.domain.user.service.UserService;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
@@ -20,17 +21,16 @@ public class UserStudySubjectService {
 
     private final UserStudySubjectRepository userStudySubjectRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public void save(UserStudySubjectReqDto req) throws Exception {
-        Optional<UserStudySubject> byTitle = userStudySubjectRepository.findByTitle(req.getTitle());
-        if(byTitle.isPresent()){
+
+        Optional<UserStudySubject> findEntity = userStudySubjectRepository.duplicateCheck(req.getUserId(), req.getTitle());
+        if(findEntity.isPresent()){
             throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
         }
-        Optional<User> byId = userRepository.findById(req.getUserId());
-        if(!byId.isPresent()){
-            throw new Exception("[userId] 값 확인 요망. 유저가 존재하지 않습니다.");
-        }
-        User user = byId.get();
+
+        User user = userService.findById(req.getUserId());
 
         UserStudySubject userStudySubject = UserStudySubject.builder()
                 .id(UUID.randomUUID())
@@ -59,7 +59,7 @@ public class UserStudySubjectService {
 
 
     public UserStudySubjectResDto findById(UUID id) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(id);
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdFetchJoin(id);
         if(!byId.isPresent())
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
 
@@ -68,7 +68,7 @@ public class UserStudySubjectService {
     }
 
     public void deleteById(UserStudySubjectReqDto req) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(req.getId());
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdFetchJoin(req.getId());
         if(!byId.isPresent()){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }
