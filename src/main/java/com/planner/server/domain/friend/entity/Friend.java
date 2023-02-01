@@ -1,5 +1,6 @@
 package com.planner.server.domain.friend.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,20 +13,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Table
-@Entity(name = "friend")
+@Entity
+@Table(name = "friend")
 @Getter
-public class Friend {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Friend implements Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
     
     @Type(type = "uuid-char")
@@ -33,15 +36,29 @@ public class Friend {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_id")
+    @JoinColumn(name = "friend_id", referencedColumnName = "id")
     private User friend;
 
     private boolean allow;
     
     private LocalDateTime createdAt;
+
+    @Builder
+    public Friend(UUID id, User user, User friend, boolean allow, LocalDateTime createdAt) {
+        this.id = id;
+        this.user = user;
+        this.friend = friend;
+        this.allow = allow;
+        this.createdAt = createdAt;
+    }
+
+    public void fixAllowance(){
+        boolean allowance = this.allow;
+        this.allow = !allowance;
+    }
 }

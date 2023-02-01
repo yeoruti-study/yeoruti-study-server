@@ -1,5 +1,6 @@
 package com.planner.server.domain.study_goal.entity;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,20 +14,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
 @Table(name = "study_goal")
 @Getter
-public class StudyGoal {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class StudyGoal implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cid;
     
     @Type(type = "uuid-char")
@@ -38,12 +38,25 @@ public class StudyGoal {
 
     private Duration goalTime;
 
+   // @Type(type = "DATETIME(6)")
     private LocalDateTime startDate;
 
+    //@Type(type = "DATETIME(6)")
     private LocalDateTime endDate;
+
+    @Builder
+    public StudyGoal(UUID id, String goalTitle, String goalDetail, Duration goalTime, LocalDateTime startDate, LocalDateTime endDate, User user) {
+        this.id = id;
+        this.goalTitle = goalTitle;
+        this.goalDetail = goalDetail;
+        this.goalTime = goalTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.user = user;
+    }
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }
