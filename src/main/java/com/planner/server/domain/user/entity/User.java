@@ -97,17 +97,14 @@ public class User implements Serializable {
 
     public void addRecord(Record record) {
         this.records.add(record);
-        record.setUser(this);
     }
 
     public void addStudyGoal(StudyGoal studyGoal) {
         this.studyGoals.add(studyGoal);
-        studyGoal.setUser(this);
     }
 
     public void addAttendanceCheck(AttendanceCheck attendanceCheck) {
         this.attendanceChecks.add(attendanceCheck);
-        attendanceCheck.setUser(this);
     }
 
     public void addUserStudySubject(UserStudySubject userStudySubject){
@@ -116,7 +113,6 @@ public class User implements Serializable {
 
     public void addFriend(Friend friend) {
         this.friends.add(friend);
-        friend.setUser(this);
     }
 
     public void fixProfile(UserReqDto reqDto) {

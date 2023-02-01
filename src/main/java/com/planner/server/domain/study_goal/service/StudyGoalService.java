@@ -59,7 +59,7 @@ public class StudyGoalService {
                 .build();
 
         StudyGoal savedStudyGoal = studyGoalRepository.save(studyGoal);
-        user.getStudyGoals().add(savedStudyGoal);
+        user.addStudyGoal(savedStudyGoal);
 
         return StudyGoalReqDto.toDto(studyGoal);
     }

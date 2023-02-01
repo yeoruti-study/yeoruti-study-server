@@ -15,6 +15,12 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("select r from Record r where r.id = :id")
     Optional<Record> findById(@Param("id")UUID id);
 
+    @Query("select distinct r from Record r join fetch r.user join fetch r.userStudySubject where r.id = :id")
+    Optional<Record> findByIdFetchJoin(@Param("id")UUID id);
+
+    @Query("select distinct r from Record r join fetch r.user join fetch r.userStudySubject")
+    List<Record> findAllByFetchJoin();
+
     @Query("select r from Record r where r.user.id = :userId")
     List<Record> findByUserId(@Param("userId")UUID userId);
 

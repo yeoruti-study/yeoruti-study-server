@@ -38,7 +38,8 @@ public class UserStudySubjectService {
                 .user(user)
                 .build();
 
-        userStudySubjectRepository.save(userStudySubject);
+        UserStudySubject save = userStudySubjectRepository.save(userStudySubject);
+        user.addUserStudySubject(save);
     }
 
     public List<UserStudySubjectResDto> findByUserId(UUID userId) throws Exception {

@@ -55,7 +55,8 @@ public class RecordService {
                 .studying(req.isStudying())
                 .build();
 
-        recordRepository.save(record);
+        Record save = recordRepository.save(record);
+        user.addRecord(save);
 
         return RecordResDto.builder()
                 .id(record.getId())
@@ -70,7 +71,7 @@ public class RecordService {
 
 
     public List<RecordResDto> getAll() {
-        List<Record> recordList = recordRepository.findAll();
+        List<Record> recordList = recordRepository.findAllByFetchJoin();
         List<RecordResDto> recordResDtoList = new ArrayList<>();
 
         recordList.stream().forEach(record -> recordResDtoList.add(RecordResDto.toDto(record)));

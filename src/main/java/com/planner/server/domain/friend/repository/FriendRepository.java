@@ -13,8 +13,10 @@ import java.util.UUID;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
+    Optional<Friend> findById(UUID id);
+
     @Query("select distinct f from Friend f join fetch f.user join fetch f.friend where f.id = :id")
-    Optional<Friend> findById(@Param("id") UUID id);
+    Optional<Friend> findByIdFetchJoin(@Param("id") UUID id);
 
     @Query("select distinct f from Friend f join fetch f.user join fetch f.friend")
     List<Friend> findAll();

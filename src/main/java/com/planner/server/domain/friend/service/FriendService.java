@@ -43,9 +43,7 @@ public class FriendService {
             throw new Exception("[id] 확인 요망");
         }
         User user = users.get(1);
-        System.out.println("user = " + user.getId());
         User friend = users.get(0);
-        System.out.println("friend = " + friend.getId());
 
         validateUserAndFriend(user, friend);
 
@@ -149,7 +147,7 @@ public class FriendService {
 
     public void deleteById(FriendReqDto req) throws Exception {
         logger.info("FriendService - deleteById 실행");
-        Optional<Friend> findFriend = friendRepository.findById(req.getId());
+        Optional<Friend> findFriend = friendRepository.findByIdFetchJoin(req.getId());
         logger.info("FriendRepository - findById 실행 완료");
 
         if(!findFriend.isPresent()) throw new Exception("[id] 확인 요망. id에 해당하는 친구요청이 존재하지 않습니다.");
