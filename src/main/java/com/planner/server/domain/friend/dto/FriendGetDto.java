@@ -11,13 +11,13 @@ import java.util.List;
 public class FriendGetDto {
 
     private int count;
-    private List<FriendDto> friendList = new ArrayList<>();
-    public void addFriendDto(FriendDto friendDto){
+    private List<FriendResDto> friendList = new ArrayList<>();
+    public void addFriendDto(FriendResDto friendDto){
         this.friendList.add(friendDto);
     }
 
-    public static FriendGetDto toDto(List<FriendDto> friendDtos){
-        List<FriendDto> temp = new ArrayList<>();
+    public static FriendGetDto toDto(List<FriendResDto> friendDtos){
+        List<FriendResDto> temp = new ArrayList<>();
         friendDtos.stream().forEach(friendDto -> temp.add(friendDto));
 
         return FriendGetDto.builder()
