@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -45,23 +47,11 @@ public class FriendController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll(){
-        FriendGetDto friendGetDto = friendService.findAll();
-
-        Message message = Message.builder()
-                .data(friendGetDto)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
-    }
-
     @GetMapping("/user/list")
     public ResponseEntity<?> getByUserId(@RequestParam UUID id){
-        FriendGetDto friendGetDto = null;
+        List<FriendResDto> friendResDtos = new ArrayList<>();
         try {
-            friendGetDto = friendService.findByUserId(id);
+            friendResDtos = friendService.findByUserId(id);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -71,7 +61,7 @@ public class FriendController {
         }
 
         Message message = Message.builder()
-                .data(friendGetDto)
+                .data(friendResDtos)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

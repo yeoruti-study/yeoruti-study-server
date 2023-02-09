@@ -44,8 +44,11 @@ public class StudyGoal implements Serializable {
     //@Type(type = "DATETIME(6)")
     private LocalDateTime endDate;
 
+    @Type(type = "uuid-char")
+    private UUID userStudySubjectId;
+
     @Builder
-    public StudyGoal(UUID id, String goalTitle, String goalDetail, Duration goalTime, LocalDateTime startDate, LocalDateTime endDate, User user) {
+    public StudyGoal(UUID id, String goalTitle, String goalDetail, Duration goalTime, LocalDateTime startDate, LocalDateTime endDate, User user, UUID userStudySubjectId) {
         this.id = id;
         this.goalTitle = goalTitle;
         this.goalDetail = goalDetail;
@@ -53,6 +56,7 @@ public class StudyGoal implements Serializable {
         this.startDate = startDate;
         this.endDate = endDate;
         this.user = user;
+        this.userStudySubjectId = userStudySubjectId;
     }
 
     @Setter

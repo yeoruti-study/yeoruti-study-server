@@ -14,7 +14,7 @@ public class UserReqDto {
     private String password;
     private String roles;
     private String profileName;
-    private String profileAge;
+    private String profileBirth;
     private String profileImagePath;
     private boolean alarmPermission;
     private boolean friendAcceptance;
@@ -27,7 +27,7 @@ public class UserReqDto {
                 .password(user.getPassword())
                 .roles(user.getRoles())
                 .profileName(user.getProfileName())
-                .profileAge(user.getProfileAge())
+                .profileBirth(user.getProfileBirth())
                 .alarmPermission(user.isAlarmPermission())
                 .friendAcceptance(user.isFriendAcceptance())
                 .profileImagePath(user.getProfileImagePath())

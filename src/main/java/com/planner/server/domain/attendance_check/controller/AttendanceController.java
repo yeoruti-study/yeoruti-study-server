@@ -1,6 +1,5 @@
 package com.planner.server.domain.attendance_check.controller;
 
-import com.planner.server.domain.attendance_check.dto.AttendanceListDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceReqDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceResDto;
 import com.planner.server.domain.attendance_check.service.AttendanceService;
@@ -10,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -40,11 +41,11 @@ public class AttendanceController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user/one")
+    @GetMapping("/user/list")
     public ResponseEntity<?> findByUserId(@RequestParam UUID userId){
-        AttendanceListDto attendanceListDto;
+        List<AttendanceResDto> attendanceResDtos = new ArrayList<>();
         try{
-            attendanceListDto = attendanceService.findByUserId(userId);
+            attendanceResDtos = attendanceService.findByUserId(userId);
         }
         catch (NoSuchElementException e){
             Message message = Message.builder()
@@ -55,7 +56,7 @@ public class AttendanceController {
         }
 
         Message message = Message.builder()
-                .data(attendanceListDto)
+                .data(attendanceResDtos)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

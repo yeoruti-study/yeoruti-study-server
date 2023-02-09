@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(@Param("id") UUID id);
 
     @Query("select distinct u from User u join fetch u.userStudySubjects where u.id = :id")
-    Optional<User> findByIdJoinFetch(@Param("id") UUID id);
+    Optional<User> findByIdJoinFetchUserStudySubject(@Param("id") UUID id);
 
     Optional<User> findByUsername(String username);
 

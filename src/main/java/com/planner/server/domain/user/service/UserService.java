@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class UserService {
                 .salt(salt)
                 .roles("ROLE_USER")
                 .profileName(reqDto.getProfileName())
-                .profileAge(reqDto.getProfileAge())
+                .profileBirth(reqDto.getProfileBirth())
                 .profileImagePath(reqDto.getProfileImagePath())
                 .alarmPermission(reqDto.isAlarmPermission())
                 .friendAcceptance(reqDto.isFriendAcceptance())
@@ -57,13 +58,15 @@ public class UserService {
         return findUser.get();
     }
 
-    public UserGetDto findAll() {
-        List<User> users = userRepository.findAll();
-        UserGetDto userGetDto = new UserGetDto();
 
-        userGetDto.work(users);
-        return userGetDto;
+    public List<UserResDto> findAll() {
+        List<User> users = userRepository.findAll();
+        List<UserResDto> userResDtos = new ArrayList<>();
+        users.forEach(user->userResDtos.add(UserResDto.toDto(user)));
+
+        return userResDtos;
     }
+
 
     @Transactional
     public void changeProfile(UserReqDto req) throws IllegalArgumentException{

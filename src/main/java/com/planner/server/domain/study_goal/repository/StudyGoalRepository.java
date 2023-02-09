@@ -17,4 +17,7 @@ public interface StudyGoalRepository extends JpaRepository<StudyGoal, Long> {
     @Query("select distinct s from StudyGoal s join fetch s.user where s.id = :id")
     Optional<StudyGoal> findById(@Param("id") UUID id);
 
+    @Query("select s from StudyGoal s where s.userStudySubjectId = :id")
+    List<StudyGoal> findByUserStudySubjectId(@Param("id") UUID id);
+
 }
