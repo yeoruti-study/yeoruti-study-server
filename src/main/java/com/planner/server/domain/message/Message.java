@@ -1,14 +1,14 @@
 package com.planner.server.domain.message;
 
+import lombok.*;
 import org.springframework.http.HttpStatus;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Message {
     private Object data;
     private HttpStatus status;

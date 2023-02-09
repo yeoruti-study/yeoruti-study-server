@@ -143,8 +143,4 @@ public class User implements Serializable {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void addUserStudySubject(UserStudySubject userStudySubject) {
-        this.userStudySubjects.add(userStudySubject);
-        userStudySubject.setUser(this);
-    }
 }

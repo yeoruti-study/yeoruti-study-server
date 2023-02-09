@@ -1,3 +1,5 @@
+
+
 package com.planner.server.domain.user.dto;
 
 import java.util.UUID;
@@ -20,7 +22,7 @@ public class UserDto {
 
     public static UserDto toDto(User entity) {
         return UserDto.builder()
-            .id(entity.getId())
-            .build();
+                .id(entity.getId())
+                .build();
     }
 }

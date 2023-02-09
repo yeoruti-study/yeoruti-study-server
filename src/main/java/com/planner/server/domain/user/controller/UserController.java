@@ -25,8 +25,6 @@ public class UserController {
     private final UserRepository userRepository;
     private final FriendService friendService;
 
-    /**
-     * 회원가입 - 유저생성 */
     @PostMapping ("/one")
     public ResponseEntity<?> signUp(@RequestBody UserReqDto req){
         try {
@@ -47,21 +45,6 @@ public class UserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    /**
-     * 전체 유저 조회 */
-    @GetMapping("/all")
-    public ResponseEntity<?> findAll(){
-        UserGetDto result = userService.findAll();
-        Message message = Message.builder()
-                .data(result)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
-    }
-
-    /**
-     * id(UUID)로 조회 */
     @GetMapping("/one")
     public ResponseEntity<?> findOne(@RequestParam UUID id){
         UserResDto userResDto = null;
@@ -84,9 +67,6 @@ public class UserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-
-    /**
-     * 유저 프로필 수정 (수정 예정)*/
     @PutMapping ("/profile/one")
     public ResponseEntity<?> updateUserProfile(@RequestBody UserReqDto req){
         try{
@@ -107,8 +87,7 @@ public class UserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    /**
-     * 유저 삭제*/
+
     @DeleteMapping("/one")
     public ResponseEntity<?> deleteUser(@RequestBody UserReqDto req){
         friendService.deleteByFriendId(req.getId());

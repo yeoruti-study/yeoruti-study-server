@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,14 +54,6 @@ public class UserService {
             throw new Exception("parameter:[id] is wrong");
         }
         return findUser.get();
-    }
-
-    public UserGetDto findAll() {
-        List<User> users = userRepository.findAll();
-        UserGetDto userGetDto = new UserGetDto();
-
-        userGetDto.work(users);
-        return userGetDto;
     }
 
     @Transactional

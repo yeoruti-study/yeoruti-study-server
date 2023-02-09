@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.Console;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,28 +120,18 @@ public class FriendService {
         return byId.get();
     }
 
-    public FriendGetDto findByUserId(UUID id) throws Exception {
+    public List<FriendResDto> findByUserId(UUID id) throws Exception {
         List<Friend> friendList = new ArrayList<>();
-
         try{
             friendList = friendRepository.findByUserId(id);
         }
         catch (Exception e){
             throw new Exception("입력받은 유저의 id로 친구를 찾을 수 없습니다.");
         }
-        List<FriendResDto> friendDtoList = new ArrayList<>();
-        friendList.forEach(f -> friendDtoList.add(FriendResDto.toDto(f)));
+        List<FriendResDto> friendResDtos = new ArrayList<>();
+        friendList.forEach(f -> friendResDtos.add(FriendResDto.toDto(f)));
 
-        return FriendGetDto.toDto(friendDtoList);
-    }
-
-    public FriendGetDto findAll(){
-        List<Friend> friendList = friendRepository.findAll();
-
-        List<FriendResDto> friendDtoList = new ArrayList<>();
-        friendList.stream().forEach(friend -> friendDtoList.add(FriendResDto.toDto(friend)));
-
-        return FriendGetDto.toDto(friendDtoList);
+        return friendResDtos;
     }
 
     public void deleteById(FriendReqDto req) throws Exception {

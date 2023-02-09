@@ -77,8 +77,8 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user-study-subject/list")
-    public ResponseEntity<?> getByUserStudySubjectId(@RequestParam("id") UUID req){
+    @GetMapping("/userstudysubject/list")
+    public ResponseEntity<?> getByUserStudySubjectId(@RequestParam("userstudysubjectid") UUID req){
         List<RecordResDto> recordResDtoList = null;
         try {
             recordResDtoList = recordService.getByUserStudySubjectId(req);

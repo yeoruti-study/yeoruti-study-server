@@ -1,10 +1,8 @@
 package com.planner.server.domain.attendance_check.service;
 
-import com.planner.server.domain.attendance_check.dto.AttendanceListDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceResDto;
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
 import com.planner.server.domain.attendance_check.repository.AttendanceRepository;
-import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
@@ -35,15 +33,16 @@ public class AttendanceService {
         return AttendanceResDto.toDto(saveAttendance);
     }
 
-    public AttendanceListDto findByUserId(UUID userId) {
-        List<AttendanceCheck> attendanceList;
+    public List<AttendanceResDto> findByUserId(UUID userId) {
+        List<AttendanceResDto> attendanceResDtoList = new ArrayList<>();
+        List<AttendanceCheck> attendanceList = new ArrayList<>();
         try{
             attendanceList = attendanceRepository.findByUserId(userId);
         }
         catch (NoSuchElementException e){
             throw new NoSuchElementException("[id]값 확인 요망.");
         }
-        AttendanceListDto attendanceResDtoList = AttendanceListDto.toDtoList(attendanceList);
+        attendanceList.forEach(attendanceCheck -> attendanceResDtoList.add(AttendanceResDto.toDto(attendanceCheck)));
         return attendanceResDtoList;
     }
 
