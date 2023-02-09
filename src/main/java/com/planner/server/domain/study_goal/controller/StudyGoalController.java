@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/study_goal")
+@RequestMapping("/api/study-goal")
 public class StudyGoalController {
 
     private final StudyGoalService studyGoalService;
@@ -63,11 +63,32 @@ public class StudyGoalController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user/one")
+    @GetMapping("/user/list")
     public ResponseEntity<?> getByUserId(@RequestParam UUID userId){
         List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
         try {
             studyGoalResDtos = studyGoalService.findByUserId(userId);
+        } catch (Exception e) {
+            Message message = Message.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+
+        Message message = Message.builder()
+                .data(studyGoalResDtos)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @GetMapping("/user-study-subject/list")
+    public ResponseEntity<?> getByUserStudySubjectId(@RequestParam UUID userStudySubjectId){
+        List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
+        try {
+            studyGoalResDtos = studyGoalService.findByUserStudySubjectId(userStudySubjectId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)

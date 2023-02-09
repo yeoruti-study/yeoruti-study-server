@@ -8,6 +8,8 @@ import com.planner.server.domain.study_goal.repository.StudyGoalRepository;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
+import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
+import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ public class StudyGoalService {
     private final UserRepository userRepository;
 
     private final UserService userService;
+    private final UserStudySubjectService userStudySubjectService;
 
     Logger logger = LoggerFactory.getLogger(FriendService.class);
 
@@ -56,6 +59,7 @@ public class StudyGoalService {
                 .startDate(startDateTime)
                 .endDate(endDateTime)
                 .user(user)
+                .userStudySubjectId(req.getUserStudySubjectId())
                 .build();
 
         StudyGoal savedStudyGoal = studyGoalRepository.save(studyGoal);
@@ -92,6 +96,25 @@ public class StudyGoalService {
         return studyGoalResDtos;
     }
 
+    public List<StudyGoalResDto> findByUserStudySubjectId(UUID userStudySubjectId) throws Exception {
+        try { // 존재유무 확인
+            userStudySubjectService.findById(userStudySubjectId);
+        } catch (Exception e) {
+            throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
+        }
+        List<StudyGoal> studyGoals;
+        try{
+            studyGoals = studyGoalRepository.findByUserStudySubjectId(userStudySubjectId);
+        }catch (Exception e){
+            throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
+        }
+
+        List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
+        studyGoals.forEach(studyGoal -> studyGoalResDtos.add(StudyGoalResDto.toDto(studyGoal)));
+
+        return studyGoalResDtos;
+    }
+
     public void deleteById(StudyGoalReqDto req){
         UUID id = req.getId();
         Optional<StudyGoal> studyGoal = studyGoalRepository.findById(id);
@@ -100,4 +123,5 @@ public class StudyGoalService {
         }
         studyGoalRepository.delete(studyGoal.get());
     }
+
 }
