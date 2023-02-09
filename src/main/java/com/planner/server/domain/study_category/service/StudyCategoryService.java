@@ -52,6 +52,7 @@ public class StudyCategoryService {
 
     
     public void deleteOne(UUID studyCategoryId) {
+        // TODO :: 이미 스터디룸에 부여된 스터디카테고리를 제거하려고 할 때 예외처리
         Optional<StudyCategory> entityOpt = studyCategoryRepository.findById(studyCategoryId);
 
         if(entityOpt.isPresent()) {
