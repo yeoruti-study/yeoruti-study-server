@@ -67,6 +67,17 @@ public class UserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> findAll(){
+        List<UserResDto> result = userService.findAll();
+        Message message = Message.builder()
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
     @PutMapping ("/profile/one")
     public ResponseEntity<?> updateUserProfile(@RequestBody UserReqDto req){
         try{

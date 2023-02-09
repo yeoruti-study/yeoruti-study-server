@@ -48,7 +48,7 @@ public class User implements Serializable {
 
     private String profileName;
 
-    private String profileAge;
+    private String profileBirth;
 
     private String profileImagePath;
 
@@ -61,14 +61,14 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(UUID id, String username, String password, String salt, String roles, String profileName, String profileAge, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(UUID id, String username, String password, String salt, String roles, String profileName, String profileBirth, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.salt = salt;
         this.roles = roles;
         this.profileName = profileName;
-        this.profileAge = profileAge;
+        this.profileBirth = profileBirth;
         this.profileImagePath = profileImagePath;
         this.friendAcceptance = friendAcceptance;
         this.alarmPermission = alarmPermission;
@@ -121,7 +121,7 @@ public class User implements Serializable {
 
     public void fixProfile(UserReqDto reqDto) {
         this.profileName = reqDto.getProfileName();
-        this.profileAge = reqDto.getProfileAge();
+        this.profileBirth = reqDto.getProfileBirth();
         this.profileImagePath = reqDto.getProfileImagePath();
         this.friendAcceptance = reqDto.isFriendAcceptance();
         this.alarmPermission = reqDto.isAlarmPermission();
