@@ -50,4 +50,25 @@ public class StudyRoomReqDto {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReqChangePassword {
+        private UUID id;
+        private String roomPassword;
+        private UUID userId;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReqCheckRoomPassword {
+        private UUID id;
+        private String roomPassword;
+    }
 }

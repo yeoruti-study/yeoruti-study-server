@@ -115,11 +115,28 @@ public class StudyRoomController {
 
     // 스터디룸 비밀번호 수정
     @PatchMapping("/room-password")
-    public ResponseEntity<?> changeRoomPassword(@RequestBody StudyRoomReqDto studyRoomDto) {
+    public ResponseEntity<?> changeRoomPassword(@RequestBody StudyRoomReqDto.ReqChangePassword studyRoomDto) {
         Message message = new Message();
 
         try {
             studyRoomService.changeRoomPassword(studyRoomDto);
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("success");
+        } catch (Exception e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo(e.getMessage());
+        }
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    // 스터디룸 비밀번호 확인
+    @PostMapping("/room-password/check")
+    public ResponseEntity<?> checkRoomPassword(@RequestBody StudyRoomReqDto.ReqCheckRoomPassword studyRoomDto) {
+        Message message = new Message();
+
+        try {
+            studyRoomService.checkRoomPassword(studyRoomDto);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {

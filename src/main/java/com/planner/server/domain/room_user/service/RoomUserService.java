@@ -53,7 +53,7 @@ public class RoomUserService {
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomId);
         
         if(studyRoomOpt.isPresent()) {
-            List<RoomUser> roomUsers = roomUserRepository.findByStudyRoom(studyRoomOpt.get());
+            List<RoomUser> roomUsers = roomUserRepository.findByStudyRoom(studyRoomOpt.get().getId());
             List<RoomUserResDto> roomUserDtos = roomUsers.stream().map(entity -> RoomUserResDto.toDto(entity)).collect(Collectors.toList());
             return roomUserDtos;
         }else {
@@ -61,6 +61,7 @@ public class RoomUserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public void deleteOne(UUID roomUserId) {
         Optional<RoomUser> entityOpt = roomUserRepository.findById(roomUserId);
 
@@ -71,11 +72,12 @@ public class RoomUserService {
         }
     }
 
+    // TODO :: 추후에는 userId를 받지 않는다
     public List<StudyRoomResDto> searchListJoinedStudyRoom(UUID userId) {
         Optional<User> userOpt = userRepository.findById(userId);
 
         if(userOpt.isPresent()) {
-            List<RoomUser> roomUsers = roomUserRepository.findByUser(userOpt.get());
+            List<RoomUser> roomUsers = roomUserRepository.findByUser(userOpt.get().getId());
             List<RoomUserResDto> roomUserResDtos = roomUsers.stream().map(r -> RoomUserResDto.toDto(r)).collect(Collectors.toList());
             List<StudyRoomResDto> studyRoomResDtos = roomUserResDtos.stream().map(r -> r.getStudyRoomDto()).collect(Collectors.toList());
             return studyRoomResDtos;

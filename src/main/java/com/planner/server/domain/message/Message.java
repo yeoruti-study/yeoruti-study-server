@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 @Setter
 @ToString
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Message {
     private Object data;
     private HttpStatus status;

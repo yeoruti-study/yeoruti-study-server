@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.planner.server.domain.room_chat.dto.RoomChatRes;
-import com.planner.server.domain.room_chat.entity.RoomChat;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
 import com.planner.server.domain.study_room.dto.StudyRoomReqDto;
@@ -69,8 +67,7 @@ public class StudyRoomService {
             UUID updatedStudyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
             if(!entityOpt.get().getStudyCategory().getId().equals(updatedStudyCategoryId)){
                 studyCategoryOpt = studyCategoryRepository.findById(updatedStudyCategoryId);
-
-                if(studyCategoryOpt.isPresent()) {
+                if(!studyCategoryOpt.isPresent()) {
                     throw new NullPointerException("존재하지 않는 데이터");
                 }
             }
@@ -110,7 +107,8 @@ public class StudyRoomService {
         }
     }
 
-    public void changeRoomPassword(StudyRoomReqDto studyRoomDto) {
+    // Room Password는 master user만이 변경할 수 있다
+    public void changeRoomPassword(StudyRoomReqDto.ReqChangePassword studyRoomDto) {
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomDto.getId());
         
         // TODO
@@ -120,7 +118,28 @@ public class StudyRoomService {
         
         if(studyRoomOpt.isPresent()) {
             StudyRoom studyRoom = studyRoomOpt.get();
+            
+            if(!studyRoomDto.getUserId().equals(studyRoom.getMasterUserId())) {
+                // TODO :: 커스텀 예외 처리하기. null pointer exception X.
+                throw new NullPointerException("허용된 유저가 아닙니다.");
+            }
             studyRoom.setRoomPassword(studyRoomDto.getRoomPassword());
+        }else {
+            throw new NullPointerException("존재하지 않는 데이터");
+        }
+    }
+
+    // Room Password 체크
+    public void checkRoomPassword(StudyRoomReqDto.ReqCheckRoomPassword studyRoomDto) {
+        Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomDto.getId());
+        
+        if(studyRoomOpt.isPresent()) {
+            if(studyRoomOpt.get().getRoomPassword().equals(studyRoomDto.getRoomPassword())) {
+                return;
+            }else {
+                // TODO :: 커스텀 예외 처리하기. null pointer exception X.
+                throw new NullPointerException("스터디룸 비밀번호 오류");
+            }
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }

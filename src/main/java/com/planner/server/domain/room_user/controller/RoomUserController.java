@@ -40,7 +40,7 @@ public class RoomUserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/list/study-room/{studyRoomId}")
+    @GetMapping("/list/{studyRoomId}")
     public ResponseEntity<?> searchListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {
         Message message = new Message();
 
@@ -73,7 +73,7 @@ public class RoomUserController {
     }
 
     // 유저가 속한 스터디룸 전체 조회
-    @GetMapping("/study-room/{userId}")
+    @GetMapping("/study-room/user/list/{userId}")
     public ResponseEntity<?> searchListJoinedStudyRoom(@PathVariable(name = "userId") UUID userId) {
         Message message = new Message();
 
