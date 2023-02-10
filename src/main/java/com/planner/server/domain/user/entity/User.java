@@ -91,7 +91,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> friends = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<UserStudySubject> userStudySubjects = new ArrayList<>();
 
     public void addRoomUser(RoomUser roomUser) {

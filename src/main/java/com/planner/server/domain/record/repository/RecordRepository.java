@@ -12,21 +12,16 @@ import java.util.UUID;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    @Query("select r from Record r where r.id = :id")
+    @Query("select r from Record r join fetch r.user join fetch r.userStudySubject where r.id = :id")
     Optional<Record> findById(@Param("id")UUID id);
 
-    @Query("select distinct r from Record r join fetch r.user join fetch r.userStudySubject where r.id = :id")
-    Optional<Record> findByIdFetchJoin(@Param("id")UUID id);
+//    @Query("select distinct r from Record r join fetch r.user")
+//    List<Record> findAllByFetchJoin();
 
-    @Query("select distinct r from Record r join fetch r.user join fetch r.userStudySubject")
-    List<Record> findAllByFetchJoin();
+    @Query("select r from Record r join fetch r.user join fetch r.userStudySubject where r.user.id = :userId")
+    List<Record> findByUserId(@Param("userId") UUID userId);
 
-    @Query("select r from Record r where r.user.id = :userId")
-    List<Record> findByUserId(@Param("userId")UUID userId);
+    @Query("select r from Record r join fetch r.userStudySubject join fetch r.user where r.userStudySubject.id = :userStudySubjectId")
+    List<Record> findByUserStudySubjectId(@Param("userStudySubjectId") UUID userStudySubjectId);
 
-    @Query("select r from Record r where r.userStudySubject.id = :id")
-    List<Record> findByUserStudySubjectId(@Param("id") UUID id);
-
-    @Query("delete from Record r where r.id = :id")
-    void deleteById(@Param("id") UUID id);
 }

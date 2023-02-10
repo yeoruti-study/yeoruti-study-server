@@ -28,7 +28,7 @@ public class UserStudySubject implements Serializable {
 
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
