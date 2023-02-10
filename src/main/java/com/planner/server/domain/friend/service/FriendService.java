@@ -9,9 +9,6 @@ import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,14 +20,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
     private final UserService userService;
 
-    Logger logger = LoggerFactory.getLogger(FriendService.class);
 
     public FriendResDto save(FriendReqDto req) throws Exception {
 
@@ -135,22 +130,18 @@ public class FriendService {
     }
 
     public void deleteById(FriendReqDto req) throws Exception {
-        logger.info("FriendService - deleteById 실행");
         Optional<Friend> findFriend = friendRepository.findByIdFetchJoin(req.getId());
-        logger.info("FriendRepository - findById 실행 완료");
 
         if(!findFriend.isPresent()) throw new Exception("[id] 확인 요망. id에 해당하는 친구요청이 존재하지 않습니다.");
 
         Friend friend = findFriend.get();
         friendRepository.delete(friend);
-        logger.info("FriendService - deleteById 실행 완료");
     }
 
     @Transactional
     public Friend changeAllowance(FriendReqDto req) throws Exception {
         UUID id = req.getId();
         Optional<Friend> friend = friendRepository.findById(id);
-        logger.info("FriendRepository - findById 실행 완료");
         if(!friend.isPresent()){
             throw new Exception("[id]확인 요망. 해당 id의 친구요청이 존재하지 않습니다.");
         }

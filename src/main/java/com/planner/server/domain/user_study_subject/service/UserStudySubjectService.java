@@ -25,12 +25,12 @@ public class UserStudySubjectService {
 
     public void save(UserStudySubjectReqDto req) throws Exception {
 
-        Optional<UserStudySubject> findEntity = userStudySubjectRepository.duplicateCheck(req.getUserId(), req.getTitle());
+        Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserIdAndTitle(req.getUserId(), req.getTitle());
         if(findEntity.isPresent()){
             throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
         }
 
-        User user = userService.findById(req.getUserId());
+        User user = userService.findOne(req.getUserId());
 
         UserStudySubject userStudySubject = UserStudySubject.builder()
                 .id(UUID.randomUUID())
@@ -60,7 +60,7 @@ public class UserStudySubjectService {
 
 
     public UserStudySubjectResDto findById(UUID id) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdFetchJoin(id);
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(id);
         if(!byId.isPresent())
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
 
@@ -69,7 +69,7 @@ public class UserStudySubjectService {
     }
 
     public void deleteById(UserStudySubjectReqDto req) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdFetchJoin(req.getId());
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(req.getId());
         if(!byId.isPresent()){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }

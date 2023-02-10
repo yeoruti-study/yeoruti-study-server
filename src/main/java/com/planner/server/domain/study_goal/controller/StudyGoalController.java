@@ -22,7 +22,7 @@ public class StudyGoalController {
     private final StudyGoalService studyGoalService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> save(@RequestBody StudyGoalReqDto req){
+    public ResponseEntity<?> createOne(@RequestBody StudyGoalReqDto req){
         StudyGoalReqDto studyGoalReqDto = null;
         try {
             studyGoalReqDto = studyGoalService.save(req);
@@ -43,7 +43,7 @@ public class StudyGoalController {
     }
 
     @GetMapping("/one")
-    public ResponseEntity<?> getById(@RequestParam UUID id){
+    public ResponseEntity<?> searchOne(@RequestParam UUID id){
         StudyGoalResDto studyGoalResDto;
         try {
             studyGoalResDto = studyGoalService.findById(id);
@@ -64,7 +64,7 @@ public class StudyGoalController {
     }
 
     @GetMapping("/user/list")
-    public ResponseEntity<?> getByUserId(@RequestParam UUID userId){
+    public ResponseEntity<?> searchListByUser(@RequestParam UUID userId){
         List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
         try {
             studyGoalResDtos = studyGoalService.findByUserId(userId);
@@ -85,7 +85,7 @@ public class StudyGoalController {
     }
 
     @GetMapping("/user-study-subject/list")
-    public ResponseEntity<?> getByUserStudySubjectId(@RequestParam UUID userStudySubjectId){
+    public ResponseEntity<?> searchListByUserSubject(@RequestParam UUID userStudySubjectId){
         List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
         try {
             studyGoalResDtos = studyGoalService.findByUserStudySubjectId(userStudySubjectId);
@@ -106,7 +106,7 @@ public class StudyGoalController {
     }
 
     @DeleteMapping("/delete/one")
-    public ResponseEntity<?> deleteById(@RequestBody StudyGoalReqDto id){
+    public ResponseEntity<?> deleteOne(@RequestBody StudyGoalReqDto id){
         try {
             studyGoalService.deleteById(id);
         } catch (NoSuchElementException e) {

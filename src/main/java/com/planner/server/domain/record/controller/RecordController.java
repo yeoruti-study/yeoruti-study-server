@@ -6,8 +6,6 @@ import com.planner.server.domain.record.dto.RecordResDto;
 import com.planner.server.domain.record.service.RecordService;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +21,8 @@ public class RecordController {
     private final RecordService recordService;
     private final UserService userService;
 
-    Logger logger = LoggerFactory.getLogger(RecordService.class);
-
     @PostMapping("/one")
-    public ResponseEntity<?> save(@RequestBody RecordReqDto req){
+    public ResponseEntity<?> createOne(@RequestBody RecordReqDto req){
         try {
             RecordResDto savedRecord = recordService.save(req);
         } catch (Exception e) {
@@ -44,23 +40,11 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll(){
-        List<RecordResDto> recordResDtoList = recordService.getAll();
-
-        Message message = Message.builder()
-                .data(recordResDtoList)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
-    }
-
     @GetMapping("/user/list")
-    public ResponseEntity<?> getByUserId(@RequestParam("userId") UUID req){
+    public ResponseEntity<?> SearchListByUser(@RequestParam("userId") UUID req){
         List<RecordResDto> recordResDtoList = null;
         try {
-            recordResDtoList = recordService.getByUserId(req);
+            recordResDtoList = recordService.findListByUser(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -77,8 +61,8 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/userstudysubject/list")
-    public ResponseEntity<?> getByUserStudySubjectId(@RequestParam("userstudysubjectid") UUID req){
+    @GetMapping("/user-study-subject/list")
+    public ResponseEntity<?> SearchListByUserStudySubject(@RequestParam("userStudySubjectId") UUID req){
         List<RecordResDto> recordResDtoList = null;
         try {
             recordResDtoList = recordService.getByUserStudySubjectId(req);
@@ -99,9 +83,9 @@ public class RecordController {
     }
 
     @DeleteMapping("/one")
-    public ResponseEntity<?> delete(@RequestBody RecordReqDto req){
+    public ResponseEntity<?> deleteOne(@RequestBody RecordReqDto req){
         try {
-            recordService.deleteById(req);
+            recordService.deleteOne(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)

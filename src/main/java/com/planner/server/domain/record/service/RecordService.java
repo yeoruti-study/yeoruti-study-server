@@ -6,15 +6,11 @@ import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.record.repository.RecordRepository;
 import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
-import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import com.planner.server.domain.user_study_subject.repository.UserStudySubjectRepository;
-import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -32,10 +28,8 @@ public class RecordService {
 
     private final UserStudySubjectRepository userStudySubjectRepository;
 
-    Logger logger = LoggerFactory.getLogger(RecordService.class);
-
     public RecordResDto save(RecordReqDto req) throws Exception {
-        User user = userService.findById(req.getUserId());
+        User user = userService.findOne(req.getUserId());
         UserResDto userResDto = UserResDto.toDto(user);
 
         Optional<UserStudySubject> byId = userStudySubjectRepository.findById(req.getUserStudySubjectId());
@@ -69,16 +63,7 @@ public class RecordService {
                 .build();
     }
 
-
-    public List<RecordResDto> getAll() {
-        List<Record> recordList = recordRepository.findAllByFetchJoin();
-        List<RecordResDto> recordResDtoList = new ArrayList<>();
-
-        recordList.stream().forEach(record -> recordResDtoList.add(RecordResDto.toDto(record)));
-        return recordResDtoList;
-    }
-
-    public List<RecordResDto> getByUserId(UUID userId) throws Exception {
+    public List<RecordResDto> findListByUser(UUID userId) throws Exception {
         List<Record> recordList = new ArrayList<>();
 
         try{
@@ -106,12 +91,14 @@ public class RecordService {
         return recordResDtoList;
     }
 
-    public void deleteById(RecordReqDto req) throws Exception {
-        Optional<Record> byId = recordRepository.findById(req.getId());
+    public void deleteOne(RecordReqDto req) throws Exception {
+        UUID id = req.getId();
+        Optional<Record> byId = recordRepository.findById(id);
         if(!byId.isPresent()){
             throw new Exception("[id] 확인 요망");
         }
         Record record = byId.get();
         recordRepository.delete(record);
     }
+
 }

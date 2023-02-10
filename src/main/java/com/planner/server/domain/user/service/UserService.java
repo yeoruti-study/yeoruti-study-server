@@ -20,7 +20,7 @@ public class UserService {
     // private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
-    public void signUp(UserReqDto reqDto) throws Exception{
+    public void createOne(UserReqDto reqDto) throws Exception{
 
         String salt = UUID.randomUUID().toString();
         String password = reqDto.getPassword() + salt;
@@ -46,8 +46,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-
-    public User findById(UUID id) throws Exception {
+    public User findOne(UUID id) throws Exception {
         if(id==null) {
             throw new IllegalArgumentException("parameter:[id] is null");
         }
@@ -80,7 +79,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(UserReqDto req) throws Exception {
+    public void deleteOne(UserReqDto req) throws Exception {
         Optional<User> byId = userRepository.findById(req.getId());
         if(!byId.isPresent()){
             throw new Exception("[id] 값 확인요망. 유저 데이터가 없습니다.");

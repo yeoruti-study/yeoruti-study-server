@@ -21,7 +21,7 @@ public class AttendanceService {
     private final UserService userService;
 
     public AttendanceResDto save(UUID userId) throws Exception {
-        User findUser = userService.findById(userId);
+        User findUser = userService.findOne(userId);
 
         AttendanceCheck attendanceCheck = AttendanceCheck.builder()
                 .id(UUID.randomUUID())
