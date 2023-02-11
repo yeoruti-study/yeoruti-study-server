@@ -30,11 +30,15 @@ public class RoomUserService {
     public void createOne(RoomUserReqDto roomUserDto) {
         UUID userId = roomUserDto.getUserDto().getId();
         UUID studyRoomId = roomUserDto.getStudyRoomDto().getId();
-        
+
         Optional<User> userOpt = userRepository.findById(userId);
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomId);
         
+        
         if(userOpt.isPresent() && studyRoomOpt.isPresent()) {
+            this.checkStudyRoomMaximumNumberOfPeople(studyRoomOpt.get());
+            this.checkDuplicationJoin(roomUserDto);
+
             // 2. study room 생성
             RoomUser roomUser = RoomUser.builder()
                 .id(UUID.randomUUID())
@@ -46,6 +50,27 @@ public class RoomUserService {
         } else {
             throw new NullPointerException("존재하지 않는 데이터");
         }
+    }
+
+    // 스터디룸 정원 확인
+    public void checkStudyRoomMaximumNumberOfPeople(StudyRoom studyRoom) {
+        int maximumNumberOfPeople = studyRoom.getMaximumNumberOfPeople();
+        List<RoomUserResDto> roomUserDtos = this.searchListByStudyRoomId(studyRoom.getId());
+
+        if(!roomUserDtos.isEmpty() && (roomUserDtos.size() >= maximumNumberOfPeople)) {
+            throw new RuntimeException("스터디룸 정원을 초과하였습니다.");
+        }
+    }
+    
+    // 가입 여부 확인
+    public void checkDuplicationJoin(RoomUserReqDto roomUserDto) {
+        List<StudyRoomResDto> studyRoomDtos = this.searchListJoinedStudyRoom(roomUserDto.getUserDto().getId());
+        
+        studyRoomDtos.forEach(studyRoom -> {
+            if(studyRoom.getId().equals(roomUserDto.getStudyRoomDto().getId())) {
+                throw new RuntimeException("이미 가입한 스터디룸입니다.");
+            }
+        });
     }
 
     @Transactional(readOnly = true)

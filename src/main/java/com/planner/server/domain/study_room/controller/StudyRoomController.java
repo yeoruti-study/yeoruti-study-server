@@ -32,8 +32,7 @@ public class StudyRoomController {
         Message message = new Message();
 
         try {
-            studyRoomService.createOne(studyRoomDto);
-            // TODO :: 스터디룸 생성하면서 room user도 함께 생성하기
+            studyRoomService.createStudyRoomAndRoomUser(studyRoomDto);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {

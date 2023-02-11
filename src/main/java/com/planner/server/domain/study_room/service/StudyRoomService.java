@@ -9,12 +9,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.planner.server.domain.room_user.entity.RoomUser;
+import com.planner.server.domain.room_user.repository.RoomUserRepository;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 import com.planner.server.domain.study_category.repository.StudyCategoryRepository;
 import com.planner.server.domain.study_room.dto.StudyRoomReqDto;
 import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 import com.planner.server.domain.study_room.entity.StudyRoom;
 import com.planner.server.domain.study_room.repository.StudyRoomRepository;
+import com.planner.server.domain.user.entity.User;
+import com.planner.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,20 +28,26 @@ import lombok.RequiredArgsConstructor;
 public class StudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
     private final StudyCategoryRepository studyCategoryRepository;
+    private final UserRepository userRepository;
+    private final RoomUserRepository roomUserRepository;
 
-    // TODO :: masterUserId - userService : getUserId 사용하기
-    public void createOne(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
+    private final int DEFAULT_MAXIMUM_NUMBER_OF_PEOPLE = 30;
+
+    // 1. studyRoom생성, roomUser생성
+    public void createStudyRoomAndRoomUser(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         UUID studyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
+        StudyRoom newStudyRoom = new StudyRoom();
 
         // 1. study category 조회
         Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
+        Optional<User> userOpt = userRepository.findById(studyRoomDto.getMasterUserId());
 
-        if(studyCategoryOpt.isPresent()) {
+        if(studyCategoryOpt.isPresent() && userOpt.isPresent()) {
             // 2. study room 생성
-            StudyRoom studyRoom = StudyRoom.builder()
+            newStudyRoom = StudyRoom.builder()
                 .id(UUID.randomUUID())
                 .name(studyRoomDto.getName())
-                .maximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople())
+                .maximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople() == 0 ? DEFAULT_MAXIMUM_NUMBER_OF_PEOPLE : studyRoomDto.getMaximumNumberOfPeople())
                 .studyCategory(studyCategoryOpt.get())
                 .studyGoalTime(studyRoomDto.getStudyGoalTime())
                 .roomPassword(studyRoomDto.getRoomPassword())
@@ -45,10 +55,19 @@ public class StudyRoomService {
                 .masterUserId(studyRoomDto.getMasterUserId())
                 .build();
 
-            studyRoomRepository.save(studyRoom);
+            studyRoomRepository.save(newStudyRoom);
         } else {
             throw new NullPointerException("존재하지 않는 데이터");
         }
+        
+        // 3. room user 생성
+        RoomUser roomUser = RoomUser.builder()
+            .id(UUID.randomUUID())
+            .user(userOpt.get())
+            .studyRoom(newStudyRoom)
+            .build();
+
+        roomUserRepository.save(roomUser);
     }
 
     @Transactional(readOnly = true)
@@ -59,6 +78,7 @@ public class StudyRoomService {
         return studyRoomDtos;
     }
 
+    // TODO :: room password 변경 분리한거 api docs에 반영하자
     public void updateOne(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomDto.getId());
         Optional<StudyCategory> studyCategoryOpt = null;
@@ -75,9 +95,8 @@ public class StudyRoomService {
             StudyRoom entity = entityOpt.get();
             entity.setName(studyRoomDto.getName())
                 .setStudyCategory(studyCategoryOpt.get())
-                .setMaximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople())
+                .setMaximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople() == 0 ? DEFAULT_MAXIMUM_NUMBER_OF_PEOPLE : studyRoomDto.getMaximumNumberOfPeople())
                 .setStudyGoalTime(studyRoomDto.getStudyGoalTime())
-                .setRoomPassword(studyRoomDto.getRoomPassword())
                 .setMasterUserId(studyRoomDto.getMasterUserId())
                 .setUpdatedAt(LocalDateTime.now());
         }else {
