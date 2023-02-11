@@ -6,6 +6,7 @@ import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 
 import com.planner.server.domain.user.dto.UserResDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,12 +1,18 @@
 package com.planner.server.domain.user.dto;
 
 import com.planner.server.domain.user.entity.User;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserReqDto {
 
     private UUID id;
