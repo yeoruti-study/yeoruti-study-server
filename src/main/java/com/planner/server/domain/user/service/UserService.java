@@ -79,8 +79,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteOne(UserReqDto req) throws Exception {
-        Optional<User> byId = userRepository.findById(req.getId());
+    public void deleteOne(UUID userId) throws Exception {
+        Optional<User> byId = userRepository.findById(userId);
         if(!byId.isPresent()){
             throw new Exception("[id] 값 확인요망. 유저 데이터가 없습니다.");
         }

@@ -42,8 +42,8 @@ public class StudyGoalController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/one")
-    public ResponseEntity<?> searchOne(@RequestParam UUID id){
+    @GetMapping("/one/{studyGoalId}")
+    public ResponseEntity<?> searchOne(@PathVariable("studyGoalId") UUID id){
         StudyGoalResDto studyGoalResDto = null;
         try {
             studyGoalResDto = studyGoalService.findById(id);
@@ -63,8 +63,8 @@ public class StudyGoalController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user/list")
-    public ResponseEntity<?> searchListByUser(@RequestParam UUID userId){
+    @GetMapping("/list/user/{userId}")
+    public ResponseEntity<?> searchListByUser(@PathVariable("userId") UUID userId){
         List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
         try {
             studyGoalResDtos = studyGoalService.findByUserId(userId);
@@ -84,8 +84,8 @@ public class StudyGoalController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user-study-subject/list")
-    public ResponseEntity<?> searchListByUserSubject(@RequestParam UUID userStudySubjectId){
+    @GetMapping("/list/user-study-subject/{userStudySubjectId}")
+    public ResponseEntity<?> searchListByUserSubject(@PathVariable("userStudySubjectId") UUID userStudySubjectId){
         List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
         try {
             studyGoalResDtos = studyGoalService.findByUserStudySubjectId(userStudySubjectId);
@@ -105,8 +105,8 @@ public class StudyGoalController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/delete/one")
-    public ResponseEntity<?> deleteOne(@RequestBody StudyGoalReqDto id){
+    @DeleteMapping("/one/{studyGoalId}")
+    public ResponseEntity<?> deleteOne(@PathVariable("studyGoalId") UUID id){
         try {
             studyGoalService.deleteById(id);
         } catch (NoSuchElementException e) {

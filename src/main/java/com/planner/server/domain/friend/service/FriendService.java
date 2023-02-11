@@ -150,7 +150,7 @@ public class FriendService {
     }
 
     public void deleteByFriendId(UUID friendId){
-        List<Friend> friendList = friendRepository.findByFriendId(UUID.fromString(friendId.toString()));
+        List<Friend> friendList = friendRepository.findByFriendId(friendId);
 
         friendList.stream().forEach(friend -> friendRepository.delete(friend));
     }

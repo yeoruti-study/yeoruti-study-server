@@ -97,9 +97,8 @@ public class RecordService {
         return recordResDtoList;
     }
 
-    public void deleteOne(RecordReqDto req) throws Exception {
-        UUID id = req.getId();
-        Optional<Record> byId = recordRepository.findByIdJoinFetchUserAndUserStudySubject(id);
+    public void deleteOne(UUID recordId) throws Exception {
+        Optional<Record> byId = recordRepository.findByIdJoinFetchUserAndUserStudySubject(recordId);
         if(!byId.isPresent()){
             throw new Exception("[id] 확인 요망");
         }

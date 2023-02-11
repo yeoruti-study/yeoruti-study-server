@@ -21,8 +21,8 @@ public class RecordController {
     private final RecordService recordService;
     private final UserService userService;
 
-    @PostMapping("start/one")
-    public ResponseEntity<?> startRecording(@RequestBody RecordReqDto req){
+    @PostMapping("/one")
+    public ResponseEntity<?> startRecord(@RequestBody RecordReqDto req){
         UUID recordId = null;
         try {
             recordId = recordService.startRecording(req);
@@ -42,8 +42,8 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @PostMapping("end/one")
-    public ResponseEntity<?> endRecording(@RequestBody RecordReqDto req){
+    @PatchMapping("/one")
+    public ResponseEntity<?> endRecord(@RequestBody RecordReqDto req){
         try {
             recordService.endRecording(req);
         } catch (Exception e) {
@@ -61,11 +61,11 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user/list")
-    public ResponseEntity<?> SearchListByUser(@RequestParam("userId") UUID req){
+    @GetMapping("/list/user/{userId}")
+    public ResponseEntity<?> searchListByUser(@PathVariable("userId") UUID userId){
         List<RecordResDto> recordResDtoList = null;
         try {
-            recordResDtoList = recordService.findListByUser(req);
+            recordResDtoList = recordService.findListByUser(userId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -82,11 +82,11 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user-study-subject/list")
-    public ResponseEntity<?> SearchListByUserStudySubject(@RequestParam("userStudySubjectId") UUID req){
+    @GetMapping("/list/user-study-subject/{userStudySubjectId}")
+    public ResponseEntity<?> searchListByUserStudySubject(@PathVariable("userStudySubjectId") UUID userStudySubjectId){
         List<RecordResDto> recordResDtoList = null;
         try {
-            recordResDtoList = recordService.getByUserStudySubjectId(req);
+            recordResDtoList = recordService.getByUserStudySubjectId(userStudySubjectId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -103,10 +103,10 @@ public class RecordController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/one")
-    public ResponseEntity<?> deleteOne(@RequestBody RecordReqDto req){
+    @DeleteMapping("/one/{recordId}")
+    public ResponseEntity<?> deleteOne(@PathVariable("recordId") UUID recordId){
         try {
-            recordService.deleteOne(req);
+            recordService.deleteOne(recordId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)

@@ -12,6 +12,5 @@ import java.util.UUID;
 public class AttendanceReqDto {
 
     private UUID id;
-    private LocalDateTime createdAt;
     private UUID userId;
 }

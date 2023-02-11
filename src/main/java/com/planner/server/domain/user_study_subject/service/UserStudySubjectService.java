@@ -65,8 +65,8 @@ public class UserStudySubjectService {
         return UserStudySubjectResDto.toDto(userStudySubject);
     }
 
-    public void deleteById(UserStudySubjectReqDto req) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdJoinFetchUser(req.getId());
+    public void deleteById(UUID id) throws Exception {
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdJoinFetchUser(id);
         if(!byId.isPresent()){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }

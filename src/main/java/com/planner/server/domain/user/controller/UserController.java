@@ -45,8 +45,8 @@ public class UserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/one")
-    public ResponseEntity<?> searchOne(@RequestParam UUID id){
+    @GetMapping("/one/{userId}")
+    public ResponseEntity<?> searchOne(@PathVariable("userId") UUID id){
         UserResDto userResDto = null;
         Message message = new Message();
         try {
@@ -100,11 +100,11 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/one")
-    public ResponseEntity<?> deleteOne(@RequestBody UserReqDto req){
-        friendService.deleteByFriendId(req.getId());
+    @DeleteMapping("/one/{userId}")
+    public ResponseEntity<?> deleteOne(@PathVariable("userId") UUID id){
+        friendService.deleteByFriendId(id);
         try {
-            userService.deleteOne(req);
+            userService.deleteOne(id);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)

@@ -39,8 +39,8 @@ public class UserStudySubjectController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("user/list")
-    public ResponseEntity<?> searchListByUser(@RequestParam UUID userId){
+    @GetMapping("list/user/{userId}")
+    public ResponseEntity<?> searchListByUser(@PathVariable("userId") UUID userId){
         List<UserStudySubjectResDto> list = new ArrayList<>();
         try {
             list = userStudySubjectService.findByUserId(userId);
@@ -61,8 +61,8 @@ public class UserStudySubjectController {
     }
 
 
-    @GetMapping("/one")
-    public ResponseEntity<?> searchOne(@RequestParam UUID id){
+    @GetMapping("/one/{userStudySubjectId}")
+    public ResponseEntity<?> searchOne(@PathVariable("userStudySubjectId") UUID id){
         UserStudySubjectResDto byId;
         try {
             byId = userStudySubjectService.findById(id);
@@ -83,10 +83,10 @@ public class UserStudySubjectController {
     }
 
 
-    @DeleteMapping("/one")
-    public ResponseEntity<?> deleteOne(@RequestBody UserStudySubjectReqDto req){
+    @DeleteMapping("/one/{userStudySubjectId}")
+    public ResponseEntity<?> deleteOne(@PathVariable("userStudySubjectId") UUID id){
         try {
-            userStudySubjectService.deleteById(req);
+            userStudySubjectService.deleteById(id);
         }catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -96,23 +96,6 @@ public class UserStudySubjectController {
         }
         Message message = Message.builder()
                 .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
-    }
-
-    @DeleteMapping("/user/one")
-    public ResponseEntity<?> deleteOneByUser(@RequestBody UserStudySubjectReqDto req){
-        try {
-            userStudySubjectService.deleteByUserId(req);
-        }catch (Exception e) {
-            Message message = Message.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
-                    .build();
-            return new ResponseEntity<>(message, message.getStatus());
-        }
-        Message message = Message.builder()
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
