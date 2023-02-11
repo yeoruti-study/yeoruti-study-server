@@ -91,35 +91,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Friend> friends = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<UserStudySubject> userStudySubjects = new ArrayList<>();
 
-    public void addRoomUser(RoomUser roomUser) {
-        this.roomUsers.add(roomUser);
-        roomUser.setUser(this);
-    }
-
-    public void addRecord(Record record) {
-        this.records.add(record);
-    }
-
-    public void addStudyGoal(StudyGoal studyGoal) {
-        this.studyGoals.add(studyGoal);
-    }
-
-    public void addAttendanceCheck(AttendanceCheck attendanceCheck) {
-        this.attendanceChecks.add(attendanceCheck);
-    }
-
-    public void addUserStudySubject(UserStudySubject userStudySubject){
-        this.userStudySubjects.add(userStudySubject);
-    }
-
-    public void addFriend(Friend friend) {
-        this.friends.add(friend);
-    }
-
-    public void fixProfile(UserReqDto reqDto) {
+    public void changeUserInfo(UserReqDto reqDto) {
         this.profileName = reqDto.getProfileName();
         this.profileBirth = reqDto.getProfileBirth();
         this.profileImagePath = reqDto.getProfileImagePath();
@@ -127,19 +102,4 @@ public class User implements Serializable {
         this.alarmPermission = reqDto.isAlarmPermission();
     }
 
-    public void fixPassword(String password){
-        this.password = password;
-    }
-
-    public void fixFriendAcceptance(){
-        this.friendAcceptance = !this.friendAcceptance;
-    }
-
-    public void fixAlarmPermission(){
-        this.alarmPermission = !this.alarmPermission;
-    }
-
-    public void update(){
-        this.updatedAt = LocalDateTime.now();
-    }
 }

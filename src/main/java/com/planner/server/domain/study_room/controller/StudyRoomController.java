@@ -2,6 +2,7 @@ package com.planner.server.domain.study_room.controller;
 
 import java.util.UUID;
 
+import com.planner.server.domain.room_user.service.RoomUserService;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
