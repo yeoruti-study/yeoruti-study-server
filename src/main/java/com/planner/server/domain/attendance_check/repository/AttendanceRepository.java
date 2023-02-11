@@ -15,11 +15,9 @@ public interface AttendanceRepository extends JpaRepository<AttendanceCheck, Lon
     Optional<AttendanceCheck> findById(UUID id);
 
     @Query("select distinct a from AttendanceCheck a join fetch a.user where a.id = :id")
-    Optional<AttendanceCheck> findByIdFetchJoin(UUID id);
+    Optional<AttendanceCheck> findByIdJoinFetchUser(UUID id);
 
     List<AttendanceCheck> findByUserId(@Param("id")UUID id);
 
-//    @Query("select a from AttendanceCheck a where a.user.id = :id")
-//    Optional<AttendanceCheck> alreadyExists()
 
 }

@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 
-import com.planner.server.domain.user.dto.UserDto;
+import com.planner.server.domain.user.dto.UserResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,11 +19,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class RoomUserResDto {
     private UUID id;
-    private UserDto userDto;
+    private UserResDto userDto;
     private StudyRoomResDto studyRoomDto;
 
     public static RoomUserResDto toDto(RoomUser entity) {
-        UserDto userDto = UserDto.toDto(entity.getUser());
+        UserResDto userDto = UserResDto.toDto(entity.getUser());
         StudyRoomResDto studyRoomDto = StudyRoomResDto.toDto(entity.getStudyRoom());
 
         return RoomUserResDto.builder()

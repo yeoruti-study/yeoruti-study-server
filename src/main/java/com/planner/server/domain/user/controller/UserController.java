@@ -1,8 +1,8 @@
 package com.planner.server.domain.user.controller;
 
-import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.friend.service.FriendService;
 import com.planner.server.domain.message.Message;
+import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
@@ -22,22 +22,22 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final FriendService friendService;
 
     @PostMapping ("/one")
-    public ResponseEntity<?> signUp(@RequestBody UserReqDto req){
+    public ResponseEntity<?> createOne(@RequestBody UserReqDto req){
+        Message message = new Message();
         try {
-            userService.signUp(req);
+            userService.createOne(req);
+            message.setStatus(HttpStatus.OK);
         } catch (Exception e) {
-            Message message = Message.builder()
+            message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
-
-        Message message = Message.builder()
+        message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
@@ -46,30 +46,32 @@ public class UserController {
     }
 
     @GetMapping("/one")
-    public ResponseEntity<?> findOne(@RequestParam UUID id){
+    public ResponseEntity<?> searchOne(@RequestParam UUID id){
         UserResDto userResDto = null;
-
+        Message message = new Message();
         try {
-            userResDto = UserResDto.toDto(userService.findById(id));
-        } catch (Exception e) {
-            Message message = Message.builder()
+            userResDto = UserResDto.toDto(userService.findOne(id));
+            message = Message.builder()
+                    .data(userResDto)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+
+        }catch (Exception e) {
+            message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
 
-        Message message = Message.builder()
-                .data(userResDto)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> findAll(){
+    public ResponseEntity<?> searchAll(){
         List<UserResDto> result = userService.findAll();
+
         Message message = Message.builder()
                 .data(result)
                 .status(HttpStatus.OK)
@@ -79,31 +81,30 @@ public class UserController {
     }
 
     @PutMapping ("/profile/one")
-    public ResponseEntity<?> updateUserProfile(@RequestBody UserReqDto req){
+    public ResponseEntity<?> updateProfile(@RequestBody UserReqDto req){
+        Message message = new Message();
+
         try{
-            userService.changeProfile(req);
-        }
-        catch (IllegalArgumentException e){
-            Message message = Message.builder()
+            userService.changeUserInfo(req);
+            message = Message.builder()
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+        } catch (IllegalArgumentException e){
+            message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
                     .build();
-            return new ResponseEntity<>(message, message.getStatus());
         }
-
-        Message message = Message.builder()
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
 
     @DeleteMapping("/one")
-    public ResponseEntity<?> deleteUser(@RequestBody UserReqDto req){
+    public ResponseEntity<?> deleteOne(@RequestBody UserReqDto req){
         friendService.deleteByFriendId(req.getId());
         try {
-            userService.deleteUser(req);
+            userService.deleteOne(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)

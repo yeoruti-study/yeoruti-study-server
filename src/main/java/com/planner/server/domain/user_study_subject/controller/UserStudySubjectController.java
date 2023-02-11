@@ -21,7 +21,7 @@ public class UserStudySubjectController {
     private final UserStudySubjectService userStudySubjectService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> save(@RequestBody UserStudySubjectReqDto req){
+    public ResponseEntity<?> createOne(@RequestBody UserStudySubjectReqDto req){
         try{
             userStudySubjectService.save(req);
         }catch (Exception e){
@@ -39,8 +39,8 @@ public class UserStudySubjectController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/user/one")
-    public ResponseEntity<?> findByUserId(@RequestParam UUID userId){
+    @GetMapping("user/list")
+    public ResponseEntity<?> searchListByUser(@RequestParam UUID userId){
         List<UserStudySubjectResDto> list = new ArrayList<>();
         try {
             list = userStudySubjectService.findByUserId(userId);
@@ -62,7 +62,7 @@ public class UserStudySubjectController {
 
 
     @GetMapping("/one")
-    public ResponseEntity<?> findById(@RequestParam UUID id){
+    public ResponseEntity<?> searchOne(@RequestParam UUID id){
         UserStudySubjectResDto byId;
         try {
             byId = userStudySubjectService.findById(id);
@@ -84,7 +84,7 @@ public class UserStudySubjectController {
 
 
     @DeleteMapping("/one")
-    public ResponseEntity<?> deleteById(@RequestBody UserStudySubjectReqDto req){
+    public ResponseEntity<?> deleteOne(@RequestBody UserStudySubjectReqDto req){
         try {
             userStudySubjectService.deleteById(req);
         }catch (Exception e) {
@@ -102,7 +102,7 @@ public class UserStudySubjectController {
     }
 
     @DeleteMapping("/user/one")
-    public ResponseEntity<?> deleteByUserId(@RequestBody UserStudySubjectReqDto req){
+    public ResponseEntity<?> deleteOneByUser(@RequestBody UserStudySubjectReqDto req){
         try {
             userStudySubjectService.deleteByUserId(req);
         }catch (Exception e) {

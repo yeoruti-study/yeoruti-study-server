@@ -7,8 +7,6 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +24,8 @@ public class FriendController {
     private final FriendService friendService;
     private final UserService userService;
 
-    Logger logger = LoggerFactory.getLogger(FriendService.class);
-
     @PostMapping("/one")
-    public ResponseEntity<?> save(@RequestBody FriendReqDto req){
+    public ResponseEntity<?> createOne(@RequestBody FriendReqDto req){
         try {
             FriendResDto savedFriend = friendService.save(req);
         } catch (Exception e) {
@@ -48,7 +44,7 @@ public class FriendController {
     }
 
     @GetMapping("/user/list")
-    public ResponseEntity<?> getByUserId(@RequestParam UUID id){
+    public ResponseEntity<?> searchListByUser(@RequestParam UUID id){
         List<FriendResDto> friendResDtos = new ArrayList<>();
         try {
             friendResDtos = friendService.findByUserId(id);
@@ -69,7 +65,7 @@ public class FriendController {
     }
 
     @GetMapping("/one")
-    public ResponseEntity<?> getById(@RequestParam UUID id){
+    public ResponseEntity<?> searchOne(@RequestParam UUID id){
         Friend byId = null;
         try {
             byId = friendService.findById(id);
@@ -94,7 +90,6 @@ public class FriendController {
         Friend friendEntity = null;
         try {
             friendEntity = friendService.changeAllowance(req);
-            logger.info("changeAllowance 완료");
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -108,7 +103,6 @@ public class FriendController {
         User friend = friendEntity.getUser();
         System.out.println("friend.getId() = " + friend.getId());
 
-        logger.info("friendService.reverseSave 시작");
         try {
             friendService.reverseSave(user, friend);
         } catch (Exception e) {
@@ -119,10 +113,6 @@ public class FriendController {
             return new ResponseEntity<>(message, message.getStatus());
         }
 
-        logger.info("friendService.save 끝");
-        user.addFriend(friendEntity);
-        friend.addFriend(friendEntity);
-
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
@@ -132,7 +122,7 @@ public class FriendController {
     }
 
     @DeleteMapping("/one")
-    public ResponseEntity<?> delete(@RequestBody FriendReqDto req){
+    public ResponseEntity<?> deleteOne(@RequestBody FriendReqDto req){
         try {
             friendService.deleteById(req);
         } catch (Exception e) {
