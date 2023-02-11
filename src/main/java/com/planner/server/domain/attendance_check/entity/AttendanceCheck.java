@@ -18,9 +18,12 @@ import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
 
-@Entity
-@Table(name = "attendance_check")
 @Getter
+@ToString
+@Entity
+@Builder
+@Table(name = "attendance_check")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AttendanceCheck implements Serializable {
 
@@ -30,13 +33,6 @@ public class AttendanceCheck implements Serializable {
     
     @Type(type = "uuid-char")
     private UUID id;
-
-    @Builder
-    public AttendanceCheck(UUID id, User user, LocalDateTime createdAt) {
-        this.id = id;
-        this.user = user;
-        this.createdAt = createdAt;
-    }
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)

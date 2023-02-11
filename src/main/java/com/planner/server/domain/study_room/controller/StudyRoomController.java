@@ -2,8 +2,7 @@ package com.planner.server.domain.study_room.controller;
 
 import java.util.UUID;
 
-import com.planner.server.domain.room_user.service.RoomUserService;
-import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -84,7 +83,7 @@ public class StudyRoomController {
             studyRoomService.deleteOne(studyRoomId);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
-        } catch(ConstraintViolationException e) {
+        } catch(DataIntegrityViolationException e) {
             message.setStatus(HttpStatus.BAD_REQUEST);
             message.setMessage("error");
             message.setMemo("삭제할 수 없는 데이터입니다.");
@@ -97,7 +96,7 @@ public class StudyRoomController {
     }
 
     // study category로 study room 조회 - 특정 카테고리의 스터디룸 확인
-    @GetMapping("/study-category/{studyCategoryId}")
+    @GetMapping("/list/study-category/{studyCategoryId}")
     public ResponseEntity<?> searchListByStudyCategory(@PathVariable(name = "studyCategoryId") UUID studyCategoryId) {
         Message message = new Message();
 
