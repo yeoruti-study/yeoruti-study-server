@@ -1,17 +1,16 @@
 package com.planner.server.domain.attendance_check.dto;
-
-import com.planner.server.domain.user.dto.UserResDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Builder
-public class AttendanceReqDto {
-
+@AllArgsConstructor
+@NoArgsConstructor
+public class AttendanceCheckReqDto {
     private UUID id;
-    private LocalDateTime createdAt;
     private UUID userId;
 }

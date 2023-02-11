@@ -1,11 +1,13 @@
 package com.planner.server.domain.study_room.service;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,23 +80,24 @@ public class StudyRoomService {
         return studyRoomDtos;
     }
 
-    // TODO :: room password 변경 분리한거 api docs에 반영하자
+    // TODO :: 스터디룸 수정도 master user 에게만 권한을 줘야함
     public void updateOne(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomDto.getId());
-        Optional<StudyCategory> studyCategoryOpt = null;
         
         if(entityOpt.isPresent()) {
+            StudyRoom entity = entityOpt.get();
+
             UUID updatedStudyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
             if(!entityOpt.get().getStudyCategory().getId().equals(updatedStudyCategoryId)){
-                studyCategoryOpt = studyCategoryRepository.findById(updatedStudyCategoryId);
+                Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(updatedStudyCategoryId);
                 if(!studyCategoryOpt.isPresent()) {
                     throw new NullPointerException("존재하지 않는 데이터");
                 }
-            }
 
-            StudyRoom entity = entityOpt.get();
+                entity.setStudyCategory(studyCategoryOpt.get());
+            }
+            
             entity.setName(studyRoomDto.getName())
-                .setStudyCategory(studyCategoryOpt.get())
                 .setMaximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople() == 0 ? DEFAULT_MAXIMUM_NUMBER_OF_PEOPLE : studyRoomDto.getMaximumNumberOfPeople())
                 .setStudyGoalTime(studyRoomDto.getStudyGoalTime())
                 .setMasterUserId(studyRoomDto.getMasterUserId())
@@ -104,6 +107,7 @@ public class StudyRoomService {
         }
     }
 
+    // TODO :: 스터디룸 삭제도 master user 에게만 권한을 줘야함
     public void deleteOne(UUID studyRoomId) {
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomId);
 
@@ -114,6 +118,7 @@ public class StudyRoomService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<StudyRoomResDto> searchListByStudyCategory(UUID studyCategoryId) {
         Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
 
@@ -130,17 +135,14 @@ public class StudyRoomService {
     public void changeRoomPassword(StudyRoomReqDto.ReqChangePassword studyRoomDto) {
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomDto.getId());
         
-        // TODO
-        // 1. master user 확인을 위해 user 조회
-        // 2. master user id 와 user id 가 동일하다면 room password 변경 허락
-        // 3. 그렇지 않다면 room password 변경 거부
-        
         if(studyRoomOpt.isPresent()) {
             StudyRoom studyRoom = studyRoomOpt.get();
             
+            // 1. master user 확인을 위해 user 조회
+            // 2. master user id 와 user id 가 동일하다면 room password 변경 허락
+            // 3. 그렇지 않다면 room password 변경 거부
             if(!studyRoomDto.getUserId().equals(studyRoom.getMasterUserId())) {
-                // TODO :: 커스텀 예외 처리하기. null pointer exception X.
-                throw new NullPointerException("허용된 유저가 아닙니다.");
+                throw new RuntimeException("허용된 유저가 아닙니다.");
             }
             studyRoom.setRoomPassword(studyRoomDto.getRoomPassword());
         }else {
@@ -156,8 +158,7 @@ public class StudyRoomService {
             if(studyRoomOpt.get().getRoomPassword().equals(studyRoomDto.getRoomPassword())) {
                 return;
             }else {
-                // TODO :: 커스텀 예외 처리하기. null pointer exception X.
-                throw new NullPointerException("스터디룸 비밀번호 오류");
+                throw new RuntimeException("스터디룸 비밀번호 오류");
             }
         }else {
             throw new NullPointerException("존재하지 않는 데이터");

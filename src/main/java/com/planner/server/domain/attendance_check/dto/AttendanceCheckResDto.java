@@ -5,22 +5,23 @@ import com.planner.server.domain.user.dto.UserResDto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @Builder
-public class AttendanceResDto {
-
+public class AttendanceCheckResDto {
     private UUID id;
-    private LocalDateTime createdAt;
     private UserResDto userResDto;
-    public static AttendanceResDto toDto(AttendanceCheck attendance){
-        return AttendanceResDto.builder()
+    private LocalDateTime createdAt;
+
+    public static AttendanceCheckResDto toDto(AttendanceCheck attendance){
+        UserResDto userDto = UserResDto.toDto(attendance.getUser());
+
+        return AttendanceCheckResDto.builder()
                 .id(attendance.getId())
+                .userResDto(userDto)
                 .createdAt(attendance.getCreatedAt())
-                .userResDto(UserResDto.toDto(attendance.getUser()))
                 .build();
     }
 }

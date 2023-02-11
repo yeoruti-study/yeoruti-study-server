@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoomUserService {
     private final RoomUserRepository roomUserRepository;
     private final UserRepository userRepository;
@@ -86,7 +87,6 @@ public class RoomUserService {
         }
     }
 
-    @Transactional(readOnly = true)
     public void deleteOne(UUID roomUserId) {
         Optional<RoomUser> entityOpt = roomUserRepository.findById(roomUserId);
 
@@ -97,7 +97,7 @@ public class RoomUserService {
         }
     }
 
-    // TODO :: 추후에는 userId를 받지 않는다
+    @Transactional(readOnly = true)
     public List<StudyRoomResDto> searchListJoinedStudyRoom(UUID userId) {
         Optional<User> userOpt = userRepository.findById(userId);
 
