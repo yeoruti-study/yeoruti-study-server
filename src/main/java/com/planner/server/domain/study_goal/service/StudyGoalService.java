@@ -101,8 +101,7 @@ public class StudyGoalService {
         return studyGoalResDtos;
     }
 
-    public void deleteById(StudyGoalReqDto req){
-        UUID id = req.getId();
+    public void deleteById(UUID id){
         Optional<StudyGoal> studyGoal = studyGoalRepository.findByIdJoinFetchUser(id);
         if(!studyGoal.isPresent()){
             throw new NoSuchElementException("[id] 확인 요망. id 값과 일치하는 데이터가 존재하지 않습니다.");

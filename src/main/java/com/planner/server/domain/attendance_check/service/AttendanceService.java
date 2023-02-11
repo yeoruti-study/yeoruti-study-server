@@ -17,7 +17,6 @@ import java.util.*;
 public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     public AttendanceResDto save(UUID userId) throws Exception {
