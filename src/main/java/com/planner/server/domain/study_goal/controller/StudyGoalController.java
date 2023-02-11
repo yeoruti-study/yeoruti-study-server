@@ -44,7 +44,7 @@ public class StudyGoalController {
 
     @GetMapping("/one")
     public ResponseEntity<?> searchOne(@RequestParam UUID id){
-        StudyGoalResDto studyGoalResDto;
+        StudyGoalResDto studyGoalResDto = null;
         try {
             studyGoalResDto = studyGoalService.findById(id);
         } catch (Exception e) {

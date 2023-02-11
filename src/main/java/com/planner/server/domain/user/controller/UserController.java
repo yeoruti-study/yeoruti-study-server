@@ -85,7 +85,7 @@ public class UserController {
         Message message = new Message();
 
         try{
-            userService.changeProfile(req);
+            userService.changeUserInfo(req);
             message = Message.builder()
                     .status(HttpStatus.OK)
                     .message("success")

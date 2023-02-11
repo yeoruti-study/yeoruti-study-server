@@ -1,7 +1,6 @@
 package com.planner.server.domain.user_study_subject.service;
 
 import com.planner.server.domain.user.entity.User;
-import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
@@ -20,12 +19,11 @@ import java.util.UUID;
 public class UserStudySubjectService {
 
     private final UserStudySubjectRepository userStudySubjectRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     public void save(UserStudySubjectReqDto req) throws Exception {
 
-        Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserIdAndTitle(req.getUserId(), req.getTitle());
+        Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserAndTitleJoinFetchUser(req.getUserId(), req.getTitle());
         if(findEntity.isPresent()){
             throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
         }
@@ -39,14 +37,13 @@ public class UserStudySubjectService {
                 .build();
 
         UserStudySubject save = userStudySubjectRepository.save(userStudySubject);
-        user.addUserStudySubject(save);
     }
 
     public List<UserStudySubjectResDto> findByUserId(UUID userId) throws Exception {
 
         List<UserStudySubject> subjectList = new ArrayList<>();
         try{
-            subjectList = userStudySubjectRepository.findByUserId(userId);
+            subjectList = userStudySubjectRepository.findByUserJoinFetchUser(userId);
         }
         catch (Exception e){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
@@ -60,7 +57,7 @@ public class UserStudySubjectService {
 
 
     public UserStudySubjectResDto findById(UUID id) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(id);
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdJoinFetchUser(id);
         if(!byId.isPresent())
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
 
@@ -69,7 +66,7 @@ public class UserStudySubjectService {
     }
 
     public void deleteById(UserStudySubjectReqDto req) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(req.getId());
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdJoinFetchUser(req.getId());
         if(!byId.isPresent()){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }
@@ -80,7 +77,7 @@ public class UserStudySubjectService {
     public void deleteByUserId(UserStudySubjectReqDto req) throws Exception {
         List<UserStudySubject> subjectList;
         try{
-            subjectList = userStudySubjectRepository.findByUserId(req.getUserId());
+            subjectList = userStudySubjectRepository.findByUserJoinFetchUser(req.getUserId());
         }
         catch (Exception e){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");

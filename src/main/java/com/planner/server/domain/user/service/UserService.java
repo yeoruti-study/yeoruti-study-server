@@ -68,14 +68,14 @@ public class UserService {
 
 
     @Transactional
-    public void changeProfile(UserReqDto req) throws IllegalArgumentException{
+    public void changeUserInfo(UserReqDto req) throws IllegalArgumentException{
         Optional<User> user = userRepository.findById(req.getId());
 
         if(!user.isPresent()){
             throw new IllegalArgumentException("id에 부합하는 유저가 존재하지 않습니다. 다시 입력해주세요.");
         }
         User findUser = user.get();
-        findUser.fixProfile(req);
+        findUser.changeUserInfo(req);
     }
 
     @Transactional

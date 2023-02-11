@@ -13,15 +13,15 @@ import java.util.UUID;
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query("select r from Record r join fetch r.user join fetch r.userStudySubject where r.id = :id")
-    Optional<Record> findById(@Param("id")UUID id);
+    Optional<Record> findByIdJoinFetchUserAndUserStudySubject(@Param("id")UUID id);
 
 //    @Query("select distinct r from Record r join fetch r.user")
 //    List<Record> findAllByFetchJoin();
 
     @Query("select r from Record r join fetch r.user join fetch r.userStudySubject where r.user.id = :userId")
-    List<Record> findByUserId(@Param("userId") UUID userId);
+    List<Record> findByUserJoinFetchUserAndUserStudySubject(@Param("userId") UUID userId);
 
     @Query("select r from Record r join fetch r.userStudySubject join fetch r.user where r.userStudySubject.id = :userStudySubjectId")
-    List<Record> findByUserStudySubjectId(@Param("userStudySubjectId") UUID userStudySubjectId);
+    List<Record> findByUserStudySubjectJoinFetchUserAndUserStudySubject(@Param("userStudySubjectId") UUID userStudySubjectId);
 
 }

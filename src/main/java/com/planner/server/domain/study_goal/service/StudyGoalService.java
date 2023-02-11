@@ -56,15 +56,14 @@ public class StudyGoalService {
                 .build();
 
         StudyGoal savedStudyGoal = studyGoalRepository.save(studyGoal);
-        user.addStudyGoal(savedStudyGoal);
 
         return StudyGoalReqDto.toDto(studyGoal);
     }
 
     public StudyGoalResDto findById(UUID id) throws Exception {
-        StudyGoal studyGoal;
+        StudyGoal studyGoal = null;
         try{
-            Optional<StudyGoal> byId = studyGoalRepository.findById(id);
+            Optional<StudyGoal> byId = studyGoalRepository.findByIdJoinFetchUser(id);
             studyGoal = byId.get();
         }catch(Exception e){
             throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
@@ -75,9 +74,9 @@ public class StudyGoalService {
 
     public List<StudyGoalResDto> findByUserId(UUID id) throws Exception {
         userService.findOne(id); // 유저의 존재 여부 확인
-        List<StudyGoal> studyGoals;
+        List<StudyGoal> studyGoals = new ArrayList<>();
         try{
-            studyGoals = studyGoalRepository.findByUserId(id);
+            studyGoals = studyGoalRepository.findByUserJoinFetchUser(id);
         }catch(Exception e){
             throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
         }
@@ -89,9 +88,9 @@ public class StudyGoalService {
     }
 
     public List<StudyGoalResDto> findByUserStudySubjectId(UUID userStudySubjectId) throws Exception {
-        List<StudyGoal> studyGoals;
+        List<StudyGoal> studyGoals = new ArrayList<>();
         try{
-            studyGoals = studyGoalRepository.findByUserStudySubjectId(userStudySubjectId);
+            studyGoals = studyGoalRepository.findByUserStudySubjectJoinFetchUser(userStudySubjectId);
         }catch (Exception e){
             throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
         }
@@ -104,7 +103,7 @@ public class StudyGoalService {
 
     public void deleteById(StudyGoalReqDto req){
         UUID id = req.getId();
-        Optional<StudyGoal> studyGoal = studyGoalRepository.findById(id);
+        Optional<StudyGoal> studyGoal = studyGoalRepository.findByIdJoinFetchUser(id);
         if(!studyGoal.isPresent()){
             throw new NoSuchElementException("[id] 확인 요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
         }

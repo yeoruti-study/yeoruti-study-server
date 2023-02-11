@@ -113,9 +113,6 @@ public class FriendController {
             return new ResponseEntity<>(message, message.getStatus());
         }
 
-        user.addFriend(friendEntity);
-        friend.addFriend(friendEntity);
-
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")

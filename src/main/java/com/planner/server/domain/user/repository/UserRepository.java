@@ -16,15 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(@Param("id") UUID id);
 
     @Query("select distinct u from User u join fetch u.records where u.id = :id")
-    List<User> findByIdFetchJoinRecord(@Param("id") UUID id);
+    List<User> findByIdJoinFetchRecord(@Param("id") UUID id);
 
     Optional<User> findByUsername(String username);
 
-    @Query("select distinct u from User u join fetch u.records")
-    List<User> findAllAndRelatedRecord();
-
     @Query("select distinct u from User u join fetch u.records r where r.id = :id")
-    Optional<User> findListByRecordId(@Param("id") UUID id);
+    Optional<User> findByRecordJoinFetchRecord(@Param("id") UUID id);
 
 //    @Query("select distinct u from User u join fetch u.userStudySubjects where u.id = :id")
 //    List<User> findByIdJoinFetchUserStudySubject(@Param("id") UUID id);
