@@ -39,14 +39,16 @@ public class Record implements Serializable {
     private UUID id;
     
     private LocalDateTime startTime;
-    
-    private LocalDateTime endTime;
-
-    private Duration totalStudyTime;
-
-    private boolean studying;
 
     @Setter
+    private LocalDateTime endTime;
+
+    @Setter
+    private Duration totalStudyTime;
+
+    @Setter
+    private boolean studying;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

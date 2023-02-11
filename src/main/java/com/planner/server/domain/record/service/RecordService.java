@@ -6,6 +6,7 @@ import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.record.repository.RecordRepository;
 import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
+import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
@@ -13,7 +14,9 @@ import com.planner.server.domain.user_study_subject.repository.UserStudySubjectR
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,50 +27,53 @@ import java.util.UUID;
 public class RecordService {
 
     private final RecordRepository recordRepository;
-    private final UserService userService;
-
     private final UserStudySubjectRepository userStudySubjectRepository;
+    private final UserRepository userRepository;
 
-    public RecordResDto save(RecordReqDto req) throws Exception {
-        User user = userService.findOne(req.getUserId());
-        UserResDto userResDto = UserResDto.toDto(user);
+    public UUID startRecording(RecordReqDto req) throws Exception {
+        UUID userId = req.getUserId();
+        UUID userStudySubjectId = req.getUserStudySubjectId();
 
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findById(req.getUserStudySubjectId());
-        if(!byId.isPresent())
-            throw new Exception("[id] 확인 요망. UserStudySubject가 존재하지 않습니다.");
+        Optional<User> findUser = userRepository.findById(userId);
+        Optional<UserStudySubject> findUserStudySubject = userStudySubjectRepository.findByIdJoinFetchUser(userStudySubjectId);
 
-        UserStudySubject userStudySubject = byId.get();
-        UserStudySubjectResDto userStudySubjectResDto = UserStudySubjectResDto.toDto(userStudySubject);
+        if(!findUser.isPresent() || !findUserStudySubject.isPresent()) {
+            throw new Exception("id 값 확인요망");
+        }
 
+        UUID madeRecordId = UUID.randomUUID();
         Record record = Record.builder()
-                .id(UUID.randomUUID())
-                .startTime(req.getStartTime())
-                .endTime(req.getEndTime())
-                .user(user)
-                .userStudySubject(userStudySubject)
-                .totalStudyTime(Duration.between(req.getStartTime(), req.getEndTime()))
-                .studying(req.isStudying())
+                .id(madeRecordId)
+                .user(findUser.get())
+                .userStudySubject(findUserStudySubject.get())
+                .startTime(LocalDateTime.now())
+                .studying(true)
                 .build();
+        recordRepository.save(record);
+        return madeRecordId;
+    }
 
-        Record save = recordRepository.save(record);
-        user.addRecord(save);
+    @Transactional
+    public void endRecording(RecordReqDto req) throws Exception{
+        UUID id = req.getId();
+        System.out.println("id = " + id);
+        Optional<Record> findRecord = recordRepository.findByIdJoinFetchUserAndUserStudySubject(id);
+        if(!findRecord.isPresent()){
+            throw new Exception("id 값 확인요망");
+        }
+        Record record = findRecord.get();
+        record.setEndTime(LocalDateTime.now());
+        record.setStudying(false);
 
-        return RecordResDto.builder()
-                .id(record.getId())
-                .startTime(record.getStartTime())
-                .endTime(record.getEndTime())
-                .userDto(UserResDto.toDto(user))
-                .userStudySubjectDto(UserStudySubjectResDto.toDto(userStudySubject))
-                .totalStudyTime(record.getTotalStudyTime())
-                .studying(record.isStudying())
-                .build();
+        Duration totalStudyTime = Duration.between(record.getStartTime(), record.getEndTime());
+        record.setTotalStudyTime(totalStudyTime);
     }
 
     public List<RecordResDto> findListByUser(UUID userId) throws Exception {
         List<Record> recordList = new ArrayList<>();
 
         try{
-            recordList = recordRepository.findByUserId(userId);
+            recordList = recordRepository.findByUserJoinFetchUserAndUserStudySubject(userId);
         }catch (Exception e){
             throw new Exception("[user id] 확인 요망. 일치하는 데이터가 없습니다.");
         }
@@ -80,7 +86,7 @@ public class RecordService {
     public List<RecordResDto> getByUserStudySubjectId(UUID id) throws Exception{
         List<Record> recordList = new ArrayList<>();
         try{
-            recordList = recordRepository.findByUserStudySubjectId(id);
+            recordList = recordRepository.findByUserStudySubjectJoinFetchUserAndUserStudySubject(id);
         }
         catch(Exception e){
             throw new Exception("[id] 확인 요망. friendUserId");
@@ -93,12 +99,11 @@ public class RecordService {
 
     public void deleteOne(RecordReqDto req) throws Exception {
         UUID id = req.getId();
-        Optional<Record> byId = recordRepository.findById(id);
+        Optional<Record> byId = recordRepository.findByIdJoinFetchUserAndUserStudySubject(id);
         if(!byId.isPresent()){
             throw new Exception("[id] 확인 요망");
         }
         Record record = byId.get();
         recordRepository.delete(record);
     }
-
 }

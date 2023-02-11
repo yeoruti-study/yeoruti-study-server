@@ -21,10 +21,31 @@ public class RecordController {
     private final RecordService recordService;
     private final UserService userService;
 
-    @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody RecordReqDto req){
+    @PostMapping("start/one")
+    public ResponseEntity<?> startRecording(@RequestBody RecordReqDto req){
+        UUID recordId = null;
         try {
-            RecordResDto savedRecord = recordService.save(req);
+            recordId = recordService.startRecording(req);
+        } catch (Exception e) {
+            Message message = Message.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+
+        Message message = Message.builder()
+                .data(recordId)
+                .status(HttpStatus.OK)
+                .message("success")
+                .build();
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    @PostMapping("end/one")
+    public ResponseEntity<?> endRecording(@RequestBody RecordReqDto req){
+        try {
+            recordService.endRecording(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
