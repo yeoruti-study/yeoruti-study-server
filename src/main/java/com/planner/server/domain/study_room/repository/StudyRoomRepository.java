@@ -16,8 +16,8 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
     Optional<StudyRoom> findById(UUID id);
     
     @Query("SELECT DISTINCT sr FROM StudyRoom sr JOIN FETCH sr.studyCategory")
-    List<StudyRoom> findAllAndRelatedStudyCategory();
+    List<StudyRoom> findAllJoinFetchStudyCategory();
 
     @Query("SELECT DISTINCT sr FROM StudyRoom sr JOIN FETCH sr.studyCategory sc WHERE sc.id = :studyCategoryId")
-    List<StudyRoom> findListByStudyCategoryId(@Param("studyCategoryId") UUID studyCategoryId);
+    List<StudyRoom> findListJoinFetchStudyCategoryByStudyCategoryId(@Param("studyCategoryId") UUID studyCategoryId);
 }

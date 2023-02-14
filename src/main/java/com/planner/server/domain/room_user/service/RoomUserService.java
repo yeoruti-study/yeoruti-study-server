@@ -79,7 +79,7 @@ public class RoomUserService {
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomId);
         
         if(studyRoomOpt.isPresent()) {
-            List<RoomUser> roomUsers = roomUserRepository.findByStudyRoom(studyRoomOpt.get().getId());
+            List<RoomUser> roomUsers = roomUserRepository.findListJoinFetchUserByStudyRoomId(studyRoomOpt.get().getId());
             List<RoomUserResDto> roomUserDtos = roomUsers.stream().map(entity -> RoomUserResDto.toDto(entity)).collect(Collectors.toList());
             return roomUserDtos;
         }else {
@@ -102,7 +102,7 @@ public class RoomUserService {
         Optional<User> userOpt = userRepository.findById(userId);
 
         if(userOpt.isPresent()) {
-            List<RoomUser> roomUsers = roomUserRepository.findByUser(userOpt.get().getId());
+            List<RoomUser> roomUsers = roomUserRepository.findListJoinFetchUserByUserId(userOpt.get().getId());
             List<RoomUserResDto> roomUserResDtos = roomUsers.stream().map(r -> RoomUserResDto.toDto(r)).collect(Collectors.toList());
             List<StudyRoomResDto> studyRoomResDtos = roomUserResDtos.stream().map(r -> r.getStudyRoomDto()).collect(Collectors.toList());
             return studyRoomResDtos;

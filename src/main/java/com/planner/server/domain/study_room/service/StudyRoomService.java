@@ -38,7 +38,7 @@ public class StudyRoomService {
     // 1. studyRoom생성, roomUser생성
     public void createStudyRoomAndRoomUser(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
         UUID studyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
-        StudyRoom newStudyRoom = new StudyRoom();
+        StudyRoom newStudyRoom = null;
 
         // 1. study category 조회
         Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
@@ -74,7 +74,7 @@ public class StudyRoomService {
 
     @Transactional(readOnly = true)
     public List<StudyRoomResDto> searchAll() {
-        List<StudyRoom> studyRooms = studyRoomRepository.findAllAndRelatedStudyCategory();
+        List<StudyRoom> studyRooms = studyRoomRepository.findAllJoinFetchStudyCategory();
         List<StudyRoomResDto> studyRoomDtos = studyRooms.stream().map(entity -> StudyRoomResDto.toDto(entity)).collect(Collectors.toList());
     
         return studyRoomDtos;
@@ -123,7 +123,7 @@ public class StudyRoomService {
         Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
 
         if(studyCategoryOpt.isPresent()) {
-            List<StudyRoom> studyRooms = studyRoomRepository.findListByStudyCategoryId(studyCategoryId);
+            List<StudyRoom> studyRooms = studyRoomRepository.findListJoinFetchStudyCategoryByStudyCategoryId(studyCategoryId);
             List<StudyRoomResDto> studyRoomResDtos = studyRooms.stream().map(r -> StudyRoomResDto.toDto(r)).collect(Collectors.toList());
             return studyRoomResDtos;
         }else {
