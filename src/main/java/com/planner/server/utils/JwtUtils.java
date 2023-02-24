@@ -7,36 +7,27 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.planner.server.domain.user.entity.User;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 
-@Service
 @NoArgsConstructor
 public class JwtUtils {
 
     @Value("${jwt.secret}")
     private static String SECRET;
 
-    @Value("{jwt.token-validity-in-seconds}")
+    @Value("${jwt.token-validity-in-seconds}")
     private static Long TOKEN_VALIDITY_IN_SECOND;
 
-    private static Long TOKEN_VALIDITY_IN_MINUTE = TOKEN_VALIDITY_IN_SECOND * 60;
+    private static final Long ACCESS_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 15;
 
-    private static Long TOKEN_VALIDITY_IN_HOUR = TOKEN_VALIDITY_IN_MINUTE * 60;
-
-    private static Long TOKEN_VALIDITY_IN_DAY = TOKEN_VALIDITY_IN_HOUR* 24;
-
-    private static Long ACCESS_TOKEN_VALIDITY = TOKEN_VALIDITY_IN_MINUTE * 15;
-
-    private static Long REFRESH_TOKEN_VALIDITY = TOKEN_VALIDITY_IN_DAY * 2;
+    private static final Long REFRESH_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 60 * 24 * 3;
 
 
     public static String createAccessToken(User userEntity){
 
         return JWT.create()
                 .withSubject("access_token")
-                .withExpiresAt(new Date(System.currentTimeMillis()+ ACCESS_TOKEN_VALIDITY))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ ACCESS_TOKEN_VALIDITY_TIME))
                 .withClaim("username", userEntity.getUsername())
                 .sign(Algorithm.HMAC512(SECRET));
     }
@@ -45,7 +36,7 @@ public class JwtUtils {
 
         return JWT.create()
                 .withSubject("refresh_token")
-                .withExpiresAt(new Date(System.currentTimeMillis()+ REFRESH_TOKEN_VALIDITY))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ REFRESH_TOKEN_VALIDITY_TIME))
                 .withClaim("username", userEntity.getUsername())
                 .sign(Algorithm.HMAC512(SECRET));
     }
