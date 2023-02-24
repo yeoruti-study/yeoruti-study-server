@@ -7,12 +7,8 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.planner.server.domain.user.entity.User;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 @Service
@@ -20,64 +16,46 @@ import java.util.Date;
 public class JwtUtils {
 
     @Value("${jwt.secret}")
-    private String secret;
+    private static String SECRET;
 
     @Value("{jwt.token-validity-in-seconds}")
-    private Long tokenValidityInSeconds;
+    private static Long TOKEN_VALIDITY_IN_SECOND;
 
-    private Long tokenValidityInMinutes = tokenValidityInSeconds * 60;
+    private static Long TOKEN_VALIDITY_IN_MINUTE = TOKEN_VALIDITY_IN_SECOND * 60;
 
-    private Long tokenValidityInHours = tokenValidityInMinutes * 60;
+    private static Long TOKEN_VALIDITY_IN_HOUR = TOKEN_VALIDITY_IN_MINUTE * 60;
 
-    private Long tokenValidityInDays = tokenValidityInHours * 24;
+    private static Long TOKEN_VALIDITY_IN_DAY = TOKEN_VALIDITY_IN_HOUR* 24;
 
-    private Long accessTokenValidity = tokenValidityInMinutes * 15;
+    private static Long ACCESS_TOKEN_VALIDITY = TOKEN_VALIDITY_IN_MINUTE * 15;
 
-    private Long refreshTokenValidity = tokenValidityInDays * 2;
+    private static Long REFRESH_TOKEN_VALIDITY = TOKEN_VALIDITY_IN_DAY * 2;
 
 
-    public String createAccessToken(User userEntity){
+    public static String createAccessToken(User userEntity){
 
         return JWT.create()
                 .withSubject("access_token")
-                .withExpiresAt(new Date(System.currentTimeMillis()+ accessTokenValidity))
-                .withClaim("id", userEntity.getId().toString())
+                .withExpiresAt(new Date(System.currentTimeMillis()+ ACCESS_TOKEN_VALIDITY))
                 .withClaim("username", userEntity.getUsername())
-                .sign(Algorithm.HMAC512(secret));
+                .sign(Algorithm.HMAC512(SECRET));
     }
 
-    public String createRefreshToken(User userEntity){
+    public static String createRefreshToken(User userEntity){
 
         return JWT.create()
                 .withSubject("refresh_token")
-                .withExpiresAt(new Date(System.currentTimeMillis()+ refreshTokenValidity))
-                .withClaim("id", userEntity.getId().toString())
+                .withExpiresAt(new Date(System.currentTimeMillis()+ REFRESH_TOKEN_VALIDITY))
                 .withClaim("username", userEntity.getUsername())
-                .sign(Algorithm.HMAC512(secret));
+                .sign(Algorithm.HMAC512(SECRET));
     }
 
-    public String checkTokenUsername(String tokenVal) throws TokenExpiredException, JWTVerificationException {
-        String username = JWT.require(Algorithm.HMAC512(secret)).build()
+    public static String checkTokenUsername(String tokenVal) throws TokenExpiredException, JWTVerificationException {
+        String username = JWT.require(Algorithm.HMAC512(SECRET)).build()
                 .verify(tokenVal)
                 .getClaim("username")
                 .asString();
         return username;
     }
 
-    private void issueNewAccessToken(HttpServletResponse response, User user) {
-        String newAccessToken = createAccessToken(user);
-        String jwtToken = createAccessToken(user);
-
-        Cookie cookie = new Cookie("Authorization", jwtToken);
-        cookie.setMaxAge(60*30);
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-
-        PrincipalDetails principalDetails = new PrincipalDetails(user);
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(principalDetails, null,principalDetails.getAuthorities());
-
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    }
 }
