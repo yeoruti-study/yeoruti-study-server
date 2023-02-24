@@ -24,7 +24,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
-	implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.8.1'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.7.6'
@@ -41,6 +40,6 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+// tasks.named('test') {
+// 	useJUnitPlatform()
+// }
