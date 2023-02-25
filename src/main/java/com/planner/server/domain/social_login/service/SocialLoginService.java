@@ -31,8 +31,6 @@ public class SocialLoginService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final JwtUtils jwtUtils;
-
     private final UserRepository userRepository;
 
     public LoginResponse socialLogin(SocialLoginReqDto req) throws Exception {
@@ -69,16 +67,18 @@ public class SocialLoginService {
         }else{
             userEntity = findUser.get();
         }
-        String accessToken = jwtUtils.createAccessToken(userEntity);
-        String refreshToken = jwtUtils.createRefreshToken(userEntity);
+        UUID refreshTokenId = UUID.randomUUID();
+
+        String accessToken = JwtUtils.createAccessToken(userEntity, refreshTokenId);
+        String refreshToken = JwtUtils.createRefreshToken(userEntity);
 
         Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUserId(userEntity.getId());
         if(oldRefreshToken.isPresent()){ // 해당 사용자의 리프레쉬 토큰이 이미 있다면 삭제한다.
             refreshTokenRepository.delete(oldRefreshToken.get());
         }
         RefreshToken newRefreshToken = RefreshToken.builder()
-                .id(UUID.randomUUID())
-                .value(refreshToken)
+                .id(refreshTokenId)
+                .refreshToken(refreshToken)
                 .userId(userEntity.getId())
                 .build();
         refreshTokenRepository.save(newRefreshToken);
