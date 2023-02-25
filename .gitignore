@@ -39,6 +39,7 @@ out/
 
 ### Application ###
 src/main/resources/application.properties
+src/main/resources/**
 
 # misc
 .DS_Store
