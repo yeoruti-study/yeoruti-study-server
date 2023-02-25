@@ -11,7 +11,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
-public class OauthTokenProvider {
+public class OauthTokenProvider
+{
 
     public static OAuthTokenResponse getTokenFromAuthServer(SocialLoginReqDto req, ClientRegistration provider) throws Exception {
         String providerName = req.getProvider();
