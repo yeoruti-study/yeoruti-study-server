@@ -49,7 +49,7 @@ public class SocialLoginController {
 
         String accessToken = loginResponse.getAccess_token();
 
-        ResponseCookie cookie = ResponseCookie.from("Authorization", accessToken)
+        ResponseCookie cookie = ResponseCookie.from("yeoruti_token", accessToken)
                 .httpOnly(true)
                 .domain("localhost")
                 .sameSite("Strict")

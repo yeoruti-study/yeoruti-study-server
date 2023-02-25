@@ -62,7 +62,8 @@ public class SecurityConfig {
             .access("hasRole('ROLE_USER')")
             .antMatchers("/api/social-login/**", "/api/login")
             .permitAll()
-            .anyRequest().authenticated();
+            // .anyRequest().authenticated();
+            .anyRequest().permitAll();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterAfter(jwtAuthorizationFilter, JwtAuthenticationFilter.class);
