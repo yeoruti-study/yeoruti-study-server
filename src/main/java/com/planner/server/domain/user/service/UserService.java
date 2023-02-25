@@ -22,8 +22,8 @@ public class UserService {
 
     public void createOne(UserReqDto reqDto) throws Exception{
 
-        String salt = UUID.randomUUID().toString();
-        String password = reqDto.getPassword() + salt;
+        UUID salt = UUID.randomUUID();
+        String password = reqDto.getPassword() + salt.toString();
 
         if(userRepository.findByUsername(reqDto.getUsername()).isPresent()){
             throw new Exception("해당 유저네임이 이미 존재합니다. 다른 이름을 입력해주세요.");

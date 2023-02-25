@@ -42,7 +42,7 @@ public class User implements Serializable {
 
     private String password;
 
-    private String salt;
+    private UUID salt;
 
     private String roles;
 
@@ -63,7 +63,7 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(UUID id, String username, String password, String salt, String roles, String provider, String profileName, String profileBirth, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(UUID id, String username, String password, UUID salt, String roles, String provider, String profileName, String profileBirth, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
