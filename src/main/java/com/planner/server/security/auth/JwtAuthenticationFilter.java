@@ -92,7 +92,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         // 4. Cookie에 Access Token (access_token) 주입
-        ResponseCookie cookies = ResponseCookie.from("access_token", accessToken)
+        ResponseCookie cookies = ResponseCookie.from("yeoruti_token", accessToken)
             .httpOnly(true)
             .domain("localhost")
             // .secure(true)

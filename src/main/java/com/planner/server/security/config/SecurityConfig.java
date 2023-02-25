@@ -52,7 +52,7 @@ public class SecurityConfig {
             .logout()
             .logoutUrl("/api/logout")
             .logoutSuccessHandler(new CustomLogoutHandler())
-            .deleteCookies("access_token");
+            .deleteCookies("yeoruti_token");
 
         http
             .authorizeRequests()
