@@ -19,6 +19,7 @@ import com.planner.server.security.auth.CustomUserDetailsService;
 import com.planner.server.security.auth.JwtAuthenticationFilter;
 import com.planner.server.security.auth.JwtAuthenticationProvider;
 import com.planner.server.security.auth.JwtAuthorizationFilter;
+import com.planner.server.security.handler.CustomLogoutHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +47,12 @@ public class SecurityConfig {
         
         http
             .headers().frameOptions().sameOrigin();
+
+        http
+            .logout()
+            .logoutUrl("/api/logout")
+            .logoutSuccessHandler(new CustomLogoutHandler())
+            .deleteCookies("access_token");
 
         http
             .authorizeRequests()
