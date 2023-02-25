@@ -3,7 +3,6 @@ package com.planner.server.security.auth;
 import java.io.IOException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,17 +20,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.planner.server.domain.refresh_token.entity.RefreshToken;
 import com.planner.server.domain.refresh_token.repository.RefreshTokenRepository;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.properties.AuthProperties;
 import com.planner.server.utils.JwtUtils;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private UserRepository userRepository;
@@ -51,10 +50,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws ServletException, IOException {
         System.out.println("#=====AUTHORIZATION FILTER=====#");
 
-        Cookie cookie = Arrays.stream(request.getCookies())
-            .filter(r -> r.getName().equals("access_token"))
-            .findAny()
-            .orElse(null);
+        Cookie cookie = null;
+        try {
+            cookie = Arrays.stream(request.getCookies())
+                .filter(r -> r.getName().equals("yeoruti_token"))
+                .findAny()
+                .orElse(null);
+        } catch (NullPointerException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if(cookie == null) {
             filterChain.doFilter(request, response);
@@ -62,44 +67,48 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
         
         String accessToken = cookie.getValue();
-        DecodedJWT decodedAccessToken = null;
-        DecodedJWT decodedRefreshToken = null;
+        Claims claims = null;
         boolean isAccessTokenExpired = false;
         
         try {
-            decodedAccessToken = JWT.require(Algorithm.HMAC512(AuthProperties.getAccessSecret())).build().verify(accessToken);
-        } catch (TokenExpiredException e) {
+            claims = Jwts.parserBuilder().setSigningKey(AuthProperties.getAccessSecret()).build().parseClaimsJws(accessToken).getBody();
+        } catch (ExpiredJwtException e) {
             System.out.println("-----access token expired-----");
-            
-            // TODO :: access toekn 만료 시 claim값을 조회하는 방법 정하기
-            // decodedAccessToken = null;
+            claims = e.getClaims();
             isAccessTokenExpired = true;
+        } catch (MalformedJwtException e) {
+            filterChain.doFilter(request, response);
+            return;
         } catch (Exception e) {
             filterChain.doFilter(request, response);
             return;
         }
-        
+
         // 토큰에 저장된 유저정보가 존재하지 않는 경우 예외처리
-        User savedUser = userRepository.findByUsername(decodedAccessToken.getClaim("username").asString())
+        User savedUser = userRepository.findByUsername(claims.get("username").toString())
             .orElseThrow(() -> new UserPrincipalNotFoundException("not found user."));
 
         // 액세스토큰이 만료된 경우
         if(isAccessTokenExpired) {
-            UUID refreshTokenId = UUID.fromString(decodedAccessToken.getClaim("refreshTokenId").asString());
+            UUID refreshTokenId = UUID.fromString(claims.get("refreshTokenId").toString());
             Optional<RefreshToken> refreshTokenOpt = refreshTokenRepository.findById(refreshTokenId);
 
             // 액세스토큰과 매칭된 리프레시토큰을 DB에서 조회한다
             if(refreshTokenOpt.isPresent()) {
+                Claims refreshTokenClaims = null;
                 String refreshToken = refreshTokenOpt.get().getRefreshToken();
 
                 try {
-                    decodedRefreshToken = JWT.require(Algorithm.HMAC512(AuthProperties.getRefreshSecret())).build().verify(refreshToken);
-                } catch (TokenExpiredException e) {
+                    refreshTokenClaims = Jwts.parserBuilder().setSigningKey(AuthProperties.getRefreshSecret()).build().parseClaimsJws(refreshToken).getBody();
+                } catch (ExpiredJwtException e) {
                     // 리프레시 토큰이 만료된 경우
                     System.out.println("-----refresh token expired-----");
                     
                     // 만료된 리프레시 토큰을 제거 후 doFitler
                     refreshTokenRepository.delete(refreshTokenOpt.get());
+                    filterChain.doFilter(request, response);
+                    return;
+                } catch (MalformedJwtException e) {
                     filterChain.doFilter(request, response);
                     return;
                 } catch (Exception e) {     // TODO :: 구체 예외 처리
@@ -110,8 +119,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 // 리프레시 토큰이 존재한다면 액세스토큰 발급
                 String newAccessToken = JwtUtils.createAccessToken(savedUser, refreshTokenId);
 
-                if(decodedRefreshToken != null) {
-                    ResponseCookie cookies = ResponseCookie.from("access_token", newAccessToken)
+                if(refreshTokenClaims != null) {
+                    ResponseCookie cookies = ResponseCookie.from("yeoruti_token", newAccessToken)
                         .httpOnly(true)
                         .domain("localhost")
                         // .secure(true)
