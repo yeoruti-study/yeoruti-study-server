@@ -1,38 +1,43 @@
 package com.planner.server.domain.refresh_token.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.UUID;
+
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
-@Builder
+@Table(name = "refresh_token")
 @Getter
-@NoArgsConstructor
+@Builder
+@ToString
 @AllArgsConstructor
-public class RefreshToken implements Serializable {
-
+@NoArgsConstructor
+public class RefreshToken {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cid;
+    public Long cid;
 
     @Type(type = "uuid-char")
     private UUID id;
 
-    private String value;
+    private String refreshToken;
 
-    private Date createdAt;
-
+    private LocalDateTime createdAt;
+    
     @Type(type = "uuid-char")
     private UUID userId;
-
 }

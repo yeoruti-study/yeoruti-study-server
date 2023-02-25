@@ -5,48 +5,45 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.planner.server.domain.user.entity.User;
+import com.planner.server.properties.AuthProperties;
+
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @NoArgsConstructor
 public class JwtUtils {
+    private static long TOKEN_VALIDITY_IN_SECOND = 1000;
+    // private static long ACCESS_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 15;
+    // private static long REFRESH_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 60 * 24 * 3;
+    private static long ACCESS_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 30;
+    private static long REFRESH_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 1;
 
-    @Value("${jwt.secret}")
-    private String SECRET;
-
-    private long TOKEN_VALIDITY_IN_SECOND = 1000;
-
-    private long ACCESS_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 15;
-
-    private long REFRESH_TOKEN_VALIDITY_TIME = TOKEN_VALIDITY_IN_SECOND * 60 * 60 * 24 * 3;
-
-
-    public String createAccessToken(User userEntity){
+    public static String createAccessToken(User userEntity, UUID refreshTokenId){
         return JWT.create()
                 .withSubject("access_token")
                 .withExpiresAt(new Date(System.currentTimeMillis()+ ACCESS_TOKEN_VALIDITY_TIME))
                 .withClaim("username", userEntity.getUsername())
-                .sign(Algorithm.HMAC512(SECRET));
+                .withClaim("refreshTokenId", refreshTokenId.toString())
+                .sign(Algorithm.HMAC512(AuthProperties.getAccessSecret()));
     }
 
-    public String createRefreshToken(User userEntity){
+    public static String createRefreshToken(User userEntity){
         return JWT.create()
                 .withSubject("refresh_token")
                 .withExpiresAt(new Date(System.currentTimeMillis()+ REFRESH_TOKEN_VALIDITY_TIME))
                 .withClaim("username", userEntity.getUsername())
-                .sign(Algorithm.HMAC512(SECRET));
+                .sign(Algorithm.HMAC512(AuthProperties.getRefreshSecret()));
     }
 
-    public String checkTokenUsername(String tokenVal) throws TokenExpiredException, JWTVerificationException {
-        String username = JWT.require(Algorithm.HMAC512(SECRET)).build()
+    public static String checkTokenUsername(String tokenVal) throws TokenExpiredException, JWTVerificationException {
+        String username = JWT.require(Algorithm.HMAC512(AuthProperties.getAccessSecret())).build()
                 .verify(tokenVal)
                 .getClaim("username")
                 .asString();
         return username;
     }
-
 }
