@@ -46,6 +46,8 @@ public class User implements Serializable {
 
     private String roles;
 
+    private String provider;
+
     private String profileName;
 
     private String profileBirth;
@@ -61,12 +63,13 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(UUID id, String username, String password, String salt, String roles, String profileName, String profileBirth, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(UUID id, String username, String password, String salt, String roles, String provider, String profileName, String profileBirth, String profileImagePath, boolean friendAcceptance, boolean alarmPermission, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.salt = salt;
         this.roles = roles;
+        this.provider = provider;
         this.profileName = profileName;
         this.profileBirth = profileBirth;
         this.profileImagePath = profileImagePath;
