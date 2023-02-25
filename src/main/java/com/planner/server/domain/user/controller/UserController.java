@@ -2,12 +2,8 @@ package com.planner.server.domain.user.controller;
 
 import com.planner.server.domain.friend.service.FriendService;
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.user.dto.*;
-import com.planner.server.domain.user.entity.User;
-import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
-import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
