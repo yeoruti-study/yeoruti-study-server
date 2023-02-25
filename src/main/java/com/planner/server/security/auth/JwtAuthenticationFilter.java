@@ -66,7 +66,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = ((CustomUserDetails) authResult.getPrincipal()).getUser();
 
         // 2. Access Token 생성, Refresh Token 생성
-        String accessToken = JwtUtils.createAccessToken(user);
+        UUID refreshTokenId = UUID.randomUUID();
+        String accessToken = JwtUtils.createAccessToken(user, refreshTokenId);
         String refreshToken = JwtUtils.createRefreshToken(user);
 
         // 3. Refresh Token DB 저장
@@ -79,7 +80,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
 
             RefreshToken newRefreshToken = RefreshToken.builder()
-                .id(UUID.randomUUID())
+                .id(refreshTokenId)
                 .refreshToken(refreshToken)
                 .createdAt(LocalDateTime.now())
                 .userId(user.getId())
