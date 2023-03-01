@@ -4,6 +4,8 @@ import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +19,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    // private final PasswordEncoder encoder;
+     private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
 
     public void createOne(UserReqDto reqDto) throws Exception{
 
         UUID salt = UUID.randomUUID();
         String password = reqDto.getPassword() + salt.toString();
+        String encodedPassword = encoder.encode(password);
 
         if(userRepository.findByUsername(reqDto.getUsername()).isPresent()){
             throw new Exception("해당 유저네임이 이미 존재합니다. 다른 이름을 입력해주세요.");
@@ -32,7 +35,7 @@ public class UserService {
         User user = User.builder()
                 .id(UUID.randomUUID())
                 .username(reqDto.getUsername())
-                .password(password)
+                .password(encodedPassword)
                 .salt(salt)
                 .roles("ROLE_USER")
                 .profileName(reqDto.getProfileName())
