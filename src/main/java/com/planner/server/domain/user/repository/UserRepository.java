@@ -25,4 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    @Query("select distinct u from User u join fetch u.userStudySubjects where u.id = :id")
 //    List<User> findByIdJoinFetchUserStudySubject(@Param("id") UUID id);
 
+
+    @Query("select u from User u where u.id IN :ids")
+    List<User> findListByIds(@Param("ids") List<UUID> ids);
+
 }

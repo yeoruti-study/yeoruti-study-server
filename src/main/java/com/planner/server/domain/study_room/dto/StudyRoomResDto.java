@@ -49,4 +49,23 @@ public class StudyRoomResDto {
             .updatedAt(entity.getUpdatedAt())
             .build();
     }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class IncludesMasterUserInfo {
+        private UUID id;
+        private String name;
+        private StudyCategoryResDto studyCategoryDto;   // study room을 조회할 때, 카테고리는 항상 포함
+        private int maximumNumberOfPeople;
+        private Duration studyGoalTime;
+        private String roomPassword;
+        private UUID masterUserId;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private String masterUserUsername;
+        private String masterUserProfileName;
+    }
 }

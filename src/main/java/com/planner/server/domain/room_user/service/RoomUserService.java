@@ -15,6 +15,7 @@ import com.planner.server.domain.room_user.repository.RoomUserRepository;
 import com.planner.server.domain.study_room.dto.StudyRoomResDto;
 import com.planner.server.domain.study_room.entity.StudyRoom;
 import com.planner.server.domain.study_room.repository.StudyRoomRepository;
+import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 
@@ -56,7 +57,7 @@ public class RoomUserService {
     // 스터디룸 정원 확인
     public void checkStudyRoomMaximumNumberOfPeople(StudyRoom studyRoom) {
         int maximumNumberOfPeople = studyRoom.getMaximumNumberOfPeople();
-        List<RoomUserResDto> roomUserDtos = this.searchListByStudyRoomId(studyRoom.getId());
+        List<UserResDto> roomUserDtos = this.searchUserListByStudyRoomId(studyRoom.getId());
 
         if(!roomUserDtos.isEmpty() && (roomUserDtos.size() >= maximumNumberOfPeople)) {
             throw new RuntimeException("스터디룸 정원을 초과하였습니다.");
@@ -75,12 +76,12 @@ public class RoomUserService {
     }
 
     @Transactional(readOnly = true)
-    public List<RoomUserResDto> searchListByStudyRoomId(UUID studyRoomId) {
+    public List<UserResDto> searchUserListByStudyRoomId(UUID studyRoomId) {
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomId);
         
         if(studyRoomOpt.isPresent()) {
             List<RoomUser> roomUsers = roomUserRepository.findListJoinFetchUserByStudyRoomId(studyRoomOpt.get().getId());
-            List<RoomUserResDto> roomUserDtos = roomUsers.stream().map(entity -> RoomUserResDto.toDto(entity)).collect(Collectors.toList());
+            List<UserResDto> roomUserDtos = roomUsers.stream().map(entity -> UserResDto.toDto(entity.getUser())).collect(Collectors.toList());
             return roomUserDtos;
         }else {
             return null;

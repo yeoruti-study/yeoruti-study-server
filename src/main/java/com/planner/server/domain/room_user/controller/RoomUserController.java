@@ -41,11 +41,11 @@ public class RoomUserController {
     }
 
     @GetMapping("/user/list/study-room/{studyRoomId}")
-    public ResponseEntity<?> searchListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {
+    public ResponseEntity<?> searchUserListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {
         Message message = new Message();
 
         try {
-            message.setData(roomUserService.searchListByStudyRoomId(studyRoomId));
+            message.setData(roomUserService.searchUserListByStudyRoomId(studyRoomId));
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
