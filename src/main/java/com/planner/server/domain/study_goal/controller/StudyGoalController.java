@@ -29,7 +29,8 @@ public class StudyGoalController {
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
+                    .message("error")
+                    .memo(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
@@ -50,7 +51,8 @@ public class StudyGoalController {
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
+                    .message("error")
+                    .memo(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
@@ -71,7 +73,8 @@ public class StudyGoalController {
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
+                    .message("error")
+                    .memo(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
@@ -92,7 +95,8 @@ public class StudyGoalController {
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
+                    .message("error")
+                    .memo(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
@@ -112,7 +116,8 @@ public class StudyGoalController {
         } catch (NoSuchElementException e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
+                    .message("error")
+                    .memo(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
