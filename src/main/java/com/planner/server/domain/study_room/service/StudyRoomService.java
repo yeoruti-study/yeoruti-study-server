@@ -73,11 +73,32 @@ public class StudyRoomService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudyRoomResDto> searchAll() {
+    public List<StudyRoomResDto.IncludesMasterUserInfo> searchAll() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAllJoinFetchStudyCategory();
         List<StudyRoomResDto> studyRoomDtos = studyRooms.stream().map(entity -> StudyRoomResDto.toDto(entity)).collect(Collectors.toList());
-    
-        return studyRoomDtos;
+
+        List<UUID> masterUserIds = studyRoomDtos.stream().map(studyRoomDto -> studyRoomDto.getMasterUserId()).collect(Collectors.toList());
+        List<User> users = userRepository.findListByIds(masterUserIds);
+        
+        List<StudyRoomResDto.IncludesMasterUserInfo> studyRoomAndMasterUserInfoDtos = studyRoomDtos.stream().map(studyRoomDto -> {
+            User user = users.stream().filter(userEntity -> userEntity.getId().equals(studyRoomDto.getMasterUserId())).collect(Collectors.toList()).get(0);
+
+            return StudyRoomResDto.IncludesMasterUserInfo.builder()
+                .id(studyRoomDto.getId())
+                .name(studyRoomDto.getName())
+                .studyCategoryDto(studyRoomDto.getStudyCategoryDto())
+                .maximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople())
+                .studyGoalTime(studyRoomDto.getStudyGoalTime())
+                .masterUserId(studyRoomDto.getMasterUserId())
+                .roomPassword(studyRoomDto.getRoomPassword())
+                .createdAt(studyRoomDto.getCreatedAt())
+                .updatedAt(studyRoomDto.getUpdatedAt())
+                .masterUserUsername(user.getUsername())
+                .masterUserProfileName(user.getProfileName())
+                .build();
+        }).collect(Collectors.toList());
+
+        return studyRoomAndMasterUserInfoDtos;
     }
 
     // TODO :: 스터디룸 수정도 master user 에게만 권한을 줘야함
