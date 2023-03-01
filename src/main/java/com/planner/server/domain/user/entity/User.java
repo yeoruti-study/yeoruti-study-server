@@ -42,6 +42,7 @@ public class User implements Serializable {
 
     private String password;
 
+    @Type(type = "uuid-char")
     private UUID salt;
 
     private String roles;

@@ -13,6 +13,7 @@ import com.planner.server.domain.social_login.provider.OAuth2UserInfo;
 import com.planner.server.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class SocialLoginService {
 
     private final UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     public LoginResponse socialLogin(SocialLoginReqDto req) throws Exception {
 
         ClientRegistration provider = clientRegistrationRepository.findByRegistrationId(req.getProvider());
@@ -47,6 +50,7 @@ public class SocialLoginService {
 
         String username = providerName +"_"+oauth2UserInfo.getProviderId();
         String password = UUID.randomUUID().toString();
+        String encodedPassword = passwordEncoder.encode(password);
 
         Optional<User> findUser = userRepository.findByUsername(username);
         User userEntity = null;
@@ -55,7 +59,7 @@ public class SocialLoginService {
             userEntity = User.builder()
                     .id(UUID.randomUUID())
                     .username(username)
-                    .password(password)
+                    .password(encodedPassword)
                     .roles("ROLE_USER")
                     .provider(providerName)
                     .profileImagePath(oauth2UserInfo.getProfileImagePath())

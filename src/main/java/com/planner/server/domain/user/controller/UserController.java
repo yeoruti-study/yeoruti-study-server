@@ -22,18 +22,17 @@ public class UserController {
 
     @PostMapping ("/one")
     public ResponseEntity<?> createOne(@RequestBody UserReqDto req){
-        Message message = new Message();
         try {
             userService.createOne(req);
-            message.setStatus(HttpStatus.OK);
         } catch (Exception e) {
-            message = Message.builder()
+            Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message(e.getMessage())
+                    .message("error")
+                    .memo(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
-        message = Message.builder()
+        Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
@@ -56,6 +55,7 @@ public class UserController {
         }catch (Exception e) {
             message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
+                    .message("searching_error")
                     .message(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
