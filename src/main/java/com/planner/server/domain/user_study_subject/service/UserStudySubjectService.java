@@ -21,14 +21,13 @@ public class UserStudySubjectService {
     private final UserStudySubjectRepository userStudySubjectRepository;
     private final UserService userService;
 
-    public void save(UserStudySubjectReqDto req) throws Exception {
+    public void save(UserStudySubjectReqDto.ReqCreateOne req, UUID userId) throws Exception {
 
-        Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserAndTitleJoinFetchUser(req.getUserId(), req.getTitle());
+        Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserAndTitleJoinFetchUser(userId, req.getTitle());
         if(findEntity.isPresent()){
             throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
         }
-
-        User user = userService.findOne(req.getUserId());
+        User user = userService.findOne(userId);
 
         UserStudySubject userStudySubject = UserStudySubject.builder()
                 .id(UUID.randomUUID())
@@ -39,8 +38,7 @@ public class UserStudySubjectService {
         UserStudySubject save = userStudySubjectRepository.save(userStudySubject);
     }
 
-    public List<UserStudySubjectResDto> findByUserId(UUID userId) throws Exception {
-
+    public UserStudySubjectResDto.ResSearchList findByUserId(UUID userId) throws Exception {
         List<UserStudySubject> subjectList = new ArrayList<>();
         try{
             subjectList = userStudySubjectRepository.findByUserJoinFetchUser(userId);
@@ -48,11 +46,11 @@ public class UserStudySubjectService {
         catch (Exception e){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }
-
         List<UserStudySubjectResDto> userStudySubjectResDtoList = new ArrayList<>();
         subjectList.forEach(s-> userStudySubjectResDtoList.add(UserStudySubjectResDto.toDto(s)));
 
-        return userStudySubjectResDtoList;
+        UserStudySubjectResDto.ResSearchList searchList = new UserStudySubjectResDto.ResSearchList(userId, userStudySubjectResDtoList);
+        return searchList;
     }
 
 
