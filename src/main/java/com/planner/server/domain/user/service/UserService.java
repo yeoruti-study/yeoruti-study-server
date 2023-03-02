@@ -1,11 +1,12 @@
 package com.planner.server.domain.user.service;
 
+import com.planner.server.domain.refresh_token.entity.RefreshToken;
+import com.planner.server.domain.refresh_token.repository.RefreshTokenRepository;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +22,9 @@ public class UserService {
 
      private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public void createOne(UserReqDto reqDto) throws Exception{
+    public void createOne(UserReqDto.ReqCreateOne reqDto) throws Exception{
 
         UUID salt = UUID.randomUUID();
         String password = reqDto.getPassword() + salt.toString();
@@ -71,8 +73,8 @@ public class UserService {
 
 
     @Transactional
-    public void changeUserInfo(UserReqDto req) throws IllegalArgumentException{
-        Optional<User> user = userRepository.findById(req.getId());
+    public void changeUserInfo(UserReqDto.ReqUpdateProfile req, UUID userId) throws IllegalArgumentException{
+        Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()){
             throw new IllegalArgumentException("id에 부합하는 유저가 존재하지 않습니다. 다시 입력해주세요.");
@@ -82,12 +84,18 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteOne(UUID userId) throws Exception {
-        Optional<User> byId = userRepository.findById(userId);
-        if(!byId.isPresent()){
-            throw new Exception("[id] 값 확인요망. 유저 데이터가 없습니다.");
+    public void deleteOne(User user) throws Exception {
+        UUID userId = user.getId();
+        Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(userId);
+        if(findRefreshToken.isPresent()){
+           refreshTokenRepository.delete(findRefreshToken.get());
         }
-        userRepository.delete(byId.get());
+        userRepository.delete(user);
     }
 
+    public boolean checkPassword(User findUser, String inputPassword) {
+        String userPassword = findUser.getPassword();
+        inputPassword = inputPassword + findUser.getSalt();
+        return encoder.matches(inputPassword, userPassword);
+    }
 }

@@ -2,10 +2,7 @@ package com.planner.server.domain.user.dto;
 
 import com.planner.server.domain.user.entity.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -15,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserReqDto {
 
-    private UUID id;
     private String username;
     private String password;
     private String roles;
@@ -25,10 +21,44 @@ public class UserReqDto {
     private boolean alarmPermission;
     private boolean friendAcceptance;
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReqCreateOne{
+        private String username;
+        private String password;
+        private String profileName;
+        private String profileBirth;
+        private String profileImagePath;
+        private boolean alarmPermission;
+        private boolean friendAcceptance;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReqUpdateProfile{
+        private String profileName;
+        private String profileBirth;
+        private String profileImagePath;
+        private boolean friendAcceptance;
+        private boolean alarmPermission;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReqDeleteUser{
+        private String username;
+        private String password;
+    }
+
     public static UserReqDto toDto(User user) {
 
         return UserReqDto.builder()
-                .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .roles(user.getRoles())
