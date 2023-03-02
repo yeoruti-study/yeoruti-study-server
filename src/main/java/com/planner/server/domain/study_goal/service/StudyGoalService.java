@@ -25,9 +25,7 @@ public class StudyGoalService {
     private final UserService userService;
     private final UserStudySubjectService userStudySubjectService;
 
-    public StudyGoalReqDto save(StudyGoalReqDto req) throws Exception{
-
-        UUID userId = req.getUserId();
+    public StudyGoalReqDto save(StudyGoalReqDto req, UUID userId) throws Exception{
         User user = null;
 
         try{
@@ -90,7 +88,7 @@ public class StudyGoalService {
     public List<StudyGoalResDto> findByUserStudySubjectId(UUID userStudySubjectId) throws Exception {
         List<StudyGoal> studyGoals = new ArrayList<>();
         try{
-            studyGoals = studyGoalRepository.findByUserStudySubjectJoinFetchUser(userStudySubjectId);
+            studyGoals = studyGoalRepository.findByUserStudySubject(userStudySubjectId);
         }catch (Exception e){
             throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
         }

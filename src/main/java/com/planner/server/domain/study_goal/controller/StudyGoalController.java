@@ -4,6 +4,7 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.study_goal.dto.StudyGoalReqDto;
 import com.planner.server.domain.study_goal.dto.StudyGoalResDto;
 import com.planner.server.domain.study_goal.service.StudyGoalService;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,11 @@ public class StudyGoalController {
 
     @PostMapping("/one")
     public ResponseEntity<?> createOne(@RequestBody StudyGoalReqDto req){
+        UUID userId = SecurityContextHolderUtils.getUserId();
         StudyGoalReqDto studyGoalReqDto = null;
+
         try {
-            studyGoalReqDto = studyGoalService.save(req);
+            studyGoalReqDto = studyGoalService.save(req, userId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -65,11 +68,14 @@ public class StudyGoalController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/list/user/{userId}")
-    public ResponseEntity<?> searchListByUser(@PathVariable("userId") UUID userId){
-        List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
+    @GetMapping("/list")
+    public ResponseEntity<?> searchListByUser(){
+        UUID userId = SecurityContextHolderUtils.getUserId();
+
+        StudyGoalResDto.ResSearchList searchList = null;
         try {
-            studyGoalResDtos = studyGoalService.findByUserId(userId);
+            List<StudyGoalResDto> studyGoalResDtos = studyGoalService.findByUserId(userId);
+            searchList = new StudyGoalResDto.ResSearchList(userId, studyGoalResDtos);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -80,7 +86,7 @@ public class StudyGoalController {
         }
 
         Message message = Message.builder()
-                .data(studyGoalResDtos)
+                .data(searchList)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
