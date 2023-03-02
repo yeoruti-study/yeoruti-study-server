@@ -17,6 +17,6 @@ public interface AttendanceCheckRepository extends JpaRepository<AttendanceCheck
     @Query("SELECT DISTINCT ac from AttendanceCheck ac JOIN FETCH ac.user u WHERE u.id = :userId")
     List<AttendanceCheck> findByUserId(@Param("userId") UUID userId);
 
-    @Query("SELECT ac from AttendanceCheck ac WHERE ac.createdAt BETWEEN :startDate AND :endDate")
-    Optional<AttendanceCheck> findByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT ac from AttendanceCheck ac WHERE ac.user.id = :userId AND ac.createdAt BETWEEN :startDate AND :endDate")
+    Optional<AttendanceCheck> findByDateRange(@Param("userId") UUID userId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

@@ -1,8 +1,8 @@
 package com.planner.server.domain.attendance_check.controller;
 
-import com.planner.server.domain.attendance_check.dto.AttendanceCheckReqDto;
 import com.planner.server.domain.attendance_check.service.AttendanceCheckService;
 import com.planner.server.domain.message.Message;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,12 @@ public class AttendanceCheckController {
     private final AttendanceCheckService attendanceCheckService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody AttendanceCheckReqDto attendanceCheckDto){
+    public ResponseEntity<?> createOne(){
         Message message = new Message();
+        UUID userId = SecurityContextHolderUtils.getUserId();
 
         try {
-            attendanceCheckService.createOne(attendanceCheckDto);
+            attendanceCheckService.createOne(userId);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
@@ -32,9 +33,10 @@ public class AttendanceCheckController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/list/user/{userId}")
-    public ResponseEntity<?> searchListByUserId(@PathVariable(name = "userId") UUID userId){
+    @GetMapping("/list")
+    public ResponseEntity<?> searchListByUser(){
         Message message = new Message();
+        UUID userId = SecurityContextHolderUtils.getUserId();
 
         try {
             message.setData(attendanceCheckService.searchListByUserId(userId));
@@ -48,12 +50,13 @@ public class AttendanceCheckController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/one/{attendanceCheckId}")
-    public ResponseEntity<?> deleteOne(@PathVariable(name = "attendanceCheckId") UUID userId){
+    @DeleteMapping("/one")
+    public ResponseEntity<?> deleteTodayAttendance(){
         Message message = new Message();
+        UUID userId = SecurityContextHolderUtils.getUserId();
 
         try {
-            attendanceCheckService.deleteOne(userId);
+            attendanceCheckService.deleteTodayAttendance(userId);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
