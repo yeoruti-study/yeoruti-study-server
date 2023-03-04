@@ -60,7 +60,7 @@ public class SecurityConfig {
             .access("hasRole('ROLE_ADMIN')")
             .antMatchers("/api/test/**")
             .access("hasRole('ROLE_USER')")
-            .antMatchers("/api/social-login/**", "/api/login")
+            .antMatchers("/api/social-login/**", "/api/login", "/api/user/one")
             .permitAll()
             .antMatchers("/api/**")
             .access("hasRole('ROLE_USER')")
