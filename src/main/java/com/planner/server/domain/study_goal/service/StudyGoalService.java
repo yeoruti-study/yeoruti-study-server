@@ -29,11 +29,15 @@ public class StudyGoalService {
         User user = null;
 
         try{
-            Optional<User> byId = userRepository.findById(userId);
-            user = byId.get();
+            Optional<User> findUser = userRepository.findById(userId);
+            user = findUser.get();
         }
         catch (Exception e){
             throw new Exception("[userId] 확인요망. id 값과 일치하는 유저 데이터가 존재하지 않습니다.");
+        }
+        Optional<StudyGoal> findStudyGoal = studyGoalRepository.findByUserAndTitleJoinFetchUser(userId, req.getTitle());
+        if(findStudyGoal.isPresent()){
+            throw new Exception("이미 존재하는 공부목표입니다. 다른 제목을 설정하세요");
         }
 
         // goalTime 형식 = "PT8H30M" // PT(시간)H(분)M

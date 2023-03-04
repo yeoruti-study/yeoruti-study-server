@@ -1,5 +1,7 @@
 package com.planner.server.domain.user_study_subject.service;
 
+import com.planner.server.domain.study_goal.entity.StudyGoal;
+import com.planner.server.domain.study_goal.repository.StudyGoalRepository;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class UserStudySubjectService {
 
     private final UserStudySubjectRepository userStudySubjectRepository;
+    private final StudyGoalRepository studyGoalRepository;
     private final UserService userService;
 
     public void save(UserStudySubjectReqDto.ReqCreateOne req, UUID userId) throws Exception {
@@ -64,11 +67,15 @@ public class UserStudySubjectService {
     }
 
     public void deleteById(UUID id) throws Exception {
-        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdJoinFetchUser(id);
-        if(!byId.isPresent()){
+        Optional<UserStudySubject> findUserStudySubject = userStudySubjectRepository.findByIdJoinFetchUser(id);
+        if(!findUserStudySubject.isPresent()){
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
         }
-        UserStudySubject userStudySubject = byId.get();
+        UserStudySubject userStudySubject = findUserStudySubject.get();
+
+        List<StudyGoal> studyGoalList = studyGoalRepository.findByUserStudySubject(id);
+        studyGoalList.forEach(s->{studyGoalRepository.delete(s);});
+
         userStudySubjectRepository.delete(userStudySubject);
     }
 
