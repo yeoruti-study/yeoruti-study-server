@@ -2,7 +2,6 @@ package com.planner.server.domain.user.entity;
 
 
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
-import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
@@ -91,9 +90,6 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Friend> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<UserStudySubject> userStudySubjects = new ArrayList<>();
