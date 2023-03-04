@@ -1,6 +1,5 @@
 package com.planner.server.domain.user.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.service.UserService;
@@ -117,10 +116,9 @@ public class UserController {
         }
     }
 
-
     @DeleteMapping("/one")
     public ResponseEntity<?> deleteOne(@RequestBody UserReqDto.ReqDeleteUser req, HttpServletResponse response) throws Exception {
-        Message message = new Message();
+        Message message;
         try {
             userService.deleteUser(req);
         } catch (Exception e) {
@@ -137,10 +135,8 @@ public class UserController {
                 .memo("회원 탈퇴가 완료되었습니다.")
                 .build();
 
-        //쿠키 제거
-        ObjectMapper om = new ObjectMapper();
         ResponseCookie cookies = ResponseCookie.from("yeoruti_token", null)
-                .maxAge(0)     // 3일
+                .maxAge(0)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookies.toString());
 
