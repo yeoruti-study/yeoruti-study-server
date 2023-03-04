@@ -50,8 +50,4 @@ public class StudyCategory implements Serializable {
     @OneToMany(mappedBy = "studyCategory")
     List<StudyRoom> studyRooms = new ArrayList<>();
 
-    public void addStudyRoom(StudyRoom studyRoom) {
-        this.studyRooms.add(studyRoom);
-        studyRoom.setStudyCategory(this);
-    }
 }

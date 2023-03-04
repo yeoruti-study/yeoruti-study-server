@@ -4,13 +4,11 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.study_goal.dto.StudyGoalReqDto;
 import com.planner.server.domain.study_goal.dto.StudyGoalResDto;
 import com.planner.server.domain.study_goal.service.StudyGoalService;
-import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -24,11 +22,8 @@ public class StudyGoalController {
 
     @PostMapping("/one")
     public ResponseEntity<?> createOne(@RequestBody StudyGoalReqDto req){
-        UUID userId = SecurityContextHolderUtils.getUserId();
-        StudyGoalReqDto studyGoalReqDto = null;
-
         try {
-            studyGoalReqDto = studyGoalService.save(req, userId);
+            studyGoalService.save(req);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -39,7 +34,6 @@ public class StudyGoalController {
         }
 
         Message message = Message.builder()
-                .data(studyGoalReqDto)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
@@ -70,12 +64,14 @@ public class StudyGoalController {
 
     @GetMapping("/list")
     public ResponseEntity<?> searchListByUser(){
-        UUID userId = SecurityContextHolderUtils.getUserId();
-
-        StudyGoalResDto.ResSearchList searchList = null;
         try {
-            List<StudyGoalResDto> studyGoalResDtos = studyGoalService.findByUserId(userId);
-            searchList = new StudyGoalResDto.ResSearchList(userId, studyGoalResDtos);
+            List<StudyGoalResDto> studyGoalResDtos = studyGoalService.findByUserId();
+            Message message = Message.builder()
+                    .data(studyGoalResDtos)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -84,20 +80,18 @@ public class StudyGoalController {
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
-
-        Message message = Message.builder()
-                .data(searchList)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
     }
 
     @GetMapping("/list/user-study-subject/{userStudySubjectId}")
     public ResponseEntity<?> searchListByUserSubject(@PathVariable("userStudySubjectId") UUID userStudySubjectId){
-        List<StudyGoalResDto> studyGoalResDtos = new ArrayList<>();
         try {
-            studyGoalResDtos = studyGoalService.findByUserStudySubjectId(userStudySubjectId);
+            List<StudyGoalResDto> studyGoalResDtos = studyGoalService.findByUserStudySubjectId(userStudySubjectId);
+            Message message = Message.builder()
+                    .data(studyGoalResDtos)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -106,13 +100,6 @@ public class StudyGoalController {
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
-
-        Message message = Message.builder()
-                .data(studyGoalResDtos)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
     }
 
     @DeleteMapping("/one/{studyGoalId}")

@@ -4,13 +4,11 @@ import com.planner.server.domain.record.dto.RecordReqDto;
 import com.planner.server.domain.record.dto.RecordResDto;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.record.repository.RecordRepository;
-import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
-import com.planner.server.domain.user.service.UserService;
-import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import com.planner.server.domain.user_study_subject.repository.UserStudySubjectRepository;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +28,8 @@ public class RecordService {
     private final UserStudySubjectRepository userStudySubjectRepository;
     private final UserRepository userRepository;
 
-    public UUID startRecording(RecordReqDto.ReqStartRecord req, UUID userId) throws Exception {
+    public UUID startRecording(RecordReqDto.ReqStartRecord req) throws Exception {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         UUID userStudySubjectId = req.getUserStudySubjectId();
 
         Optional<User> findUser = userRepository.findById(userId);
@@ -67,9 +66,9 @@ public class RecordService {
         record.setTotalStudyTime(totalStudyTime);
     }
 
-    public RecordResDto.ResSearchListByUser findListByUser(UUID userId) throws Exception {
+    public List<RecordResDto> findListByUser() throws Exception {
         List<Record> recordList = new ArrayList<>();
-
+        UUID userId = SecurityContextHolderUtils.getUserId();
         try{
             recordList = recordRepository.findByUserJoinFetchUserAndUserStudySubject(userId);
         }catch (Exception e){
@@ -77,9 +76,7 @@ public class RecordService {
         }
         List<RecordResDto> recordResDtoList = new ArrayList<>();
         recordList.stream().forEach(record -> recordResDtoList.add(RecordResDto.toDto(record)));
-
-        RecordResDto.ResSearchListByUser resSearchListByUser = new RecordResDto.ResSearchListByUser(userId, recordResDtoList);
-        return resSearchListByUser;
+        return recordResDtoList;
     }
 
     public List<RecordResDto> getByUserStudySubjectId(UUID id) throws Exception{

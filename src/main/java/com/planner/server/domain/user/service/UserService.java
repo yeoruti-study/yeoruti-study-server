@@ -5,6 +5,7 @@ import com.planner.server.domain.refresh_token.repository.RefreshTokenRepository
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,8 @@ public class UserService {
 
 
     @Transactional
-    public void changeUserInfo(UserReqDto.ReqUpdateProfile req, UUID userId) throws IllegalArgumentException{
+    public void changeUserInfo(UserReqDto.ReqUpdateProfile req) throws IllegalArgumentException{
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()){
@@ -83,14 +85,25 @@ public class UserService {
         findUser.changeUserInfo(req);
     }
 
-    @Transactional
-    public void deleteOne(User user) throws Exception {
-        UUID userId = user.getId();
-        Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(userId);
-        if(findRefreshToken.isPresent()){
-           refreshTokenRepository.delete(findRefreshToken.get());
+    public void deleteUser(UserReqDto.ReqDeleteUser req) throws Exception {
+        String username = SecurityContextHolderUtils.getUsername();
+        if(!req.getUsername().equals(username)){
+            throw new Exception("username 확인 요망");
         }
-        userRepository.delete(user);
+        Optional<User> findUser = userRepository.findByUsername(username);
+        User user = findUser.get();
+
+        String password = user.getPassword();
+        String inputPassword = req.getPassword() + user.getSalt();
+
+        if(encoder.matches(inputPassword, password)){
+            userRepository.delete(user);
+            Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByUserId(user.getId());
+            if(findRefreshToken.isPresent()){
+                refreshTokenRepository.delete(findRefreshToken.get());
+            }
+        }else
+            throw new Exception("password 확인 요망");
     }
 
     public boolean checkPassword(User findUser, String inputPassword) {
