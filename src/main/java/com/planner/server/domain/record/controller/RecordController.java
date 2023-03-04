@@ -5,6 +5,7 @@ import com.planner.server.domain.record.dto.RecordReqDto;
 import com.planner.server.domain.record.dto.RecordResDto;
 import com.planner.server.domain.record.service.RecordService;
 import com.planner.server.domain.user.service.UserService;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,12 @@ public class RecordController {
     private final UserService userService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> startRecord(@RequestBody RecordReqDto req){
+    public ResponseEntity<?> startRecord(@RequestBody RecordReqDto.ReqStartRecord req){
         UUID recordId = null;
+        UUID userId = SecurityContextHolderUtils.getUserId();
+
         try {
-            recordId = recordService.startRecording(req);
+            recordId = recordService.startRecording(req, userId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -36,15 +39,17 @@ public class RecordController {
         }
 
         Message message = Message.builder()
-                .data(recordId)
                 .status(HttpStatus.OK)
+                .data(new RecordResDto.ResStartRecord(recordId))
                 .message("success")
+                .memo("기록 측정이 시작되었습니다. 반드시 종료를 해주세요.")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
     @PatchMapping("/one")
-    public ResponseEntity<?> endRecord(@RequestBody RecordReqDto req){
+    public ResponseEntity<?> endRecord(@RequestBody RecordReqDto.ReqEndRecord req){
+
         try {
             recordService.endRecording(req);
         } catch (Exception e) {
@@ -59,15 +64,17 @@ public class RecordController {
         Message message = Message.builder()
                 .status(HttpStatus.OK)
                 .message("success")
+                .memo("측정 종료")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/list/user/{userId}")
-    public ResponseEntity<?> searchListByUser(@PathVariable("userId") UUID userId){
-        List<RecordResDto> recordResDtoList = null;
+    @GetMapping("/list")
+    public ResponseEntity<?> searchListByUser(){
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        RecordResDto.ResSearchListByUser resSearchListByUser = null;
         try {
-            recordResDtoList = recordService.findListByUser(userId);
+            resSearchListByUser = recordService.findListByUser(userId);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -78,7 +85,7 @@ public class RecordController {
         }
 
         Message message = Message.builder()
-                .data(recordResDtoList)
+                .data(resSearchListByUser)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();

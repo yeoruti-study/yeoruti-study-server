@@ -30,8 +30,7 @@ public class RecordService {
     private final UserStudySubjectRepository userStudySubjectRepository;
     private final UserRepository userRepository;
 
-    public UUID startRecording(RecordReqDto req) throws Exception {
-        UUID userId = req.getUserId();
+    public UUID startRecording(RecordReqDto.ReqStartRecord req, UUID userId) throws Exception {
         UUID userStudySubjectId = req.getUserStudySubjectId();
 
         Optional<User> findUser = userRepository.findById(userId);
@@ -54,10 +53,9 @@ public class RecordService {
     }
 
     @Transactional
-    public void endRecording(RecordReqDto req) throws Exception{
-        UUID id = req.getId();
-        System.out.println("id = " + id);
-        Optional<Record> findRecord = recordRepository.findByIdJoinFetchUserAndUserStudySubject(id);
+    public void endRecording(RecordReqDto.ReqEndRecord req) throws Exception{
+        UUID recordId = req.getRecordId();
+        Optional<Record> findRecord = recordRepository.findByIdJoinFetchUserAndUserStudySubject(recordId);
         if(!findRecord.isPresent()){
             throw new Exception("id 값 확인요망");
         }
@@ -69,18 +67,19 @@ public class RecordService {
         record.setTotalStudyTime(totalStudyTime);
     }
 
-    public List<RecordResDto> findListByUser(UUID userId) throws Exception {
+    public RecordResDto.ResSearchListByUser findListByUser(UUID userId) throws Exception {
         List<Record> recordList = new ArrayList<>();
 
         try{
             recordList = recordRepository.findByUserJoinFetchUserAndUserStudySubject(userId);
         }catch (Exception e){
-            throw new Exception("[user id] 확인 요망. 일치하는 데이터가 없습니다.");
+            throw new Exception("일치하는 데이터가 없습니다.");
         }
         List<RecordResDto> recordResDtoList = new ArrayList<>();
         recordList.stream().forEach(record -> recordResDtoList.add(RecordResDto.toDto(record)));
 
-        return recordResDtoList;
+        RecordResDto.ResSearchListByUser resSearchListByUser = new RecordResDto.ResSearchListByUser(userId, recordResDtoList);
+        return resSearchListByUser;
     }
 
     public List<RecordResDto> getByUserStudySubjectId(UUID id) throws Exception{
