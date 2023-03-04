@@ -2,16 +2,7 @@ package com.planner.server.domain.study_room.dto;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import com.planner.server.domain.room_chat.dto.RoomChatRes;
-import com.planner.server.domain.study_category.dto.StudyCategoryReqDto;
-import com.planner.server.domain.study_category.dto.StudyCategoryResDto;
-import com.planner.server.domain.study_category.entity.StudyCategory;
-import com.planner.server.domain.study_room.entity.StudyRoom;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +33,7 @@ public class StudyRoomReqDto {
     public static class JoinStudyCategory {
         private UUID id;
         private String name;
-        private StudyCategoryReqDto studyCategoryDto;
+        private UUID studyCategoryId;
         private int maximumNumberOfPeople;
         private Duration studyGoalTime;
         private String roomPassword;
@@ -59,7 +50,6 @@ public class StudyRoomReqDto {
     public static class ReqChangePassword {
         private UUID id;
         private String roomPassword;
-        private UUID userId;
     }
 
     @Getter

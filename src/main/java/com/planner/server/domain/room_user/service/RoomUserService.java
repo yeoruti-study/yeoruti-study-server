@@ -18,6 +18,7 @@ import com.planner.server.domain.study_room.repository.StudyRoomRepository;
 import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.utils.SecurityContextHolderUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,12 +31,11 @@ public class RoomUserService {
     private final StudyRoomRepository studyRoomRepository;
 
     public void createOne(RoomUserReqDto roomUserDto) {
-        UUID userId = roomUserDto.getUserDto().getId();
-        UUID studyRoomId = roomUserDto.getStudyRoomDto().getId();
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        UUID studyRoomId = roomUserDto.getStudyRoomId();
 
         Optional<User> userOpt = userRepository.findById(userId);
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomId);
-        
         
         if(userOpt.isPresent() && studyRoomOpt.isPresent()) {
             this.checkStudyRoomMaximumNumberOfPeople(studyRoomOpt.get());
@@ -66,13 +66,25 @@ public class RoomUserService {
     
     // 가입 여부 확인
     public void checkDuplicationJoin(RoomUserReqDto roomUserDto) {
-        List<StudyRoomResDto> studyRoomDtos = this.searchListJoinedStudyRoom(roomUserDto.getUserDto().getId());
+        List<StudyRoomResDto> studyRoomDtos = this.searchListJoinedStudyRoom();
         
         studyRoomDtos.forEach(studyRoom -> {
-            if(studyRoom.getId().equals(roomUserDto.getStudyRoomDto().getId())) {
+            if(studyRoom.getId().equals(roomUserDto.getStudyRoomId())) {
                 throw new RuntimeException("이미 가입한 스터디룸입니다.");
             }
         });
+    }
+
+    public void deleteOne(UUID studyRoomId) {
+        // studyRoomId와 userId로 roomUser를 조회
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        Optional<RoomUser> entityOpt = roomUserRepository.findByUserIdAndStudyRoomId(userId, studyRoomId);
+
+        if(entityOpt.isPresent()) {
+            roomUserRepository.delete(entityOpt.get());
+        }else {
+            throw new NullPointerException("존재하지 않는 데이터");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -88,18 +100,9 @@ public class RoomUserService {
         }
     }
 
-    public void deleteOne(UUID roomUserId) {
-        Optional<RoomUser> entityOpt = roomUserRepository.findById(roomUserId);
-
-        if(entityOpt.isPresent()) {
-            roomUserRepository.delete(entityOpt.get());
-        }else {
-            throw new NullPointerException("존재하지 않는 데이터");
-        }
-    }
-
     @Transactional(readOnly = true)
-    public List<StudyRoomResDto> searchListJoinedStudyRoom(UUID userId) {
+    public List<StudyRoomResDto> searchListJoinedStudyRoom() {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<User> userOpt = userRepository.findById(userId);
 
         if(userOpt.isPresent()) {

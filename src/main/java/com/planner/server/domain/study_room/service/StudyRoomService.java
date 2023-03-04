@@ -1,13 +1,11 @@
 package com.planner.server.domain.study_room.service;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +19,7 @@ import com.planner.server.domain.study_room.entity.StudyRoom;
 import com.planner.server.domain.study_room.repository.StudyRoomRepository;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.utils.SecurityContextHolderUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,12 +36,13 @@ public class StudyRoomService {
 
     // 1. studyRoom생성, roomUser생성
     public void createStudyRoomAndRoomUser(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
-        UUID studyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        UUID studyCategoryId = studyRoomDto.getStudyCategoryId();
         StudyRoom newStudyRoom = null;
 
         // 1. study category 조회
         Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(studyCategoryId);
-        Optional<User> userOpt = userRepository.findById(studyRoomDto.getMasterUserId());
+        Optional<User> userOpt = userRepository.findById(userId);
 
         if(studyCategoryOpt.isPresent() && userOpt.isPresent()) {
             // 2. study room 생성
@@ -54,7 +54,7 @@ public class StudyRoomService {
                 .studyGoalTime(studyRoomDto.getStudyGoalTime())
                 .roomPassword(studyRoomDto.getRoomPassword())
                 .createdAt(LocalDateTime.now())
-                .masterUserId(studyRoomDto.getMasterUserId())
+                .masterUserId(userId)
                 .build();
 
             studyRoomRepository.save(newStudyRoom);
@@ -101,14 +101,17 @@ public class StudyRoomService {
         return studyRoomAndMasterUserInfoDtos;
     }
 
-    // TODO :: 스터디룸 수정도 master user 에게만 권한을 줘야함
     public void updateOne(StudyRoomReqDto.JoinStudyCategory studyRoomDto) {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomDto.getId());
         
         if(entityOpt.isPresent()) {
             StudyRoom entity = entityOpt.get();
+            if(!userId.equals(entity.getMasterUserId())) {
+                throw new RuntimeException("권한 거부");
+            }
 
-            UUID updatedStudyCategoryId = studyRoomDto.getStudyCategoryDto().getId();
+            UUID updatedStudyCategoryId = studyRoomDto.getStudyCategoryId();
             if(!entityOpt.get().getStudyCategory().getId().equals(updatedStudyCategoryId)){
                 Optional<StudyCategory> studyCategoryOpt = studyCategoryRepository.findById(updatedStudyCategoryId);
                 if(!studyCategoryOpt.isPresent()) {
@@ -121,18 +124,20 @@ public class StudyRoomService {
             entity.setName(studyRoomDto.getName())
                 .setMaximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople() == 0 ? DEFAULT_MAXIMUM_NUMBER_OF_PEOPLE : studyRoomDto.getMaximumNumberOfPeople())
                 .setStudyGoalTime(studyRoomDto.getStudyGoalTime())
-                .setMasterUserId(studyRoomDto.getMasterUserId())
                 .setUpdatedAt(LocalDateTime.now());
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }
     }
 
-    // TODO :: 스터디룸 삭제도 master user 에게만 권한을 줘야함
     public void deleteOne(UUID studyRoomId) {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<StudyRoom> entityOpt = studyRoomRepository.findById(studyRoomId);
 
         if(entityOpt.isPresent()) {
+            if(!userId.equals(entityOpt.get().getMasterUserId())) {
+                throw new RuntimeException("권한 거부");
+            }
             studyRoomRepository.delete(entityOpt.get());
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
@@ -154,6 +159,7 @@ public class StudyRoomService {
 
     // Room Password는 master user만이 변경할 수 있다
     public void changeRoomPassword(StudyRoomReqDto.ReqChangePassword studyRoomDto) {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<StudyRoom> studyRoomOpt = studyRoomRepository.findById(studyRoomDto.getId());
         
         if(studyRoomOpt.isPresent()) {
@@ -162,8 +168,8 @@ public class StudyRoomService {
             // 1. master user 확인을 위해 user 조회
             // 2. master user id 와 user id 가 동일하다면 room password 변경 허락
             // 3. 그렇지 않다면 room password 변경 거부
-            if(!studyRoomDto.getUserId().equals(studyRoom.getMasterUserId())) {
-                throw new RuntimeException("허용된 유저가 아닙니다.");
+            if(!userId.equals(studyRoom.getMasterUserId())) {
+                throw new RuntimeException("권한 거부");
             }
             studyRoom.setRoomPassword(studyRoomDto.getRoomPassword());
         }else {
