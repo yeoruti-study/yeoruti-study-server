@@ -5,6 +5,8 @@ import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
 import com.planner.server.domain.attendance_check.repository.AttendanceCheckRepository;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
+import com.planner.server.utils.SecurityContextHolderUtils;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,8 @@ public class AttendanceCheckService {
         attendanceCheckRepository.save(attendanceCheck);
     }
 
-    public List<AttendanceCheckResDto> searchListByUserId(UUID userId) {
+    public List<AttendanceCheckResDto> searchListByUserId() {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<User> userOpt = userRepository.findById(userId);
 
         if(userOpt.isPresent()) {
@@ -47,16 +50,6 @@ public class AttendanceCheckService {
             List<AttendanceCheckResDto> attendanceCheckResDtos = attendanceChecks.stream().map(r -> AttendanceCheckResDto.toDto(r)).collect(Collectors.toList());
             return attendanceCheckResDtos;
         }else {
-            throw new NullPointerException("존재하지 않는 데이터");
-        }
-    }
-
-    public void deleteOne(UUID attendanceCheckId) {
-        Optional<AttendanceCheck> attendanceCheckOpt = attendanceCheckRepository.findById(attendanceCheckId);
-
-        if(attendanceCheckOpt.isPresent()) {
-            attendanceCheckRepository.delete(attendanceCheckOpt.get());
-        } else {
             throw new NullPointerException("존재하지 않는 데이터");
         }
     }

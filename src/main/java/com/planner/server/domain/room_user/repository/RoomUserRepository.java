@@ -20,4 +20,7 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, Long> {
 
     @Query("SELECT DISTINCT ru FROM RoomUser ru JOIN FETCH ru.user WHERE ru.studyRoom.id = :studyRoomId")
     List<RoomUser> findListJoinFetchUserByStudyRoomId(@Param("studyRoomId") UUID studyRoomId);
+
+    @Query("SELECT DISTINCT ru FROM RoomUser ru WHERE ru.user.id = :userId AND ru.studyRoom.id = :studyRoomId")
+    Optional<RoomUser> findByUserIdAndStudyRoomId(@Param("userId") UUID userId, @Param("studyRoomId") UUID studyRoomId);
 }
