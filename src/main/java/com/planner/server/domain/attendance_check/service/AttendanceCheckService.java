@@ -1,6 +1,5 @@
 package com.planner.server.domain.attendance_check.service;
 
-import com.planner.server.domain.attendance_check.dto.AttendanceCheckReqDto;
 import com.planner.server.domain.attendance_check.dto.AttendanceCheckResDto;
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
 import com.planner.server.domain.attendance_check.repository.AttendanceCheckRepository;
@@ -24,25 +23,22 @@ public class AttendanceCheckService {
     private final AttendanceCheckRepository attendanceCheckRepository;
     private final UserRepository userRepository;
 
-    public void createOne() {
-        UUID userId = SecurityContextHolderUtils.getUserId();
-        Optional<User> userOpt = userRepository.findById(userId);
+    public void createOne(UUID userId) throws Exception {
+        Optional<User> findUser = userRepository.findById(userId);
 
-        if(userOpt.isPresent()) {
-            if(this.isExistTodayAttendanceCheck(userId)) {
-                return;
-            }
+        if(!findUser.isPresent()){
+            throw new Exception("유저가 존재하지 않습니다.");
+        }
 
-            AttendanceCheck attendanceCheck = AttendanceCheck.builder()
+        if(this.todayAttendanceExists(userId)) {
+            throw new Exception("이미 오늘은 출석체크가 완료되었습니다.");
+        }
+        AttendanceCheck attendanceCheck = AttendanceCheck.builder()
                 .id(UUID.randomUUID())
-                .user(userOpt.get())
+                .user(findUser.get())
                 .createdAt(LocalDateTime.now())
                 .build();
-
-            attendanceCheckRepository.save(attendanceCheck);
-        }else {
-            throw new NullPointerException("존재하지 않는 데이터");
-        }
+        attendanceCheckRepository.save(attendanceCheck);
     }
 
     public List<AttendanceCheckResDto> searchListByUserId() {
@@ -59,15 +55,15 @@ public class AttendanceCheckService {
     }
 
     // 이미 등록한 출석체크 데이터가 존재하는지 검사
-    public boolean isExistTodayAttendanceCheck(UUID userId) {
+    public boolean todayAttendanceExists(UUID userId) {
         LocalDateTime todayStartTime = LocalDateTime.now().with(LocalTime.MIN);
         LocalDateTime todayEndTime = LocalDateTime.now().with(LocalTime.MAX);
 
         Optional<AttendanceCheck> attendanceCheckOpt = attendanceCheckRepository.findByDateRange(userId, todayStartTime, todayEndTime);
-        if(attendanceCheckOpt.isPresent()) {
+        if(attendanceCheckOpt.isPresent())
             return true;
-        }else {
+        else
             return false;
-        }
     }
+
 }

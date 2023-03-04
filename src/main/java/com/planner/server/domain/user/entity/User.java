@@ -98,7 +98,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<UserStudySubject> userStudySubjects = new ArrayList<>();
 
-    public void changeUserInfo(UserReqDto reqDto) {
+    public void changeUserInfo(UserReqDto.ReqUpdateProfile reqDto) {
         this.profileName = reqDto.getProfileName();
         this.profileBirth = reqDto.getProfileBirth();
         this.profileImagePath = reqDto.getProfileImagePath();

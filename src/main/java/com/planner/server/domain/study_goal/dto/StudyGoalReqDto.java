@@ -19,7 +19,6 @@ public class StudyGoalReqDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Duration goalTime;
-    private UUID userId;
     private UUID userStudySubjectId;
 
     public static StudyGoalReqDto toDto(StudyGoal studyGoal){
@@ -30,7 +29,6 @@ public class StudyGoalReqDto {
                 .startDate(studyGoal.getStartDate())
                 .endDate(studyGoal.getEndDate())
                 .goalTime(studyGoal.getGoalTime())
-                .userId(studyGoal.getUser().getId())
                 .userStudySubjectId(studyGoal.getUserStudySubjectId())
                 .build();
     }

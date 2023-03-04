@@ -2,6 +2,7 @@ package com.planner.server.domain.attendance_check.controller;
 
 import com.planner.server.domain.attendance_check.service.AttendanceCheckService;
 import com.planner.server.domain.message.Message;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,10 @@ public class AttendanceCheckController {
     @PostMapping("/one")
     public ResponseEntity<?> createOne(){
         Message message = new Message();
+        UUID userId = SecurityContextHolderUtils.getUserId();
 
         try {
-            attendanceCheckService.createOne();
+            attendanceCheckService.createOne(userId);
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
@@ -29,12 +31,13 @@ public class AttendanceCheckController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("/list/user")
-    public ResponseEntity<?> searchListByUserId(){
+    @GetMapping("/list")
+    public ResponseEntity<?> searchListByUser(){
         Message message = new Message();
+        UUID userId = SecurityContextHolderUtils.getUserId();
 
         try {
-            message.setData(attendanceCheckService.searchListByUserId());
+            message.setData(attendanceCheckService.searchListByUserId(userId));
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
@@ -44,4 +47,6 @@ public class AttendanceCheckController {
         }
         return new ResponseEntity<>(message, message.getStatus());
     }
+
+  
 }

@@ -4,13 +4,12 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,9 +20,10 @@ public class UserStudySubjectController {
     private final UserStudySubjectService userStudySubjectService;
 
     @PostMapping("/one")
-    public ResponseEntity<?> createOne(@RequestBody UserStudySubjectReqDto req){
+    public ResponseEntity<?> createOne(@RequestBody UserStudySubjectReqDto.ReqCreateOne req){
+        UUID userId = SecurityContextHolderUtils.getUserId();
         try{
-            userStudySubjectService.save(req);
+            userStudySubjectService.save(req, userId);
         }catch (Exception e){
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -39,11 +39,12 @@ public class UserStudySubjectController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @GetMapping("list/user/{userId}")
-    public ResponseEntity<?> searchListByUser(@PathVariable("userId") UUID userId){
-        List<UserStudySubjectResDto> list = new ArrayList<>();
+    @GetMapping("/list")
+    public ResponseEntity<?> searchList(){
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        UserStudySubjectResDto.ResSearchList searchList = new UserStudySubjectResDto.ResSearchList();
         try {
-            list = userStudySubjectService.findByUserId(userId);
+            searchList = userStudySubjectService.findByUserId(userId);
         }catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -53,19 +54,18 @@ public class UserStudySubjectController {
         }
 
         Message message = Message.builder()
-                .data(list)
+                .data(searchList)
                 .status(HttpStatus.OK)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-
     @GetMapping("/one/{userStudySubjectId}")
     public ResponseEntity<?> searchOne(@PathVariable("userStudySubjectId") UUID id){
-        UserStudySubjectResDto byId;
+        UserStudySubjectResDto userStudySubjectResDto;
         try {
-            byId = userStudySubjectService.findById(id);
+            userStudySubjectResDto = userStudySubjectService.findById(id);
         } catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -75,13 +75,12 @@ public class UserStudySubjectController {
         }
 
         Message message = Message.builder()
-                .data(byId)
+                .data(userStudySubjectResDto)
                 .status(HttpStatus.BAD_REQUEST)
                 .message("success")
                 .build();
         return new ResponseEntity<>(message, message.getStatus());
     }
-
 
     @DeleteMapping("/one/{userStudySubjectId}")
     public ResponseEntity<?> deleteOne(@PathVariable("userStudySubjectId") UUID id){

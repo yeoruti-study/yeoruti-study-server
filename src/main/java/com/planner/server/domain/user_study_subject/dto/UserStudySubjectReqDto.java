@@ -1,8 +1,7 @@
 package com.planner.server.domain.user_study_subject.dto;
 
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -13,6 +12,14 @@ public class UserStudySubjectReqDto {
     private UUID id;
     private String title;
     private UUID userId;
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReqCreateOne{
+        private String title;
+    }
 
     public static UserStudySubjectReqDto toDto(UserStudySubject userStudySubject){
         return UserStudySubjectReqDto.builder()
