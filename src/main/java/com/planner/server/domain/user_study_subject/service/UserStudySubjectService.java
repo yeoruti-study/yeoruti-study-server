@@ -27,6 +27,11 @@ public class UserStudySubjectService {
 
     public void save(UserStudySubjectReqDto.ReqCreateOne req) throws Exception {
         UUID userId = SecurityContextHolderUtils.getUserId();
+
+        Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserAndTitleJoinFetchUser(userId, req.getTitle());
+        if(findEntity.isPresent()){
+            throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
+        }
         User user = userService.findOne(userId);
 
         UserStudySubject userStudySubject = UserStudySubject.builder()
@@ -56,11 +61,11 @@ public class UserStudySubjectService {
 
 
     public UserStudySubjectResDto findById(UUID id) throws Exception {
-        Optional<UserStudySubject> findUserStudySubject = userStudySubjectRepository.findByIdJoinFetchUser(id);
-        if(!findUserStudySubject.isPresent())
+        Optional<UserStudySubject> byId = userStudySubjectRepository.findByIdJoinFetchUser(id);
+        if(!byId.isPresent())
             throw new Exception("parameter:[id] is wrong. There is no data for request id");
 
-        UserStudySubject userStudySubject = findUserStudySubject.get();
+        UserStudySubject userStudySubject = byId.get();
         return UserStudySubjectResDto.toDto(userStudySubject);
     }
 
