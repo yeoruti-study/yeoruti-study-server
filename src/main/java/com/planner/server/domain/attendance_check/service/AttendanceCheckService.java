@@ -73,16 +73,4 @@ public class AttendanceCheckService {
             return false;
     }
 
-    public void deleteTodayAttendance(UUID userId) throws Exception {
-        LocalDateTime todayStartTime = LocalDateTime.now().with(LocalTime.MIN);
-        LocalDateTime todayEndTime = LocalDateTime.now().with(LocalTime.MAX);
-
-        Optional<AttendanceCheck> attendanceCheckOpt = attendanceCheckRepository.findByDateRange(userId, todayStartTime, todayEndTime);
-
-        if(attendanceCheckOpt.isPresent())
-            attendanceCheckRepository.delete(attendanceCheckOpt.get());
-        else{
-            throw new Exception("오늘은 출석체크를 하지 않았습니다. 출석체크를 지울 수 없음");
-        }
-    }
 }

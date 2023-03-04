@@ -50,20 +50,4 @@ public class AttendanceCheckController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/one")
-    public ResponseEntity<?> deleteTodayAttendance(){
-        Message message = new Message();
-        UUID userId = SecurityContextHolderUtils.getUserId();
-
-        try {
-            attendanceCheckService.deleteTodayAttendance(userId);
-            message.setStatus(HttpStatus.OK);
-            message.setMessage("success");
-        } catch (Exception e) {
-            message.setStatus(HttpStatus.BAD_REQUEST);
-            message.setMessage("error");
-            message.setMemo(e.getMessage());
-        }
-        return new ResponseEntity<>(message, message.getStatus());
-    }
 }
