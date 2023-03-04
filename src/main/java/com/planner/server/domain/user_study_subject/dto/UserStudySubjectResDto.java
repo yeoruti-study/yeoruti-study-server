@@ -23,12 +23,4 @@ public class UserStudySubjectResDto {
                 .build();
     }
 
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ResSearchList {
-        private UUID userId;
-        private List<UserStudySubjectResDto> userStudySubjectResDtoList;
-    }
 }

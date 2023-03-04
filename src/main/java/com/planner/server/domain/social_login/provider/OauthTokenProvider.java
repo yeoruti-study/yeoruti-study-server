@@ -37,8 +37,6 @@ public class OauthTokenProvider
         formData.add("redirect_uri", provider.getRedirectUri());
         formData.add("code", code);
 
-        String tokenUri = provider.getProviderDetails().getTokenUri();
-
         return WebClient.create()
                 .post()
                 .uri(provider.getProviderDetails().getTokenUri())
@@ -60,8 +58,6 @@ public class OauthTokenProvider
         formData.add("client_secret", provider.getClientSecret());
         formData.add("code", code);
         formData.add("state", "1234");
-
-        String tokenUri = provider.getProviderDetails().getTokenUri();
 
         return WebClient.create()
                 .post()

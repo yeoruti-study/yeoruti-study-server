@@ -19,9 +19,4 @@ public class SecurityContextHolderUtils {
         return username;
     }
 
-    public static String getUserPassword(){
-        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String password = principal.getPassword();
-        return password;
-    }
 }

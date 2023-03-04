@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,44 +22,41 @@ public class UserStudySubjectController {
 
     @PostMapping("/one")
     public ResponseEntity<?> createOne(@RequestBody UserStudySubjectReqDto.ReqCreateOne req){
-        UUID userId = SecurityContextHolderUtils.getUserId();
         try{
-            userStudySubjectService.save(req, userId);
-        }catch (Exception e){
+            userStudySubjectService.save(req);
+            Message message = Message.builder()
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+        catch (Exception e){
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
-        Message message = Message.builder()
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-
-        return new ResponseEntity<>(message, message.getStatus());
     }
 
     @GetMapping("/list")
     public ResponseEntity<?> searchList(){
-        UUID userId = SecurityContextHolderUtils.getUserId();
-        UserStudySubjectResDto.ResSearchList searchList = new UserStudySubjectResDto.ResSearchList();
         try {
-            searchList = userStudySubjectService.findByUserId(userId);
-        }catch (Exception e) {
+            List<UserStudySubjectResDto> subjectResDtoList = userStudySubjectService.findByUser();
+            Message message = Message.builder()
+                    .data(subjectResDtoList)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+        catch (Exception e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
         }
-
-        Message message = Message.builder()
-                .data(searchList)
-                .status(HttpStatus.OK)
-                .message("success")
-                .build();
-        return new ResponseEntity<>(message, message.getStatus());
     }
 
     @GetMapping("/one/{userStudySubjectId}")

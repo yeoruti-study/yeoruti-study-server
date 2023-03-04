@@ -19,20 +19,9 @@ public class StudyGoalResDto {
     private UUID id;
     private String title;
     private String detail;
-
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Duration goalTime;
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ResSearchList{
-        private UUID userId;
-        private List<StudyGoalResDto> studyGoalDtoList;
-    }
-
 
     public static StudyGoalResDto toDto(StudyGoal studyGoal){
         return StudyGoalResDto.builder()

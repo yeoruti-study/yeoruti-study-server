@@ -12,15 +12,12 @@ import java.util.UUID;
 @Builder
 public class AttendanceCheckResDto {
     private UUID id;
-    private UserResDto userResDto;
     private LocalDateTime createdAt;
 
     public static AttendanceCheckResDto toDto(AttendanceCheck attendance){
-        UserResDto userDto = UserResDto.toDto(attendance.getUser());
 
         return AttendanceCheckResDto.builder()
                 .id(attendance.getId())
-                .userResDto(userDto)
                 .createdAt(attendance.getCreatedAt())
                 .build();
     }

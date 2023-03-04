@@ -8,6 +8,7 @@ import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,10 @@ public class StudyGoalService {
     private final UserRepository userRepository;
 
     private final UserService userService;
-    private final UserStudySubjectService userStudySubjectService;
 
-    public StudyGoalReqDto save(StudyGoalReqDto req, UUID userId) throws Exception{
+    public StudyGoalReqDto save(StudyGoalReqDto req) throws Exception{
         User user = null;
-
+        UUID userId = SecurityContextHolderUtils.getUserId();
         try{
             Optional<User> findUser = userRepository.findById(userId);
             user = findUser.get();
@@ -35,11 +35,6 @@ public class StudyGoalService {
         catch (Exception e){
             throw new Exception("[userId] 확인요망. id 값과 일치하는 유저 데이터가 존재하지 않습니다.");
         }
-        Optional<StudyGoal> findStudyGoal = studyGoalRepository.findByUserAndTitleJoinFetchUser(userId, req.getTitle());
-        if(findStudyGoal.isPresent()){
-            throw new Exception("이미 존재하는 공부목표입니다. 다른 제목을 설정하세요");
-        }
-
         // goalTime 형식 = "PT8H30M" // PT(시간)H(분)M
         Duration goalTime = req.getGoalTime();
 
@@ -57,7 +52,7 @@ public class StudyGoalService {
                 .userStudySubjectId(req.getUserStudySubjectId())
                 .build();
 
-        StudyGoal savedStudyGoal = studyGoalRepository.save(studyGoal);
+        studyGoalRepository.save(studyGoal);
 
         return StudyGoalReqDto.toDto(studyGoal);
     }
@@ -74,11 +69,12 @@ public class StudyGoalService {
         return StudyGoalResDto.toDto(studyGoal);
     }
 
-    public List<StudyGoalResDto> findByUserId(UUID id) throws Exception {
-        userService.findOne(id); // 유저의 존재 여부 확인
+    public List<StudyGoalResDto> findByUserId() throws Exception {
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        userService.findOne(userId); // 유저의 존재 여부 확인
         List<StudyGoal> studyGoals = new ArrayList<>();
         try{
-            studyGoals = studyGoalRepository.findByUserJoinFetchUser(id);
+            studyGoals = studyGoalRepository.findByUserJoinFetchUser(userId);
         }catch(Exception e){
             throw new Exception("[id] 확인요망. id 값과 일치하는 데이터가 존재하지 않습니다.");
         }

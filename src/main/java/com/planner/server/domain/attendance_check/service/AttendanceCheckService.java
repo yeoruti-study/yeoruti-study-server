@@ -6,6 +6,7 @@ import com.planner.server.domain.attendance_check.repository.AttendanceCheckRepo
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 
+import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,8 @@ public class AttendanceCheckService {
     private final AttendanceCheckRepository attendanceCheckRepository;
     private final UserRepository userRepository;
 
-    public void createOne(UUID userId) throws Exception {
+    public void createOne() throws Exception {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<User> findUser = userRepository.findById(userId);
 
         if(!findUser.isPresent()){
@@ -40,7 +42,8 @@ public class AttendanceCheckService {
         attendanceCheckRepository.save(attendanceCheck);
     }
 
-    public List<AttendanceCheckResDto> searchListByUserId(UUID userId) {
+    public List<AttendanceCheckResDto> searchListByUserId() {
+        UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<User> userOpt = userRepository.findById(userId);
 
         if(userOpt.isPresent()) {

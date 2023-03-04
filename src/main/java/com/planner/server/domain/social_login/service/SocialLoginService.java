@@ -46,7 +46,6 @@ public class SocialLoginService {
 
         OAuth2UserInfo oauth2UserInfo = OauthUserInfoProvider.makeOAuth2UserInfo(providerName, userAttributes);
         providerName = oauth2UserInfo.getProvider();
-        String providerId = oauth2UserInfo.getProviderId();
 
         String username = providerName +"_"+oauth2UserInfo.getProviderId();
         String password = UUID.randomUUID().toString();

@@ -41,7 +41,6 @@ public class SocialLoginController {
             return;
         }
         Message message = Message.builder()
-                .data(loginResponse)
                 .status(HttpStatus.OK)
                 .message("success")
                 .memo("소셜 로그인 성공. 엑세스 토큰을 발급힙니다.")

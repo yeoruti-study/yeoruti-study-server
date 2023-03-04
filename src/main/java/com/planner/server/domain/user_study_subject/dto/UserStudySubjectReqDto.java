@@ -11,7 +11,6 @@ public class UserStudySubjectReqDto {
 
     private UUID id;
     private String title;
-    private UUID userId;
 
     @Getter
     @Builder
@@ -25,7 +24,6 @@ public class UserStudySubjectReqDto {
         return UserStudySubjectReqDto.builder()
                 .id(userStudySubject.getId())
                 .title(userStudySubject.getTitle())
-                .userId(userStudySubject.getUser().getId())
                 .build();
     }
 }

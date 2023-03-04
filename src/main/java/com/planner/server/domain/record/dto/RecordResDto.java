@@ -21,7 +21,7 @@ public class RecordResDto {
     private UUID id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private UserStudySubjectResDto userStudySubjectDto;
+    private UUID userStudySubjectId;
     private Duration totalStudyTime;
     private boolean studying;
 
@@ -33,21 +33,13 @@ public class RecordResDto {
         private UUID recordId;
     }
 
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ResSearchListByUser {
-        private UUID userId;
-        private List<RecordResDto> recordList;
-    }
 
     public static RecordResDto toDto(Record record){
         return RecordResDto.builder()
                 .id(record.getId())
                 .startTime(record.getStartTime())
                 .endTime(record.getEndTime())
-                .userStudySubjectDto(UserStudySubjectResDto.toDto(record.getUserStudySubject()))
+                .userStudySubjectId(record.getUserStudySubject().getId())
                 .totalStudyTime(record.getTotalStudyTime())
                 .studying(record.isStudying())
                 .build();
