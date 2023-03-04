@@ -7,7 +7,6 @@ import com.planner.server.domain.study_goal.repository.StudyGoalRepository;
 import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.repository.UserRepository;
 import com.planner.server.domain.user.service.UserService;
-import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
 import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,6 @@
 package com.planner.server.domain.record.dto;
 
 import com.planner.server.domain.record.entity.Record;
-import com.planner.server.domain.user.dto.UserResDto;
-import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
-import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter

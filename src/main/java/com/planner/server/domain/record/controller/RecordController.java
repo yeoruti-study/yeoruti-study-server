@@ -5,13 +5,11 @@ import com.planner.server.domain.record.dto.RecordReqDto;
 import com.planner.server.domain.record.dto.RecordResDto;
 import com.planner.server.domain.record.service.RecordService;
 import com.planner.server.domain.user.service.UserService;
-import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

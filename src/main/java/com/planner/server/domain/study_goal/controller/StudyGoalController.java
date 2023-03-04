@@ -4,13 +4,11 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.study_goal.dto.StudyGoalReqDto;
 import com.planner.server.domain.study_goal.dto.StudyGoalResDto;
 import com.planner.server.domain.study_goal.service.StudyGoalService;
-import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;

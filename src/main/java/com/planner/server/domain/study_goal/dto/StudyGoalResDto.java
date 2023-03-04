@@ -1,15 +1,11 @@
 package com.planner.server.domain.study_goal.dto;
 
 import com.planner.server.domain.study_goal.entity.StudyGoal;
-import com.planner.server.domain.user.dto.UserResDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Builder

@@ -1,7 +1,6 @@
 package com.planner.server.domain.attendance_check.dto;
 
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
-import com.planner.server.domain.user.dto.UserResDto;
 import lombok.Builder;
 import lombok.Data;
 

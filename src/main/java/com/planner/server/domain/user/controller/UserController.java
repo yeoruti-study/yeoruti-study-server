@@ -3,7 +3,6 @@ package com.planner.server.domain.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user.dto.*;
-import com.planner.server.domain.user.entity.User;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;

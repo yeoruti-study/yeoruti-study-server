@@ -4,7 +4,6 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectReqDto;
 import com.planner.server.domain.user_study_subject.dto.UserStudySubjectResDto;
 import com.planner.server.domain.user_study_subject.service.UserStudySubjectService;
-import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,10 +2,7 @@ package com.planner.server.domain.attendance_check.controller;
 
 import com.planner.server.domain.attendance_check.service.AttendanceCheckService;
 import com.planner.server.domain.message.Message;
-import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
-
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
