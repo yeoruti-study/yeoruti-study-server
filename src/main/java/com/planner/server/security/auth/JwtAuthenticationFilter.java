@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        System.out.println("#=====AUTHENTICATION FILTER=====#");
 
         try {
             // form으로 넘어온 값으로 user 객체를 생성
@@ -60,7 +59,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-        System.out.println("-----successfulAuthnentication-----");
     
         // 1. 로그인 성공된 user 조회
         User user = ((CustomUserDetails) authResult.getPrincipal()).getUser();
@@ -115,7 +113,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {
-        System.out.println("-----unsuccessfulAuthnentication-----");
 
         // 1. Http Response Message 세팅 후 반환
         Object failedType = failed.getClass();

@@ -47,7 +47,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     // 3. DB에서 리프레시토큰 조회. 리프레시 토큰이 유효하다면 -> 새로운 액세스토큰 발급, 그렇지 않다면 -> 인증된 객체를 저장하지 않고 doFilter
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("#=====AUTHORIZATION FILTER=====#");
 
         Cookie cookie = null;
         try {
@@ -72,7 +71,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             claims = Jwts.parserBuilder().setSigningKey(AuthProperties.getAccessSecret()).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
-            System.out.println("-----access token expired-----");
             claims = e.getClaims();
             isAccessTokenExpired = true;
         } catch (MalformedJwtException e) {
@@ -100,9 +98,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 try {
                     refreshTokenClaims = Jwts.parserBuilder().setSigningKey(AuthProperties.getRefreshSecret()).build().parseClaimsJws(refreshToken).getBody();
                 } catch (ExpiredJwtException e) {
-                    // 리프레시 토큰이 만료된 경우
-                    System.out.println("-----refresh token expired-----");
-                    
+                    // 리프레시 토큰이 만료된 경우         
                     // 만료된 리프레시 토큰을 제거 후 doFitler
                     refreshTokenRepository.delete(refreshTokenOpt.get());
                     filterChain.doFilter(request, response);
@@ -131,8 +127,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     response.addHeader(HttpHeaders.SET_COOKIE, cookies.toString());
                 }
             }else {
-                System.out.println("-----not found access & refresh token-----");
-                // TODO :: 인가 거절
                 filterChain.doFilter(request, response);
                 return;
             }

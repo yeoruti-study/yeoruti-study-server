@@ -19,7 +19,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
-import com.planner.server.domain.room_chat.entity.RoomChat;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_category.entity.StudyCategory;
 
@@ -77,16 +76,8 @@ public class StudyRoom implements Serializable {
     @OneToMany(mappedBy = "studyRoom")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "studyRoom")
-    private List<RoomChat> roomChats = new ArrayList<>();
-
     public void addRoomUser(RoomUser roomUser) {
         this.roomUsers.add(roomUser);
         roomUser.setStudyRoom(this);
-    }
-
-    public void addRoomChat(RoomChat roomChat) {
-        this.roomChats.add(roomChat);
-        roomChat.setStudyRoom(this);
     }
 }

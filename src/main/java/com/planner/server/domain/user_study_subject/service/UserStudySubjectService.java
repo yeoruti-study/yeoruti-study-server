@@ -25,7 +25,6 @@ public class UserStudySubjectService {
     private final UserService userService;
 
     public void save(UserStudySubjectReqDto.ReqCreateOne req, UUID userId) throws Exception {
-
         Optional<UserStudySubject> findEntity = userStudySubjectRepository.findByUserAndTitleJoinFetchUser(userId, req.getTitle());
         if(findEntity.isPresent()){
             throw new Exception("이미 존재하는 제목입니다. 다른 제목을 설정해주세요.");
