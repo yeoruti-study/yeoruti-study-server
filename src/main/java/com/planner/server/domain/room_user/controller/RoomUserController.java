@@ -40,6 +40,23 @@ public class RoomUserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
+    @DeleteMapping("/one/study-room/{studyRoomId}")
+    public ResponseEntity<?> deleteOne(@PathVariable(name = "studyRoomId") UUID studyRoomId) {
+        Message message = new Message();
+
+        try {
+            roomUserService.deleteOne(studyRoomId);
+            message.setStatus(HttpStatus.OK);
+            message.setMessage("success");
+        } catch (Exception e) {
+            message.setStatus(HttpStatus.BAD_REQUEST);
+            message.setMessage("error");
+            message.setMemo(e.getMessage());
+        }
+        return new ResponseEntity<>(message, message.getStatus());
+    }
+
+    // 스터디룸에 속한 유저 전체 조회
     @GetMapping("/user/list/study-room/{studyRoomId}")
     public ResponseEntity<?> searchUserListByStudyRoomId(@PathVariable(value = "studyRoomId") UUID studyRoomId) {
         Message message = new Message();
@@ -56,29 +73,13 @@ public class RoomUserController {
         return new ResponseEntity<>(message, message.getStatus());
     }
 
-    @DeleteMapping("/one/{roomUserId}")
-    public ResponseEntity<?> deleteOne(@PathVariable(name = "roomUserId") UUID roomUserId) {
-        Message message = new Message();
-
-        try {
-            roomUserService.deleteOne(roomUserId);
-            message.setStatus(HttpStatus.OK);
-            message.setMessage("success");
-        } catch (Exception e) {
-            message.setStatus(HttpStatus.BAD_REQUEST);
-            message.setMessage("error");
-            message.setMemo(e.getMessage());
-        }
-        return new ResponseEntity<>(message, message.getStatus());
-    }
-
     // 유저가 속한 스터디룸 전체 조회
-    @GetMapping("/study-room/list/user/{userId}")
-    public ResponseEntity<?> searchListJoinedStudyRoom(@PathVariable(name = "userId") UUID userId) {
+    @GetMapping("/study-room/list")
+    public ResponseEntity<?> searchListJoinedStudyRoom() {
         Message message = new Message();
 
         try {
-            message.setData(roomUserService.searchListJoinedStudyRoom(userId));
+            message.setData(roomUserService.searchListJoinedStudyRoom());
             message.setStatus(HttpStatus.OK);
             message.setMessage("success");
         } catch (Exception e) {
