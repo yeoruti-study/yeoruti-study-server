@@ -20,7 +20,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-        System.out.println("#=====AUTHENTICATION PROVIDER=====#");
 
         String username = token.getName();
         String password = token.getCredentials().toString();
