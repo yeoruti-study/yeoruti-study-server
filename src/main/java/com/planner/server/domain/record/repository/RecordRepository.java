@@ -1,7 +1,6 @@
 package com.planner.server.domain.record.repository;
 
 import com.planner.server.domain.record.entity.Record;
-import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,9 +13,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query("select r from Record r join fetch r.user join fetch r.userStudySubject where r.id = :id")
     Optional<Record> findByIdJoinFetchUserAndUserStudySubject(@Param("id")UUID id);
-
-//    @Query("select distinct r from Record r join fetch r.user")
-//    List<Record> findAllByFetchJoin();
 
     @Query("select r from Record r join fetch r.user join fetch r.userStudySubject where r.user.id = :userId")
     List<Record> findByUserJoinFetchUserAndUserStudySubject(@Param("userId") UUID userId);

@@ -4,8 +4,6 @@ import com.planner.server.domain.user.entity.User;
 
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @AllArgsConstructor

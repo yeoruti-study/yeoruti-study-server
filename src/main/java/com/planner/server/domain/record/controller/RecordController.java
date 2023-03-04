@@ -4,7 +4,6 @@ import com.planner.server.domain.message.Message;
 import com.planner.server.domain.record.dto.RecordReqDto;
 import com.planner.server.domain.record.dto.RecordResDto;
 import com.planner.server.domain.record.service.RecordService;
-import com.planner.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import java.util.UUID;
 public class RecordController {
 
     private final RecordService recordService;
-    private final UserService userService;
 
     @PostMapping("/one")
     public ResponseEntity<?> startRecord(@RequestBody RecordReqDto.ReqStartRecord req){

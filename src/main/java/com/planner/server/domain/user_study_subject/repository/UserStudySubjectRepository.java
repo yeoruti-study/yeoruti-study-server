@@ -21,6 +21,4 @@ public interface UserStudySubjectRepository extends JpaRepository<UserStudySubje
     @Query("select us from UserStudySubject us join fetch us.user where us.id = :id")
     Optional<UserStudySubject> findByIdJoinFetchUser(@Param("id") UUID id);
 
-//    @Query("select distinct s from UserStudySubject s join fetch s.user where s.id =:id")
-//    Optional<UserStudySubject> findByIdFetchJoin(UUID id);
 }
