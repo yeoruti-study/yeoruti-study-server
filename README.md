@@ -14,9 +14,9 @@
 </br>
 
 ## API 명세서
-- 현재 버전 : V1
+- 현재 버전 : V2
 - 지속적으로 업데이트 할 예정입니다. <br>
-https://documenter.getpostman.com/view/24644793/2s935uFzpS
+https://documenter.getpostman.com/view/16728792/2s93JnURtX
 
 ## ERD
 ![ERD_V2](https://user-images.githubusercontent.com/56336436/214897140-5edb3b74-0396-48f5-be92-80ee3ea16bdc.png)
