@@ -22,6 +22,7 @@ import com.planner.server.security.auth.JwtAuthorizationFilter;
 import com.planner.server.security.handler.CustomLogoutHandler;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +57,8 @@ public class SecurityConfig {
 
         http
             .authorizeRequests()
-            .antMatchers("/api/admin/**")
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/api/admin/**")
             .access("hasRole('ROLE_ADMIN')")
             .antMatchers("/api/test/**")
             .access("hasRole('ROLE_USER')")
