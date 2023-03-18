@@ -15,14 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import com.planner.server.domain.user.entity.User;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "record")
