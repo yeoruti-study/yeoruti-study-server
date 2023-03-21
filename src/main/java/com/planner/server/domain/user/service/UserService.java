@@ -76,13 +76,13 @@ public class UserService {
     @Transactional
     public void changeUserInfo(UserReqDto.ReqUpdateProfile req) throws IllegalArgumentException{
         UUID userId = SecurityContextHolderUtils.getUserId();
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> findUser = userRepository.findById(userId);
 
-        if(!user.isPresent()){
+        if(!findUser.isPresent()){
             throw new IllegalArgumentException("id에 부합하는 유저가 존재하지 않습니다. 다시 입력해주세요.");
         }
-        User findUser = user.get();
-        findUser.changeUserInfo(req);
+        User user = findUser.get();
+        user.changeUserInfo(req);
     }
 
     public void deleteUser(UserReqDto.ReqDeleteUser req) throws Exception {
