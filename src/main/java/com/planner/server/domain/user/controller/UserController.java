@@ -1,5 +1,6 @@
 package com.planner.server.domain.user.controller;
 
+import com.planner.server.domain.aws_s3.AwsS3Uploader;
 import com.planner.server.domain.message.Message;
 import com.planner.server.domain.user.dto.*;
 import com.planner.server.domain.user.service.UserService;
@@ -10,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final AwsS3Uploader awsS3Uploader;
 
     @PostMapping ("/one")
     public ResponseEntity<?> createOne(@RequestBody UserReqDto.ReqCreateOne req){
@@ -105,8 +109,27 @@ public class UserController {
                     .message("success")
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
+        } catch (Exception e){
+            Message message = Message.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("error")
+                    .memo(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+    }
 
-        } catch (IllegalArgumentException e){
+    @PutMapping ("/profile-image/one")
+    public ResponseEntity<?> changeProfileImage(@RequestParam("file") MultipartFile multipartFile){
+        try {
+            String imageUrl = userService.changeUserProfile(multipartFile);
+            Message message = Message.builder()
+                    .data(imageUrl)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        } catch (IOException e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message("error")

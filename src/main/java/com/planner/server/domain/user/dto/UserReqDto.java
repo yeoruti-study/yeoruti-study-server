@@ -40,7 +40,6 @@ public class UserReqDto {
     public static class ReqUpdateProfile{
         private String profileName;
         private String profileBirth;
-        private String profileImagePath;
         private boolean friendAcceptance;
         private boolean alarmPermission;
     }
