@@ -25,8 +25,11 @@ public class CustomLogoutHandler implements LogoutSuccessHandler {
         message.setStatus(HttpStatus.OK);
         message.setMemo("logout success");
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(MediaType.APPLICATION_JSON.toString());    
+        response.setStatus(message.getStatus().value());
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+
         new ObjectMapper().writeValue(response.getOutputStream(), message);
     }
 }

@@ -102,7 +102,7 @@ public class UserController {
     @PutMapping ("/profile/one")
     public ResponseEntity<?> changeUserProfile(@RequestBody UserReqDto.ReqUpdateProfile req){
         try{
-            // profileImageUrl : null/{oldImageUrl}/{newImageUrl}
+            // Request profileImageUrl : null/{oldImageUrl}/{newImageUrl}
             userService.changeUserInfo(req);
             Message message = Message.builder()
                     .status(HttpStatus.OK)
