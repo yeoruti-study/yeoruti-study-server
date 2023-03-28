@@ -80,12 +80,23 @@ public class UserService {
     public void changeUserInfo(UserReqDto.ReqUpdateProfile req) throws IllegalArgumentException{
         UUID userId = SecurityContextHolderUtils.getUserId();
         Optional<User> findUser = userRepository.findById(userId);
-
         if(!findUser.isPresent()){
             throw new IllegalArgumentException("id에 부합하는 유저가 존재하지 않습니다. 다시 입력해주세요.");
         }
         User user = findUser.get();
         user.changeUserInfo(req);
+    }
+
+    @Transactional
+    public String changeUserProfileImage(MultipartFile multipartFile) throws IOException {
+        String imageUrl = awsS3Uploader.upload(multipartFile, "image");
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        Optional<User> findUser = userRepository.findById(userId);
+
+        User user = findUser.get();
+        user.setProfileImagePath(imageUrl);
+
+        return imageUrl;
     }
 
     public void deleteUser(UserReqDto.ReqDeleteUser req) throws Exception {
@@ -109,21 +120,4 @@ public class UserService {
             throw new Exception("password 확인 요망");
     }
 
-    public boolean checkPassword(User findUser, String inputPassword) {
-        String userPassword = findUser.getPassword();
-        inputPassword = inputPassword + findUser.getSalt();
-        return encoder.matches(inputPassword, userPassword);
-    }
-
-    @Transactional
-    public String changeUserProfile(MultipartFile multipartFile) throws IOException {
-        String imageUrl = awsS3Uploader.upload(multipartFile, "image");
-        UUID userId = SecurityContextHolderUtils.getUserId();
-        Optional<User> findUser = userRepository.findById(userId);
-
-        User user = findUser.get();
-        user.setProfileImagePath(imageUrl);
-
-        return imageUrl;
-    }
 }

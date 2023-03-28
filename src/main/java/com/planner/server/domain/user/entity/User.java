@@ -101,6 +101,7 @@ public class User implements Serializable {
         this.profileBirth = reqDto.getProfileBirth();
         this.friendAcceptance = reqDto.isFriendAcceptance();
         this.alarmPermission = reqDto.isAlarmPermission();
+        this.profileImagePath = reqDto.getProfileImageUrl();
     }
 
 }

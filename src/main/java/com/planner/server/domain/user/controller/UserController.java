@@ -24,7 +24,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final AwsS3Uploader awsS3Uploader;
 
     @PostMapping ("/one")
     public ResponseEntity<?> createOne(@RequestBody UserReqDto.ReqCreateOne req){
@@ -101,8 +100,9 @@ public class UserController {
     }
 
     @PutMapping ("/profile/one")
-    public ResponseEntity<?> updateProfile(@RequestBody UserReqDto.ReqUpdateProfile req){
+    public ResponseEntity<?> changeUserProfile(@RequestBody UserReqDto.ReqUpdateProfile req){
         try{
+            // profileImageUrl : null/{oldImageUrl}/{newImageUrl}
             userService.changeUserInfo(req);
             Message message = Message.builder()
                     .status(HttpStatus.OK)
@@ -122,7 +122,7 @@ public class UserController {
     @PutMapping ("/profile-image/one")
     public ResponseEntity<?> changeProfileImage(@RequestParam("file") MultipartFile multipartFile){
         try {
-            String imageUrl = userService.changeUserProfile(multipartFile);
+            String imageUrl = userService.changeUserProfileImage(multipartFile);
             Message message = Message.builder()
                     .data(imageUrl)
                     .status(HttpStatus.OK)
