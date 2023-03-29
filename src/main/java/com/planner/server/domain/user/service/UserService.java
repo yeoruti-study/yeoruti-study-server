@@ -1,5 +1,6 @@
 package com.planner.server.domain.user.service;
 
+import com.planner.server.domain.aws_s3.AwsS3Uploader;
 import com.planner.server.domain.refresh_token.entity.RefreshToken;
 import com.planner.server.domain.refresh_token.repository.RefreshTokenRepository;
 import com.planner.server.domain.user.dto.*;
@@ -10,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +24,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-     private final BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    private final AwsS3Uploader awsS3Uploader;
 
     public void createOne(UserReqDto.ReqCreateOne reqDto) throws Exception{
 
@@ -63,7 +68,6 @@ public class UserService {
         return findUser.get();
     }
 
-
     public List<UserResDto> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResDto> userResDtos = new ArrayList<>();
@@ -72,17 +76,27 @@ public class UserService {
         return userResDtos;
     }
 
-
     @Transactional
     public void changeUserInfo(UserReqDto.ReqUpdateProfile req) throws IllegalArgumentException{
         UUID userId = SecurityContextHolderUtils.getUserId();
-        Optional<User> user = userRepository.findById(userId);
-
-        if(!user.isPresent()){
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findUser.isPresent()){
             throw new IllegalArgumentException("id에 부합하는 유저가 존재하지 않습니다. 다시 입력해주세요.");
         }
-        User findUser = user.get();
-        findUser.changeUserInfo(req);
+        User user = findUser.get();
+        user.changeUserInfo(req);
+    }
+
+    @Transactional
+    public String changeUserProfileImage(MultipartFile multipartFile) throws IOException {
+        String imageUrl = awsS3Uploader.upload(multipartFile, "image");
+        UUID userId = SecurityContextHolderUtils.getUserId();
+        Optional<User> findUser = userRepository.findById(userId);
+
+        User user = findUser.get();
+        user.setProfileImagePath(imageUrl);
+
+        return imageUrl;
     }
 
     public void deleteUser(UserReqDto.ReqDeleteUser req) throws Exception {
@@ -106,9 +120,4 @@ public class UserService {
             throw new Exception("password 확인 요망");
     }
 
-    public boolean checkPassword(User findUser, String inputPassword) {
-        String userPassword = findUser.getPassword();
-        inputPassword = inputPassword + findUser.getSalt();
-        return encoder.matches(inputPassword, userPassword);
-    }
 }

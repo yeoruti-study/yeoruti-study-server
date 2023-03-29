@@ -1,8 +1,10 @@
 package com.planner.server.domain.user.dto;
 
 import com.planner.server.domain.user.entity.User;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -40,7 +42,7 @@ public class UserReqDto {
     public static class ReqUpdateProfile{
         private String profileName;
         private String profileBirth;
-        private String profileImagePath;
+        private String profileImageUrl;
         private boolean friendAcceptance;
         private boolean alarmPermission;
     }

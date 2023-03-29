@@ -1,7 +1,8 @@
 package com.planner.server.domain.user.controller;
 
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.user.dto.*;
+import com.planner.server.domain.user.dto.UserReqDto;
+import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,16 +100,36 @@ public class UserController {
     }
 
     @PutMapping ("/profile/one")
-    public ResponseEntity<?> updateProfile(@RequestBody UserReqDto.ReqUpdateProfile req){
+    public ResponseEntity<?> changeUserProfile(@RequestBody UserReqDto.ReqUpdateProfile req){
         try{
+            // Request profileImageUrl : null/{oldImageUrl}/{newImageUrl}
             userService.changeUserInfo(req);
             Message message = Message.builder()
                     .status(HttpStatus.OK)
                     .message("success")
                     .build();
             return new ResponseEntity<>(message, message.getStatus());
+        } catch (Exception e){
+            Message message = Message.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("error")
+                    .memo(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        }
+    }
 
-        } catch (IllegalArgumentException e){
+    @PutMapping ("/profile-image/one")
+    public ResponseEntity<?> changeProfileImage(@RequestParam("file") MultipartFile multipartFile){
+        try {
+            String imageUrl = userService.changeUserProfileImage(multipartFile);
+            Message message = Message.builder()
+                    .data(imageUrl)
+                    .status(HttpStatus.OK)
+                    .message("success")
+                    .build();
+            return new ResponseEntity<>(message, message.getStatus());
+        } catch (IOException e) {
             Message message = Message.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message("error")

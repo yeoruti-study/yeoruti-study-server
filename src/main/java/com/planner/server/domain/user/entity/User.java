@@ -2,17 +2,15 @@ package com.planner.server.domain.user.entity;
 
 
 import com.planner.server.domain.attendance_check.entity.AttendanceCheck;
+import com.planner.server.domain.friend.entity.Friend;
 import com.planner.server.domain.record.entity.Record;
 import com.planner.server.domain.room_user.entity.RoomUser;
 import com.planner.server.domain.study_goal.entity.StudyGoal;
 
 import com.planner.server.domain.user.dto.UserReqDto;
 import com.planner.server.domain.user_study_subject.entity.UserStudySubject;
-import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.*;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -52,6 +50,7 @@ public class User implements Serializable {
 
     private String profileBirth;
 
+    @Setter
     private String profileImagePath;
 
     private boolean friendAcceptance;
@@ -94,12 +93,15 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<UserStudySubject> userStudySubjects = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Friend> friends = new ArrayList<>();
+
     public void changeUserInfo(UserReqDto.ReqUpdateProfile reqDto) {
         this.profileName = reqDto.getProfileName();
         this.profileBirth = reqDto.getProfileBirth();
-        this.profileImagePath = reqDto.getProfileImagePath();
         this.friendAcceptance = reqDto.isFriendAcceptance();
         this.alarmPermission = reqDto.isAlarmPermission();
+        this.profileImagePath = reqDto.getProfileImageUrl();
     }
 
 }

@@ -107,7 +107,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         message.setMessage("success");
         message.setMemo("login_success");
         
-        this.createResponseMessage(response, message);
+        this.createResponseMessage(response, message, HttpStatus.OK);
     }
 
     @Override
@@ -124,20 +124,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             message.setMessage("auth_fail");
             message.setMemo(failed.getLocalizedMessage());
 
-            this.createResponseMessage(response, message);
+            this.createResponseMessage(response, message, HttpStatus.UNAUTHORIZED);
         } else {
             Message message = new Message();
             message.setStatus(HttpStatus.BAD_REQUEST);
             message.setMessage("undefined_error");
             message.setMemo(failed.getLocalizedMessage());
 
-            this.createResponseMessage(response, message);
+            this.createResponseMessage(response, message, HttpStatus.UNAUTHORIZED);
         }
     }
 
     // response message 설정
-    private void createResponseMessage(HttpServletResponse response, Message message) throws StreamWriteException, DatabindException, IOException {
-        response.setStatus(message.getStatus().value());
+    private void createResponseMessage(HttpServletResponse response, Message message, HttpStatus status) throws StreamWriteException, DatabindException, IOException {
+        response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON.toString());    
         new ObjectMapper().writeValue(response.getOutputStream(), message);
     }
