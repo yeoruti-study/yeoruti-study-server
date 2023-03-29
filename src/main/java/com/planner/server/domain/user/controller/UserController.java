@@ -1,8 +1,8 @@
 package com.planner.server.domain.user.controller;
 
-import com.planner.server.domain.aws_s3.AwsS3Uploader;
 import com.planner.server.domain.message.Message;
-import com.planner.server.domain.user.dto.*;
+import com.planner.server.domain.user.dto.UserReqDto;
+import com.planner.server.domain.user.dto.UserResDto;
 import com.planner.server.domain.user.service.UserService;
 import com.planner.server.utils.SecurityContextHolderUtils;
 import lombok.RequiredArgsConstructor;
