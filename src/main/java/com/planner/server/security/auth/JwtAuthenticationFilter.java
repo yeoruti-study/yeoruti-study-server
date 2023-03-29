@@ -137,7 +137,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // response message 설정
     private void createResponseMessage(HttpServletResponse response, Message message) throws StreamWriteException, DatabindException, IOException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(message.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON.toString());    
         new ObjectMapper().writeValue(response.getOutputStream(), message);
     }

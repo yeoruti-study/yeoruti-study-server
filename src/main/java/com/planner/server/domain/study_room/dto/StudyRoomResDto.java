@@ -25,10 +25,10 @@ public class StudyRoomResDto {
     private StudyCategoryResDto studyCategoryDto;   // study room을 조회할 때, 카테고리는 항상 포함
     private int maximumNumberOfPeople;
     private Duration studyGoalTime;
-    private String roomPassword;
     private UUID masterUserId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean hasRoomPassword;
 
     public static StudyRoomResDto toDto(StudyRoom entity) {
         StudyCategory studyCategory = entity.getStudyCategory();
@@ -47,6 +47,7 @@ public class StudyRoomResDto {
             .masterUserId(entity.getMasterUserId())
             .createdAt(entity.getCreatedAt())
             .updatedAt(entity.getUpdatedAt())
+            .hasRoomPassword(entity.isHasRoomPassword())
             .build();
     }
 
@@ -61,11 +62,11 @@ public class StudyRoomResDto {
         private StudyCategoryResDto studyCategoryDto;   // study room을 조회할 때, 카테고리는 항상 포함
         private int maximumNumberOfPeople;
         private Duration studyGoalTime;
-        private String roomPassword;
         private UUID masterUserId;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private String masterUserUsername;
         private String masterUserProfileName;
+        private boolean hasRoomPassword;
     }
 }

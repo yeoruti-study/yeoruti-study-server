@@ -45,6 +45,9 @@ public class StudyRoomService {
         Optional<User> userOpt = userRepository.findById(userId);
 
         if(studyCategoryOpt.isPresent() && userOpt.isPresent()) {
+            // '스터디룸 비밀번호 여부'에 따라 '스터디룸 비밀번호' 설정
+            String roomPassword = studyRoomDto.isHasRoomPassword() ? studyRoomDto.getRoomPassword() : null;
+
             // 2. study room 생성
             newStudyRoom = StudyRoom.builder()
                 .id(UUID.randomUUID())
@@ -52,7 +55,8 @@ public class StudyRoomService {
                 .maximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople() == 0 ? DEFAULT_MAXIMUM_NUMBER_OF_PEOPLE : studyRoomDto.getMaximumNumberOfPeople())
                 .studyCategory(studyCategoryOpt.get())
                 .studyGoalTime(studyRoomDto.getStudyGoalTime())
-                .roomPassword(studyRoomDto.getRoomPassword())
+                .roomPassword(roomPassword)
+                .hasRoomPassword(studyRoomDto.isHasRoomPassword())
                 .createdAt(LocalDateTime.now())
                 .masterUserId(userId)
                 .build();
@@ -90,11 +94,11 @@ public class StudyRoomService {
                 .maximumNumberOfPeople(studyRoomDto.getMaximumNumberOfPeople())
                 .studyGoalTime(studyRoomDto.getStudyGoalTime())
                 .masterUserId(studyRoomDto.getMasterUserId())
-                .roomPassword(studyRoomDto.getRoomPassword())
                 .createdAt(studyRoomDto.getCreatedAt())
                 .updatedAt(studyRoomDto.getUpdatedAt())
                 .masterUserUsername(user.getUsername())
                 .masterUserProfileName(user.getProfileName())
+                .hasRoomPassword(studyRoomDto.isHasRoomPassword())
                 .build();
         }).collect(Collectors.toList());
 
@@ -171,7 +175,12 @@ public class StudyRoomService {
             if(!userId.equals(studyRoom.getMasterUserId())) {
                 throw new RuntimeException("권한 거부");
             }
-            studyRoom.setRoomPassword(studyRoomDto.getRoomPassword());
+
+            if(studyRoomDto.getRoomPassword() == null || studyRoomDto.getRoomPassword().isBlank()) {
+                studyRoom.setHasRoomPassword(false).setRoomPassword(null);
+            }else {
+                studyRoom.setHasRoomPassword(true).setRoomPassword(studyRoomDto.getRoomPassword());
+            }
         }else {
             throw new NullPointerException("존재하지 않는 데이터");
         }

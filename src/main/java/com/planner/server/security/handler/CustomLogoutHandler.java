@@ -25,7 +25,7 @@ public class CustomLogoutHandler implements LogoutSuccessHandler {
         message.setStatus(HttpStatus.OK);
         message.setMemo("logout success");
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(message.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON.toString());    
         new ObjectMapper().writeValue(response.getOutputStream(), message);
     }
