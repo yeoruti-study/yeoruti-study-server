@@ -24,6 +24,7 @@ public class StudyRoomReqDto {
     private UUID masterUserId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean hasRoomPassword;
 
     @Getter
     @Builder
@@ -40,6 +41,7 @@ public class StudyRoomReqDto {
         private UUID masterUserId;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private boolean hasRoomPassword;
     }
 
     @Getter

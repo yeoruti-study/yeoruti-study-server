@@ -73,6 +73,9 @@ public class StudyRoom implements Serializable {
     @Setter
     private LocalDateTime updatedAt;
 
+    @Setter
+    private boolean hasRoomPassword;
+
     @OneToMany(mappedBy = "studyRoom")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
