@@ -59,7 +59,6 @@ public class SecurityConfig {
 
         http
             .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/admin/**")
             .access("hasRole('ROLE_ADMIN')")
             .antMatchers("/api/test/**")
