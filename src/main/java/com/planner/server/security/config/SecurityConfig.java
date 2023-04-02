@@ -39,7 +39,9 @@ public class SecurityConfig {
         JwtAuthorizationFilter jwtAuthorizationFilter = jwtAuthorizationFilter(authenticationManager);
         
         http
-            .cors().disable()
+            .cors();
+        
+        http
             .csrf().disable()
             .formLogin().disable()
             .httpBasic().disable()
@@ -57,7 +59,6 @@ public class SecurityConfig {
 
         http
             .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/admin/**")
             .access("hasRole('ROLE_ADMIN')")
             .antMatchers("/api/test/**")
