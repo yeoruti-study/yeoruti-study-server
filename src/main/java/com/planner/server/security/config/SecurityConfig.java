@@ -39,7 +39,9 @@ public class SecurityConfig {
         JwtAuthorizationFilter jwtAuthorizationFilter = jwtAuthorizationFilter(authenticationManager);
         
         http
-            .cors().disable()
+            .cors();
+        
+        http
             .csrf().disable()
             .formLogin().disable()
             .httpBasic().disable()
